@@ -4,3 +4,15 @@
 *.jar
 *.war
 *.ear
+
+# Eclipse files
+
+.metadata
+*/.project
+*/.classpath
+*/.settings/
+
+# from the project
+old_stuff/
+data/
+VSRTI\ Plotter/Sample_data
