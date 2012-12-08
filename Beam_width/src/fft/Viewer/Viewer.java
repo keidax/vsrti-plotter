@@ -35,6 +35,11 @@ import javax.swing.JTextField;
 import fft.Model.Adapter;
 import fft.Model.ModelListener;
 
+/**
+ * main GUI class
+ *
+ */
+
 public class Viewer extends JFrame implements ModelListener, ActionListener {
 
     private static final long serialVersionUID = 1L;

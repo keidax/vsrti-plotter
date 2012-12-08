@@ -9,9 +9,6 @@ import javax.swing.event.TableModelListener;
 
 public class FileTable extends JTable implements TableModelListener {
 
-    private static final long serialVersionUID = 1L;
-
-    ;
     public FileTable me = this;
     public JTable table;
     //public SortedSet<InputFile> inputFiles;

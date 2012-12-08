@@ -36,6 +36,10 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import fft.Model.Adapter;
 
+/**
+ * Base class for graphs
+ */
+
 @SuppressWarnings("serial")
 public abstract class Canvas extends JPanel implements MouseListener, MouseMotionListener {
 

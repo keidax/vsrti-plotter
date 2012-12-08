@@ -7,6 +7,11 @@ import java.util.TreeMap;
 
 import fft.Viewer.InputFile;
 
+/**
+ * Seems to provide encapsulation for a model and not a whole lot more
+ *
+ */
+
 public class Adapter {
 
     private Model model;
@@ -130,7 +135,7 @@ public class Adapter {
     }
     
     public void reset() {
-        getModel().getVisibilityGraph().reinicializePoints();
+        getModel().getVisibilityGraph().reinitializePoints();
         getModel().updateListeners();
     }
 }

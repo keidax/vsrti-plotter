@@ -1,6 +1,8 @@
 package fft.Model;
 
 /**
+ * I don't know what this class does...  
+ * 
  * This sample code is made available as part of the book "Digital Image
  * Processing - An Algorithmic Introduction using Java" by Wilhelm Burger
  * and Mark J. Burge, Copyright (C) 2005-2008 Springer-Verlag Berlin, 

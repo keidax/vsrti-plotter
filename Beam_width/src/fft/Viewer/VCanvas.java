@@ -8,6 +8,11 @@ import java.util.TreeMap;
 
 import fft.Model.Adapter;
 
+/**
+ * Specific implementation of Beam graph
+ *
+ */
+
 @SuppressWarnings("serial")
 public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMotionListener {
 

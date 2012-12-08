@@ -23,7 +23,7 @@ public class VisibilityGraph extends Graph {
         super(m);
         rawPoints = new TreeSet<Point>();
         rms = new TreeMap<Double, Double>();
-        reinicializePoints();
+        reinitializePoints();
     }
 
     public TreeMap<Double, InputFile> getInputFiles() {
@@ -49,7 +49,7 @@ public class VisibilityGraph extends Graph {
         this.gridedRms = gridedRms;
     }
 
-    public void reinicializePoints() {
+    public void reinitializePoints() {
         getPoints().clear();
         gridedRms.clear();
         compl = null;
@@ -104,7 +104,7 @@ public class VisibilityGraph extends Graph {
     public void setExponent(int e) {
         if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline()) / Math.log(2))) {
             exponent = e;
-            this.reinicializePoints();
+            this.reinitializePoints();
         }
 
     }
@@ -112,7 +112,7 @@ public class VisibilityGraph extends Graph {
     public void emptyRawPoints() {
         rawPoints.clear();
         
-        this.reinicializePoints();
+        this.reinitializePoints();
         //this.getPoints().clear();
     }
 
@@ -140,7 +140,7 @@ public class VisibilityGraph extends Graph {
 
     public void setLambda(double lambda) {
         this.lambda = lambda;
-        this.reinicializePoints();
+        this.reinitializePoints();
     }
 
     public SortedSet<Point> getRawPoints() {
@@ -196,7 +196,7 @@ public class VisibilityGraph extends Graph {
         for(Double key : keys){
             getRawPoints().add(new Point(this,key,parseFile.get(key)));
         }
-        this.reinicializePoints();
+        this.reinitializePoints();
         update();
     }
 
@@ -244,6 +244,6 @@ public class VisibilityGraph extends Graph {
 
     void setNoise(double n) {
         noise=n;
-        this.reinicializePoints();
+        this.reinitializePoints();
     }
 }

@@ -2,6 +2,12 @@ package fft.Model;
 
 import java.util.TreeMap;
 
+
+
+/**
+ * 
+ *
+ */
 public abstract class Graph {
 
     public TreeMap<Double, Double> points;
@@ -17,7 +23,7 @@ public abstract class Graph {
 
     public  void setDeltaBaseline(double b){
         deltaBaseline = b;
-        model.getVisibilityGraph().reinicializePoints();
+        model.getVisibilityGraph().reinitializePoints();
     }
 
     public int getExponent() {
@@ -26,7 +32,7 @@ public abstract class Graph {
 
     public void setExponent(int e) {
         exponent = e;
-        model.getVisibilityGraph().reinicializePoints();
+        model.getVisibilityGraph().reinitializePoints();
     }
 
     public double getDeltaBaseline() {
@@ -37,10 +43,6 @@ public abstract class Graph {
         points = new TreeMap<Double, Double>();
     }
 
-//	public void movePoint(Point p, double x, double y){
-//		p.setX(x);
-//		p.setY(y);
-//	}
     public TreeMap<Double, Double> getPoints() {
         return points;
     }

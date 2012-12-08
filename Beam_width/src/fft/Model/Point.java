@@ -2,10 +2,15 @@ package fft.Model;
 
 import java.awt.geom.Point2D;
 
+
+
+/**
+ * A basic point class
+ *
+ */
 public class Point extends Point2D.Double implements Comparable<Point> {
 
     public Graph graph;
-    private static final long serialVersionUID = 1L;
 
     public Point(Graph g, double x, double y) {
         graph = g;
