@@ -2,12 +2,6 @@ package fft.Model;
 
 import java.util.TreeMap;
 
-
-
-/**
- * 
- *
- */
 public abstract class Graph {
 
     public TreeMap<Double, Double> points;

@@ -8,7 +8,6 @@ public abstract class Graph {
     public int exponent = 5;
     public double deltaBaseline = 1;
     public Model model;
-    public double noise;
 
     public Graph(Model m) {
         model = m;
@@ -37,10 +36,6 @@ public abstract class Graph {
         points = new TreeMap<Double, Double>();
     }
 
-//	public void movePoint(Point p, double x, double y){
-//		p.setX(x);
-//		p.setY(y);
-//	}
     public TreeMap<Double, Double> getPoints() {
         return points;
     }

@@ -2,11 +2,6 @@ package fft.Model;
 
 import java.util.TreeMap;
 
-/**
- * 
- * @author Karel Durkota
- */
-
 public abstract class Graph {
 
     public TreeMap<Double, Double> points;
@@ -14,6 +9,7 @@ public abstract class Graph {
     public int exponent = 5;
     public Model model;
 
+    
     public Graph(Model m) {
         model = m;
         points = new TreeMap<Double, Double>();
@@ -40,11 +36,7 @@ public abstract class Graph {
     public Graph() {
         points = new TreeMap<Double, Double>();
     }
-
-//	public void movePoint(Point p, double x, double y){
-//		p.setX(x);
-//		p.setY(y);
-//	}
+    
     public TreeMap<Double, Double> getPoints() {
         return points;
     }

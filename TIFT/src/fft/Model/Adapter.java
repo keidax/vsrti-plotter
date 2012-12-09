@@ -159,7 +159,7 @@ public class Adapter {
     }
 
     public void importImageGraphPoints(TreeMap<Double, Double> parseFile){
-        this.getModel().getImageGraph().points.putAll(parseFile);
+        this.getModel().getImageGraph().getPoints().putAll(parseFile);
         this.getModel().getImageGraph().createVisibilityGraph();
     }
 
