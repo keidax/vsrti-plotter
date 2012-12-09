@@ -473,7 +473,7 @@ public class VisibilityGraph extends Graph {
      * @param y
      */
     public void addRawPoint(double x, double y) {
-        this.getRawPoints().add(new Point(this, x, y));
+        this.getRawPoints().add(new Point(x, y));
         this.recountExponent();
         this.countDeltaBaseline();
         deltaBaseline = this.countDeltaBaseline();

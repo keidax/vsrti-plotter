@@ -12,7 +12,7 @@ import java.util.Vector;
 
 import fft.Model.Point;
 
-public class InputFile implements Comparable {
+public class InputFile implements Comparable<InputFile> {
 
     public File file;
     public double baseline = -1;
@@ -25,29 +25,6 @@ public class InputFile implements Comparable {
         intensities = new ArrayList<Double>();
     }
 
-    static boolean isFormatCorrect(File file) {
-         try {
-            FileInputStream fstream = new FileInputStream(file);
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String strLine;
-            while ((strLine = br.readLine()) != null) {
-
-                if (strLine.trim().length()>0 && strLine.trim().charAt(0) != '*') {
-                    int li = strLine.trim().lastIndexOf(" ");
-                    if(li==-1)
-                        return false;
-                    Double.parseDouble(strLine.substring(strLine.lastIndexOf(" ") + 1));
-                }
-            }
-            in.close();
-        } catch (Exception e) {//Catch exception if any
-            System.err.println("Error: " + e.getMessage());
-            return false;
-        }
-         return true;
-    }
-
     public InputFile(File f) {
         setFile(f);
         if (isBaselineParsable()) {
@@ -55,7 +32,30 @@ public class InputFile implements Comparable {
         }
     }
 
-    public double getAverageIntensity() {
+    static boolean isFormatCorrect(File file) {
+	     try {
+	        FileInputStream fstream = new FileInputStream(file);
+	        DataInputStream in = new DataInputStream(fstream);
+	        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	        String strLine;
+	        while ((strLine = br.readLine()) != null) {
+	
+	            if (strLine.trim().length()>0 && strLine.trim().charAt(0) != '*') {
+	                int li = strLine.trim().lastIndexOf(" ");
+	                if(li==-1)
+	                    return false;
+	                Double.parseDouble(strLine.substring(strLine.lastIndexOf(" ") + 1));
+	            }
+	        }
+	        in.close();
+	    } catch (Exception e) {//Catch exception if any
+	        System.err.println("Error: " + e.getMessage());
+	        return false;
+	    }
+	     return true;
+	}
+
+	public double getAverageIntensity() {
         if (averageIntensity == -1) {
             setAverageIntensity(this.countAverageIntensity());
         }
@@ -99,8 +99,7 @@ public class InputFile implements Comparable {
     }
 
     @Override
-    public int compareTo(Object arg0) {
-        InputFile f = (InputFile) arg0;
+    public int compareTo(InputFile f) {
         if (f.baseline > this.baseline) {
             return -1;
         } else {

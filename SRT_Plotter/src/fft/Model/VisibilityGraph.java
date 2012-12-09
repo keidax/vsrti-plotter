@@ -148,7 +148,7 @@ public class VisibilityGraph extends Graph {
     }
 
      public void addRawPoint(double x, double y) {
-        this.getRawPoints().add(new Point(this, x, y));
+        this.getRawPoints().add(new Point(x, y));
         //System.out.println("new point e="+this.getExponent()+", baseline="+Graph.getDeltaBaseline());
         //this.recountExponent();
         //this.countDeltaBaseline();

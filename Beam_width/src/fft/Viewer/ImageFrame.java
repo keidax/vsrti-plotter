@@ -11,6 +11,11 @@ import java.util.SortedMap;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+/**
+ * not used in this project
+ *
+ */
+
 public class ImageFrame extends JFrame {
 
     private final double a, b;

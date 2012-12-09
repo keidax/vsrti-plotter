@@ -7,6 +7,11 @@ import java.util.Collections;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
+/***
+ * the model for the table of files
+ *
+ */
+
 public class TableModel extends AbstractTableModel {
 
     public Viewer viewer;

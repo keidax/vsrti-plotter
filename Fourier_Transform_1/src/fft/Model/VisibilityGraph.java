@@ -202,7 +202,7 @@ public class VisibilityGraph extends Graph {
     }
 
     public void addRawPoint(double x, double y) {
-        this.getRawPoints().add(new Point(this, x, y));
+        this.getRawPoints().add(new Point(x, y));
         this.recountExponent();
         this.countDeltaBaseline();
         deltaBaseline = this.countDeltaBaseline();
@@ -279,7 +279,7 @@ public class VisibilityGraph extends Graph {
         this.getRawPoints().clear();
         Set<Double> keys = parseFile.keySet();
         for (Double key : keys) {
-            getRawPoints().add(new Point(this, key, parseFile.get(key)));
+            getRawPoints().add(new Point(key, parseFile.get(key)));
         }
         System.out.println("Importing raw data, size" + getRawPoints().size() + ", ");
         this.recountExponent();

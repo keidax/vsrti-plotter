@@ -348,7 +348,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                     }
             }
         });
-        @SuppressWarnings("unused")
+
 		FileDrop fileDrop = new FileDrop(jTable, new FileDrop.Listener() {
 
             @Override

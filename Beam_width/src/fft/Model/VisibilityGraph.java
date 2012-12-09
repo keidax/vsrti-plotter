@@ -117,7 +117,7 @@ public class VisibilityGraph extends Graph {
     }
 
     public void addRawPoint(double x, double y) {
-        this.getRawPoints().add(new Point(this, x, y));
+        this.getRawPoints().add(new Point(x, y));
         addPoint(x, y);
     }
 
@@ -194,7 +194,7 @@ public class VisibilityGraph extends Graph {
         this.getRawPoints().clear();
         Set<Double> keys = parseFile.keySet();
         for(Double key : keys){
-            getRawPoints().add(new Point(this,key,parseFile.get(key)));
+            getRawPoints().add(new Point(key,parseFile.get(key)));
         }
         this.reinitializePoints();
         update();

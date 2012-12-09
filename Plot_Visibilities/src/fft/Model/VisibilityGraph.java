@@ -159,7 +159,7 @@ public class VisibilityGraph extends Graph {
     }
 
      public void addRawPoint(double x, double y) {
-        this.getRawPoints().add(new Point(this, x, y));
+        this.getRawPoints().add(new Point(x, y));
         //System.out.println("new point e="+this.getExponent()+", baseline="+Graph.getDeltaBaseline());
         //this.recountExponent();
         //this.countDeltaBaseline();
@@ -238,7 +238,7 @@ public class VisibilityGraph extends Graph {
         Set<Double> keys = this.getPoints().keySet();
         
         for(Double key : keys){
-            getRawPoints().add(new Point(this,key,this.getPoints().get(key)));
+            getRawPoints().add(new Point(key,this.getPoints().get(key)));
         }
         System.out.println("-----"  );
         update();

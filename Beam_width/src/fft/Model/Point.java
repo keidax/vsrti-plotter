@@ -10,10 +10,7 @@ import java.awt.geom.Point2D;
  */
 public class Point extends Point2D.Double implements Comparable<Point> {
 
-    public Graph graph;
-
-    public Point(Graph g, double x, double y) {
-        graph = g;
+    public Point(double x, double y) {
         this.setX(x);
         this.setY(y);
     }
