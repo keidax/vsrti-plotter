@@ -60,24 +60,6 @@ public class Adapter {
         return this.getModel().getVisibilityGraph().getDataPoints();
     }
 
-    public TreeMap<Double, Double> getImageGraphPoints() {
-        TreeMap<Double, Double> reduced = new TreeMap<Double, Double>();
-        Set<Double> keys = getModel().getImageGraph().getPoints().keySet();
-        int sum = keys.size();
-        int count = 0;
-        for (Double key : keys) {
-            count++;
-            reduced.put(key, getModel().getImageGraph().getPoints().get(key));
-            if (count == sum / 2) {
-                break;
-            }
-        }
-        reduced.putAll(getModel().getImageGraph().getPoints().headMap(getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
-        //System.out.println("Size of reduced "+reduced.size());
-        //return reduced;
-        return getModel().getImageGraph().getPoints();
-    }
-
     public Model getModel() {
         return model;
     }
@@ -107,10 +89,6 @@ public class Adapter {
 
     public void moveVisibilityPoint(double currentPoint, double toy) {
         this.getModel().getVisibilityGraph().movePoint(currentPoint, toy);
-    }
-
-    public void moveImagePoint(Double currentPoint, double toy) {
-        this.getModel().getImageGraph().movePoint(currentPoint, toy);
     }
 
     public void importVisibilityGraphPoints(TreeMap<Double, Double> parseFile) {

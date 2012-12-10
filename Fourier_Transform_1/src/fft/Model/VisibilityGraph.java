@@ -16,7 +16,7 @@ public class VisibilityGraph extends Graph {
     public double lambda = 2.5;
     public SortedSet<Point> rawPoints;
     public double halfBZero = 0;
-    public TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
+    public TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), griddedRms = new TreeMap<Double, Double>();
     //public ArrayList<InputFile> inputFiles;
     public TreeMap<Double, InputFile> inputFiles = new TreeMap<Double, InputFile>();
     public int numberOfPoints = 32;
@@ -57,22 +57,25 @@ public class VisibilityGraph extends Graph {
     }
 
     public void setGridedRms(TreeMap<Double, Double> gridedRms) {
-        this.gridedRms = gridedRms;
+        this.griddedRms = gridedRms;
     }
 
     public void reinicializePoints() {
-        getPoints().clear();
-        gridedRms.clear();
-        if(getRawPoints()!=null && getRawPoints().size()>0 &&numberOfPoints<getRawPoints().last().getX()/getDeltaBaseline())
+    	getPoints().clear();
+        griddedRms.clear();
+        if(getRawPoints()!=null && getRawPoints().size()>0 &&numberOfPoints<getRawPoints().last().getX()/getDeltaBaseline()){
             numberOfPoints=(int) Math.ceil(getRawPoints().last().getX()/getDeltaBaseline());
-        if(getRawPoints().size()!=0)
+        }
+        if(getRawPoints().size()!=0){
             for (double i = 0; i <= Math.max(numberOfPoints,getRawPoints().last().getX()/getDeltaBaseline()); i++){
                 this.getPoints().put(i * getDeltaBaseline() / getLambda(), 0.0);
             }
-        else
+        }
+        else{
             for (double i = 0; i < numberOfPoints; i++){
                 this.getPoints().put(i * getDeltaBaseline() / getLambda(), 0.0);
             }
+        }
         double maxkey = getPoints().lastKey();
         if (!getRawPoints().isEmpty()) {
             Point[] pointss = getRawPoints().toArray(new Point[0]);
@@ -106,7 +109,7 @@ public class VisibilityGraph extends Graph {
     
     public void fullReset(){
     	getPoints().clear();
-        gridedRms.clear();
+        griddedRms.clear();
         getRawPoints().clear();
         reinicializePoints();
         
@@ -171,12 +174,12 @@ public class VisibilityGraph extends Graph {
         double[][] data = new double[3][keys.length];
         for (int i = 0; i < keys.length; i++) {
             //if(gridedRms==null)
-            if (getGridedRms() == null || !getGridedRms().containsKey(keys[i])) {
+            if (getGriddedRms() == null || !getGriddedRms().containsKey(keys[i])) {
                 data[0][i] = data[1][i] = data[2][i] = getPoints().get(keys[i]);
             } else {
-                data[0][i] = getPoints().get(keys[i]) + getGridedRms().get(keys[i]) / 2;
+                data[0][i] = getPoints().get(keys[i]) + getGriddedRms().get(keys[i]) / 2;
                 data[1][i] = getPoints().get(keys[i]);
-                data[2][i] = getPoints().get(keys[i]) - getGridedRms().get(keys[i]) / 2;
+                data[2][i] = getPoints().get(keys[i]) - getGriddedRms().get(keys[i]) / 2;
             }
         }
         Dct1d dct = new Dct1d(data[0].length);
@@ -234,27 +237,27 @@ public class VisibilityGraph extends Graph {
         this.rawPoints = rawPoints;
     }
 
-    public TreeMap<Double, Double> getGridedRms() {
-        if (gridedRms != null && !gridedRms.isEmpty()) {
-            return gridedRms;
+    public TreeMap<Double, Double> getGriddedRms() {
+        if (griddedRms != null && !griddedRms.isEmpty()) {
+            return griddedRms;
         }
         if (getRms() == null || getRms().isEmpty()) {
             return new TreeMap<Double, Double>();
         }
-        gridedRms.clear();// = new TreeMap<Double,Double>();
+        griddedRms.clear();// = new TreeMap<Double,Double>();
         Set<Double> keys = getRms().keySet();
         //System.out.println("rms size " + keys.size());
         for (Double d : keys) {
             //System.out.println(d/getLambda() +" -> " + getGridX(d/getLambda()));
-            gridedRms.put(getGridX(d / getLambda()), getRms().get(d));
+            griddedRms.put(getGridX(d / getLambda()), getRms().get(d));
         }
         //System.out.println("returning gridedrms size = "+gridedRms.size());
-        return gridedRms;
+        return griddedRms;
     }
 
     public void addRms(double x, double rms) {
         getRms().put(x, rms);
-        gridedRms.clear();
+        griddedRms.clear();
     }
 
     public void moveRawPoint(Point p, double x, double y) {
@@ -299,7 +302,7 @@ public class VisibilityGraph extends Graph {
         s += "X_Y_RMS";
         Set<Double> keys = this.getPoints().keySet();
         for (Double key : keys) { // X Y RMS
-            s += key * this.lambda + " " + getPoints().get(key) + " " + (getGridedRms().containsKey(key) ? getGridedRms().get(key) : 0.0) + "\n";
+            s += key * this.lambda + " " + getPoints().get(key) + " " + (getGriddedRms().containsKey(key) ? getGriddedRms().get(key) : 0.0) + "\n";
         }
         s += "\n\nANGLE_INTENSITY";
         keys = model.imageGraph.points.keySet();
@@ -328,12 +331,12 @@ public class VisibilityGraph extends Graph {
         this.getRms().clear();
         //gridedRms.clear();
         getRms().putAll(parseData);
-        gridedRms.putAll(parseData);
+        griddedRms.putAll(parseData);
         update();
     }
 
     public void removeGridedRmsPoint(double x) {
-        getGridedRms().remove(x);
+        getGriddedRms().remove(x);
     }
 
     void removeRms(double i) {

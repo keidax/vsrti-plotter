@@ -5,12 +5,10 @@ import java.util.Vector;
 public class Model {
 
     private VisibilityGraph visibilityGraph;
-    private ImageGraph imageGraph;
     private Vector<ModelListener> listeners;
 
     public Model() {
         listeners = new Vector<ModelListener>();
-        imageGraph = new ImageGraph(this);
         visibilityGraph = new VisibilityGraph(this);
     }
 
@@ -20,14 +18,6 @@ public class Model {
 
     public void setVisibilityGraph(VisibilityGraph visibilityGraph) {
         this.visibilityGraph = visibilityGraph;
-    }
-
-    public ImageGraph getImageGraph() {
-        return imageGraph;
-    }
-
-    public void setImageGraph(ImageGraph imageGraph) {
-        this.imageGraph = imageGraph;
     }
 
     public void updateListeners() {

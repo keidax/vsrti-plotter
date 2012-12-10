@@ -31,9 +31,9 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
                 && adapter.getVisibilityGraphDataPoints().get(x) == y) {
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
-            if (adapter.getRms().containsKey(x)) {
+            if (adapter.getGriddedRms().containsKey(x)) {
                 //System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getGriddedRms().get(x) * getSigma() / 2), g2cy(y + adapter.getGriddedRms().get(x) * getSigma() / 2));
                 //System.out.println("RMS ["+x+","+adapter.getRms().get(x));
                 //System.out.println("rms = "+adapter.getRms().get(x));
             }

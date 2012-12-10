@@ -102,8 +102,8 @@ public class Adapter {
         this.getModel().updateListeners();
     }
 
-    public TreeMap<Double, Double> getRms() {
-        return getModel().getVisibilityGraph().getGridedRms();
+    public TreeMap<Double, Double> getGriddedRms() {
+        return getModel().getVisibilityGraph().getGriddedRms();
     }
 
     public void moveVisibilityPoint(double currentPoint, double toy) {

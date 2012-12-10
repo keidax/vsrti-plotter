@@ -10,6 +10,10 @@ public class ImageGraph extends Graph {
             getPoints().put((double) i, Math.sin((double) i / 2));
         }
     }
+    
+    /**
+     * recreates points in visibility graph... why is it defined in a separate class?
+     */
 
     public void createVisibilityGraph() {
 
