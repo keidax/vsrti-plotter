@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -41,7 +42,9 @@ import fft.Model.ModelListener;
  */
 
 public class Viewer extends JFrame implements ModelListener, ActionListener {
-
+	
+	
+	private List<ViewListener> listeners;
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
     public VCanvas vGraph;
@@ -55,20 +58,22 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     public static Viewer viewer;
     public double d=5,noise=0;
+    public double lambda;
     private boolean showBeamPattern = false;
     public String link = "Instructions_Plot_Beam.html";
     private JFileChooser jfc;
 
     public Viewer(Adapter a, String title) {
         super(title);
+        listeners = new ArrayList<ViewListener> ();
         Viewer.viewer = this;
         jfc = new JFileChooser();
         //model = m;
-        setAdapter(a);
+        adapter = a;
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel);
 
-        vGraph = new VCanvas(this, this.getAdapter(), getAdapter().getVisiblityGraphPoints());
+        vGraph = new VCanvas(this, adapter, adapter.getVisiblityGraphPoints());
         //iGraph = new FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
 
         vGraph.setSize(300, 100);
@@ -96,11 +101,11 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
         lSigma = new JLabel('\u03C3' + " displaying factor: ");
         lSigma.setSize(100, 22);
         fD = new JTextField(getD()+"");
-        fLambda = new JTextField(this.adapter.getLambda() + "");
+        fLambda = new JTextField(lambda + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
                 + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>"
                 + "</P></HTML>");
-        fThetaMax = new JTextField(this.adapter.getDeltaBaseline() / 2 + "");
+        fThetaMax = new JTextField();
         fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
         fSigma = new JTextField(this.getVGraph().getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
@@ -228,8 +233,12 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                 }
                 TreeMap<Double, Double>[] tm = viewer.parseFile(f);
                 if(tm!=null){
-                    viewer.adapter.importVisibilityGraphPoints(tm[0]);
-                    viewer.adapter.importVisibilityGraphRms(tm[1]);//viewer.parseFile(f));
+                	for(ViewListener vl :listeners){
+                		vl.importVisibilityGraphPoints(tm[0]);
+                		vl.importVisibilityGraphRms(tm[1]);
+                	}
+//                    viewer.adapter.importVisibilityGraphPoints(tm[0]);
+//                    viewer.adapter.importVisibilityGraphRms(tm[1]);//viewer.parseFile(f));
                 }
             }
         });
@@ -243,25 +252,13 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                 if (f == null) {
                     return;
                 }
-                writeIntoFile(f, viewer.adapter.exportVisibilityGraphPoints());
-            }
-
-            private void writeIntoFile(File f,
-                    String exportVisibilityGraphPoints) {
-
-                BufferedWriter out;
-
-                try {
-
-                    out = new BufferedWriter(new FileWriter(f));
-                    out.write(exportVisibilityGraphPoints);
-                    out.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                for(ViewListener vl : listeners){
+                	vl.writeSaveFile(f);
                 }
-
+                
             }
+
+            
         });
 
         bExit.addActionListener(new ActionListener() {
@@ -278,7 +275,9 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                viewer.adapter.reset();
+                for(ViewListener vl : listeners){
+                	vl.reset();
+                }
             }
         });
         
@@ -287,7 +286,9 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
             	tableModel.removeAllInputFiles();
-            	viewer.adapter.fullReset();
+            	for(ViewListener vl : listeners){
+                	vl.fullReset();
+                }
             }
         });
 
@@ -371,10 +372,10 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
 
     }
 
-    public void paintComponent() {
+    /*public void paintComponent() {
         fLambda.setText(this.adapter.getLambda() + "");
         fD.setText(getD() + "");
-    }
+    }*/
 
      @SuppressWarnings("unchecked")
 	public TreeMap<Double, Double>[] parseFile(File f) {
@@ -393,12 +394,21 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                 if (strLine.trim().startsWith(";"))
                     continue;
                 if (strLine.trim().startsWith("*lambda")) {
-                    viewer.adapter.setLambda(Double.parseDouble(strLine.split(" ")[1]));
-                    viewer.fLambda.setText(strLine.split(" ")[1]);
+                	double tempLambda = Double.parseDouble(strLine.split(" ")[1]);
+                	for (ViewListener vl : listeners){
+                		vl.setLambda(tempLambda);
+                	}
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
+                	double tempDeltaBaseline = Double.parseDouble(strLine.split(" ")[1]);
+                	for (ViewListener vl : listeners){
+                		vl.setDeltaBaseline(tempDeltaBaseline);
+                	}
+//                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("*exponent")) {
-                    viewer.adapter.setExponent(Integer.parseInt(strLine.split(" ")[1]));
+                	int tempExponent = Integer.parseInt(strLine.split(" ")[1]);
+                	for (ViewListener vl : listeners){
+                		vl.setExponent(tempExponent);
+                	}
                 } else if (strLine.trim().startsWith("X_Y_RMS")){
                     im=false;
                     vis=true;
@@ -497,15 +507,6 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
         return Math.sqrt(sum/(rms.size()*(rms.size()-1)));
     }
 
-
-    public Adapter getAdapter() {
-        return adapter;
-    }
-
-    public void setAdapter(Adapter adapter) {
-        this.adapter = adapter;
-    }
-
     public VCanvas getVGraph() {
         return vGraph;
     }
@@ -526,7 +527,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     public void update() {
         repaint();
         fD.setText(getD()+"");
-        fLambda.setText(viewer.adapter.getLambda()+"");
+//        fLambda.setText(viewer.adapter.getLambda()+"");
         //this.getVGraph().update();
         //this.getIGraph().update();
     }
@@ -539,22 +540,25 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
 		this.showBeamPattern = showPattern;
 	}
 
-	public void go() {
-        this.getAdapter().getModel().getListeners().add(this);
-    }
-
     public void sendAdapterFiles() {
-        this.adapter.setRawPoints(((TableModel) this.jTable.getModel()).inputFiles);
+    	ArrayList<InputFile> tempArray = ((TableModel) this.jTable.getModel()).inputFiles;
+        
+        for (ViewListener vl : listeners){
+        	vl.setRawPoints(tempArray);
+        }
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(fNoise)) {
             try {
-                Double.parseDouble(fNoise.getText());
-                System.out.println("setting noise="+noise+"->"+Double.parseDouble(fNoise.getText()));
+            	
                 noise=Double.parseDouble(fNoise.getText());
-                adapter.setNoise(noise);
+//                System.out.println("setting noise="+noise+"->"+Double.parseDouble(fNoise.getText()));
+                for (ViewListener vl : listeners){
+                	vl.setNoise(noise);
+                }
+//                adapter.setNoise(noise);
                 //System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
                 update();
             } catch (NumberFormatException e1) {
@@ -571,8 +575,11 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
 
         } else if (e.getSource().equals(fLambda)) {
             try {
-                Double.parseDouble(fLambda.getText());
-                this.adapter.setLambda(Double.parseDouble(fLambda.getText()));
+                double tempLambda = Double.parseDouble(fLambda.getText());
+                
+                for (ViewListener vl : listeners){
+                	vl.setLambda(tempLambda);
+                }
             } catch (NumberFormatException e1) {
             }
         } else if (e.getSource().equals(fThetaMax)) {
@@ -586,12 +593,12 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
             try {
 
                 Integer.parseInt((fSigma.getText()));
-                TreeMap<Double,Double> rms = this.getAdapter().getRms();
-                Set<Double> m = rms.keySet();
-                for(Double k:m)
-                {
-                	System.out.println("RMS: " +k + " : "  + rms.get(k));
-                }
+//                TreeMap<Double,Double> rms = adapter.getRms();
+//                Set<Double> m = rms.keySet();
+//                for(Double k:m)
+//                {
+//                	System.out.println("RMS: " +k + " : "  + rms.get(k));
+//                }
                 getVGraph().setSigma(Integer.parseInt((fSigma.getText())));
                 getVGraph().update();
                 update();
@@ -610,4 +617,22 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
         else
             this.d=d;
     }
+    
+    public void addListener(ViewListener listener){
+    	listeners.add(listener);
+    }
+    
+    public void setLambda(double l){
+    	lambda = l;
+    	fLambda.setText(lambda + "");
+    	
+    }
+    
+    public double getLambda(){
+    	return lambda;
+    }
+
+	public void setDeltaBaseline(double d) {
+		fThetaMax.setText(d / 2 + "");
+	}
 }

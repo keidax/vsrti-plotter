@@ -34,4 +34,9 @@ public class Model {
     public void setListeners(Vector<ModelListener> listeners) {
         this.listeners = listeners;
     }
+    
+    
+    public void addListener(ModelListener listener){
+    	listeners.add(listener);
+    }
 }

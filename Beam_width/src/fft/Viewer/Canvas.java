@@ -81,7 +81,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     public Canvas(Viewer v, Adapter a, TreeMap<Double, Double> g) {
         canvas = this;
         setPoints(g);
-        setAdapter(a);
+        adapter = a;
         this.setView(v);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -519,13 +519,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     }
 
     // GETTERS AND SETTERS
-    public Adapter getAdapter() {
-        return adapter;
-    }
-
-    public void setAdapter(Adapter adapter) {
-        this.adapter = adapter;
-    }
 
     public Viewer getView() {
         return view;
@@ -902,7 +895,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      * @return x where x equals pi*D*theta(in radians)/lambda
      */
     private double besselX(double theta){
-    	return (Math.PI * view.getD()*theta*Math.PI/180)/adapter.getLambda();
+    	return (Math.PI * view.getD()*theta*Math.PI/180)/view.getLambda();
     }
     
     /**

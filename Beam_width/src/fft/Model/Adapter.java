@@ -1,35 +1,37 @@
 package fft.Model;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeMap;
 
 import fft.Viewer.InputFile;
+import fft.Viewer.Viewer;
+import fft.Viewer.ViewListener;
 
-/**
- * Seems to provide encapsulation for a model and not a whole lot more
- *
- */
-
-public class Adapter {
+public class Adapter implements ViewListener{
 
     private Model model;
+    private Viewer view;
 
-    public Adapter(Model m) {
+    public Adapter(Model m, Viewer v) {
         model = m;
+        view = v;
     }
 
     public TreeMap<Double, Double> getVisiblityGraphPoints() {
-        return getModel().getVisibilityGraph().getPoints();
+        return model.getVisibilityGraph().getPoints();
     }
 
     public String getSaveFilename() {
-        return getModel().getVisibilityGraph().getSaveFile().getAbsolutePath();
+        return model.getVisibilityGraph().getSaveFile().getAbsolutePath();
     }
 
     public double getLambda() {
-        return getModel().getVisibilityGraph().getLambda();
+        return model.getVisibilityGraph().getLambda();
     }
 
     public double getDeltaBaseline() {
@@ -37,83 +39,94 @@ public class Adapter {
     }
 
     public void setDeltaBaseline(double d) {
-        getModel().getVisibilityGraph().setDeltaBaseline(d);
+        model.getVisibilityGraph().setDeltaBaseline(d);
+        view.setDeltaBaseline(d);
     }
 
     public void setSaveFile(File f) {
-        getModel().getVisibilityGraph().setSaveFile(f);
+        model.getVisibilityGraph().setSaveFile(f);
     }
-
+    
+    @Override
     public void setLambda(double l) {
-        getModel().getVisibilityGraph().setLambda(l);
+        model.getVisibilityGraph().setLambda(l);
+        view.setLambda(l);
     }
 
     public int getExponent() {
-        return getModel().getVisibilityGraph().getExponent();
+        return model.getVisibilityGraph().getExponent();
     }
 
     public void setExponent(int a) {
-        this.getModel().getVisibilityGraph().setExponent(a);
+        this.model.getVisibilityGraph().setExponent(a);
     }
 
     public TreeMap<Double, Double> getVisibilityGraphDataPoints() {
-        return this.getModel().getVisibilityGraph().getDataPoints();
-    }
-
-    public Model getModel() {
-        return model;
-    }
-
-    public void setModel(Model model) {
-        this.model = model;
+        return this.model.getVisibilityGraph().getDataPoints();
     }
 
     public void setRawPoints(ArrayList<InputFile> f) {
-        this.getModel().getVisibilityGraph().emptyRawPoints();
-        this.getModel().getVisibilityGraph().inputFiles.clear();
-        getModel().getVisibilityGraph().addInputFiles(f);
+        this.model.getVisibilityGraph().emptyRawPoints();
+        this.model.getVisibilityGraph().inputFiles.clear();
+        model.getVisibilityGraph().addInputFiles(f);
         for (InputFile i : f) {
-            this.getModel().getVisibilityGraph().addRawPoint(i.getBaseline(), i.getAverageIntensity());
-            this.getModel().getVisibilityGraph().addRms(i.getBaseline(), i.getRms());
+            this.model.getVisibilityGraph().addRawPoint(i.getBaseline(), i.getAverageIntensity());
+            this.model.getVisibilityGraph().addRms(i.getBaseline(), i.getRms());
         }
-        this.getModel().updateListeners();
+        this.model.updateListeners();
     }
 
     public void setNoise(double n){
-        this.getModel().getVisibilityGraph().setNoise(n);
+        this.model.getVisibilityGraph().setNoise(n);
     }
 
     public TreeMap<Double, Double> getRms() {
-        return getModel().getVisibilityGraph().getGridedRms();
+        return model.getVisibilityGraph().getGridedRms();
     }
 
     public void moveVisibilityPoint(double currentPoint, double toy) {
-        this.getModel().getVisibilityGraph().movePoint(currentPoint, toy);
+        this.model.getVisibilityGraph().movePoint(currentPoint, toy);
     }
 
     public void importVisibilityGraphPoints(TreeMap<Double, Double> parseFile) {
-        this.getModel().getVisibilityGraph().importPoints(parseFile);
+        this.model.getVisibilityGraph().importPoints(parseFile);
     }
 
     public void importVisibilityGraphRms(TreeMap<Double, Double> parseData) {
-        getModel().getVisibilityGraph().importRms(parseData);
+        model.getVisibilityGraph().importRms(parseData);
     }
 
     public String exportVisibilityGraphPoints() {
-        return this.getModel().getVisibilityGraph().toString();
+        return this.model.getVisibilityGraph().toString();
     }
 
     public void removeRmsPoint(double x) {
-        getModel().getVisibilityGraph().removeGridedRmsPoint(x);
+        model.getVisibilityGraph().removeGridedRmsPoint(x);
     }
 
     public void fullReset() {
-        getModel().getVisibilityGraph().emptyRawPoints();
-        getModel().updateListeners();
+        model.getVisibilityGraph().emptyRawPoints();
+        model.updateListeners();
     }
     
     public void reset() {
-        getModel().getVisibilityGraph().reinitializePoints();
-        getModel().updateListeners();
+        model.getVisibilityGraph().reinitializePoints();
+        model.updateListeners();
+    }
+    
+    public void writeSaveFile(File f) {
+
+        BufferedWriter out;
+
+        try {
+
+            out = new BufferedWriter(new FileWriter(f));
+            out.write(exportVisibilityGraphPoints());
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

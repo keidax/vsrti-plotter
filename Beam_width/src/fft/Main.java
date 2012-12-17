@@ -14,10 +14,6 @@ import fft.Model.Adapter;
 import fft.Model.Model;
 import fft.Viewer.Viewer;
 
-/**
- *
- * @author Administrator
- */
 public class Main {
 
     public static String link = "";
@@ -27,15 +23,16 @@ public class Main {
      */
     public static void main(String[] args) {
             Model m = new Model();
-            Adapter a = new Adapter(m);
-            Viewer v = new Viewer(a,"VSRTI Plotter - Plot Beam");
+            Viewer v = new Viewer("VSRTI Plotter - Plot Beam");
+            Adapter a = new Adapter(m, v);
+            m.addListener(v);
+            v.addListener(a);
             link = "http://www1.union.edu/marrj/Ast240/Instructions_Plot_Beam.html";
             readFromFile();
             if(!link.equals(""))
                 v.link=link;
             if(lambda!=-1.0)
                 m.getVisibilityGraph().setLambda(lambda);
-            v.go();
     }
 
     public static void readFromFile(){
