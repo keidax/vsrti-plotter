@@ -10,7 +10,6 @@ import javax.swing.table.AbstractTableModel;
 public class TableModel extends AbstractTableModel {
 
     public Viewer viewer;
-    public JTable supreme;
     public ArrayList<InputFile> inputFiles;
     public static String[] columnNames = {"Baseline", "Data file names"};
 
@@ -19,20 +18,11 @@ public class TableModel extends AbstractTableModel {
         viewer = v;
         inputFiles = new ArrayList<InputFile>();
         InputFile.tableModel = this;
-
-        //this.addTableModelListener(this);
     }
-
-//	public void setValueAt(Object value, int row, int col) {
-//		if(col==0){
-//			inputFiles.get(row).baseline = (Double)value;
-//			fireTableCellUpdated(row, col);
-//		}
-//        
-//    }
+    
     @Override
-    public String getColumnName(int column) {
-        return columnNames[column];
+    public String getColumnName(int columnIndex){
+    	return columnNames [columnIndex];
     }
 
     @Override
@@ -43,15 +33,6 @@ public class TableModel extends AbstractTableModel {
     @Override
     public int getRowCount() {
         return inputFiles.size();
-    }
-
-    @Override
-    public Class getColumnClass(int column) {
-        if (column == 0) {
-            return Double.class;
-        } else {
-            return File.class;
-        }
     }
 
     @Override
@@ -70,29 +51,6 @@ public class TableModel extends AbstractTableModel {
         return null;
     }
 
-    @Override
-    public void setValueAt(Object value, int row, int column) {
-        if (column == 0) {
-            this.inputFiles.get(row).setBaseline((Double) value);
-        }
-    }
-
-    public void addEptyRow() {
-        inputFiles.add(new InputFile());
-        fireTableRowsInserted(inputFiles.size() - 1, inputFiles.size() - 1);
-    }
-
-    @Override
-    public boolean isCellEditable(int row, int col) {
-        //Note that the data/cell address is constant,
-        //no matter where the cell appears onscreen.
-        if (col < 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public void addInputFile(InputFile inputFile) {
         for (InputFile f : inputFiles) {
             if (inputFile.file.getAbsolutePath().equals(f.file.getAbsolutePath())) {
@@ -101,7 +59,6 @@ public class TableModel extends AbstractTableModel {
         }
         this.inputFiles.add(inputFile);
         Collections.sort(inputFiles);
-        supreme.repaint();
         viewer.sendAdapterFiles();
         //viewer.adapter.setRawPoints(inputFiles);
     }
@@ -113,14 +70,12 @@ public class TableModel extends AbstractTableModel {
         } catch (IndexOutOfBoundsException e) {
         }
         System.out.println("Size" + inputFiles.size());
-        supreme.repaint();
         viewer.sendAdapterFiles();
     }
     
     public void removeAllInputFiles()
     {
     	inputFiles.clear();
-    	supreme.repaint();
         viewer.sendAdapterFiles();
     }
     
@@ -131,13 +86,4 @@ public class TableModel extends AbstractTableModel {
             }
         }
     }
-//	@Override
-//	public void tableChanged(TableModelEvent e) {
-//		// TODO Auto-generated method stub
-//		int row = e.getFirstRow();
-//        int column = e.getColumn();
-//        TableModel model = (TableModel)e.getSource();
-//        String columnName = model.getColumnName(column);
-//        inputFiles.get(row).baseline = (Double)model.getValueAt(row, column);
-//	}
 }

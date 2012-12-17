@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.TreeMap;
@@ -22,11 +23,9 @@ import javax.swing.event.TableModelListener;
  *
  */
 public class FileTable extends JTable implements TableModelListener{
-
-    private static final long serialVersionUID = 1L;
-
-    ;
+	
     public FileTable me = this;
+    
     public FileTable(TableModel m) {
         super(m);
         getModel().addTableModelListener(this);
@@ -37,11 +36,11 @@ public class FileTable extends JTable implements TableModelListener{
         this.getColumnModel().getColumn(0).setHeaderValue("Data Block");
         if(m.getColumnCount() == 3)
         	{
-        		this.getColumnModel().getColumn(2).setHeaderValue("Angle");
+        		this.getColumnModel().getColumn(2).setHeaderValue("Angle"); //TODO find out what this is about...
         		this.getColumnModel().getColumn(2).setMaxWidth(60);
         	}
 
-        this.addMouseListener(new MouseListener() {
+        this.addMouseListener(new MouseAdapter() {
         	
         /**
          * Graphs the selected data block.
@@ -75,21 +74,6 @@ public class FileTable extends JTable implements TableModelListener{
 			            }
 			        });
 				}
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub	
 		}
         });
         

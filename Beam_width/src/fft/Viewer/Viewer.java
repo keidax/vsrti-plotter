@@ -68,7 +68,6 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel);
 
-        tableModel.supreme = jTable;
         vGraph = new VCanvas(this, this.getAdapter(), getAdapter().getVisiblityGraphPoints());
         //iGraph = new FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
 

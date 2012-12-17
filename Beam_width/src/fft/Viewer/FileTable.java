@@ -10,7 +10,6 @@ import javax.swing.event.TableModelListener;
 public class FileTable extends JTable implements TableModelListener {
 
     public FileTable me = this;
-    public JTable table;
     //public SortedSet<InputFile> inputFiles;
     //public AbstractTableModel model;
 
@@ -26,9 +25,9 @@ public class FileTable extends JTable implements TableModelListener {
         this.setFillsViewportHeight(true);
         this.setMinimumSize(new Dimension(100, 600));
         this.getColumnModel().getColumn(0).setMaxWidth(55);
-        this.getColumnModel().getColumn(0).setHeaderValue("Angle");
+//        this.getColumnModel().getColumn(0).setHeaderValue("Angle");
         this.getColumnModel().getColumn(1).setPreferredWidth(50);
-        this.getColumnModel().getColumn(1).setHeaderValue("Data file names");
+//        this.getColumnModel().getColumn(1).setHeaderValue("Data file names");
 
         this.addKeyListener(new KeyAdapter() {
 

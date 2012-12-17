@@ -65,7 +65,6 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
         setAdapter(a);
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel);
-        tableModel.supreme = jTable;
         vGraph = new VCanvas(this, this.getAdapter(), getAdapter().getVisiblityGraphPoints());
         //iGraph = new FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
 
@@ -340,6 +339,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
             	tableModel.removeAllInputFiles();
+            	jTable.repaint();
             	viewer.adapter.fullReset();
             }
         });

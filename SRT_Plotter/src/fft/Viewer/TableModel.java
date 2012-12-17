@@ -3,7 +3,6 @@ package fft.Viewer;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-
 public class TableModel extends AbstractTableModel {
 
     public Viewer viewer;
@@ -25,42 +24,17 @@ public class TableModel extends AbstractTableModel {
         list = l;
         numCol = columns;
     }
-   
-    /**
-     * Returns column name
-     */
-    @Override
-    public String getColumnName(int column) {
-        return "Start Freq, Step Freq, # Channels";
-    }
-   
-    /**
-     * Returns number of rows
-     */
+    
     @Override
     public int getRowCount() {
         return list.getLength();
     }
     
-    /**
-     * Returns number of columns
-     */
     @Override
     public int getColumnCount() {
         return numCol;
     }
-    
-    /**
-     * returns column class name
-     */
-    @Override
-    public Class getColumnClass(int column) {
-        return String.class;
-    }
-    
-    /**
-     * returns the value at row, column
-     */
+
     @Override
     public Object getValueAt(int arg0, int arg1) {
     	if(arg0<list.getLength() && arg0 >= 0 && arg1 < numCol && arg1 >=0)
@@ -91,25 +65,6 @@ public class TableModel extends AbstractTableModel {
      */
     public Object getValueAt(int arg0) {
         return list.getNode(arg0);
-    }
-    
-    @Override
-    public void setValueAt(Object value, int row, int column) {
-       
-    }
-    
-    /**
-     * returns whether or not a cell is editable
-     */
-    @Override
-    public boolean isCellEditable(int row, int col) {
-        //Note that the data/cell address is constant,
-        //no matter where the cell appears onscreen.
-        if (col < 1 || col == numCol-1) {
-            return true;
-        } else {
-            return false;
-        }
     }
     
     /**
