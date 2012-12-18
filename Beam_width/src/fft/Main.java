@@ -29,10 +29,13 @@ public class Main {
             v.addListener(a);
             link = "http://www1.union.edu/marrj/Ast240/Instructions_Plot_Beam.html";
             readFromFile();
+            
             if(!link.equals(""))
                 v.link=link;
             if(lambda!=-1.0)
                 m.getVisibilityGraph().setLambda(lambda);
+            
+            
     }
 
     public static void readFromFile(){

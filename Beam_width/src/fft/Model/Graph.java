@@ -4,7 +4,7 @@ import java.util.TreeMap;
 
 public abstract class Graph {
 
-    public TreeMap<Double, Double> points;
+    private TreeMap<Double, Double> points;
     public int exponent = 5;
     public double deltaBaseline = 1;
     public Model model;

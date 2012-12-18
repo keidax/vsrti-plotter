@@ -6,11 +6,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -33,7 +31,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import fft.Model.Adapter;
 import fft.Model.ModelListener;
 
 /**
@@ -45,8 +42,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
 	
 	
 	private List<ViewListener> listeners;
-    private static final long serialVersionUID = 1L;
-    public Adapter adapter;
+//    public Adapter adapter;
     public VCanvas vGraph;
     //public FFTCanvas iGraph;
     public JButton exit;
@@ -63,17 +59,17 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     public String link = "Instructions_Plot_Beam.html";
     private JFileChooser jfc;
 
-    public Viewer(Adapter a, String title) {
+    public Viewer(/*Adapter a, */String title) {
         super(title);
         listeners = new ArrayList<ViewListener> ();
         Viewer.viewer = this;
         jfc = new JFileChooser();
         //model = m;
-        adapter = a;
+//        adapter = a;
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel);
 
-        vGraph = new VCanvas(this, adapter, adapter.getVisiblityGraphPoints());
+        vGraph = new VCanvas(this, new TreeMap<Double, Double>()/*adapter.getVisiblityGraphPoints()*/); //TODO just a temporary move...
         //iGraph = new FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
 
         vGraph.setSize(300, 100);
@@ -303,7 +299,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                     bHide.setText("Hide Beam Pattern");
                 }
                 setBeamPatternVisible(!isBeamPatternVisible());
-                update();
+//                update();
             }
 
         });
@@ -524,12 +520,15 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     }
 
     @Override
-    public void update() {
+    public void update(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {
         repaint();
         fD.setText(getD()+"");
+    	fLambda.setText(lambda + "");
+		fThetaMax.setText(d / 2 + "");
 //        fLambda.setText(viewer.adapter.getLambda()+"");
-        //this.getVGraph().update();
+        vGraph.update(points, rmsPoints);
         //this.getIGraph().update();
+        
     }
 
     public boolean isBeamPatternVisible() {
@@ -560,7 +559,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                 }
 //                adapter.setNoise(noise);
                 //System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                update();
+//                update();
             } catch (NumberFormatException e1) {
             }
 
@@ -569,7 +568,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                 Double.parseDouble(fD.getText());
                 setD(Double.parseDouble(fD.getText()));
                 //System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                update();
+//                update();
             } catch (NumberFormatException e1) {
             }
 
@@ -585,23 +584,22 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
         } else if (e.getSource().equals(fThetaMax)) {
             try {
                 Double.parseDouble(fThetaMax.getText());
-                update();
+//                update();
             } catch (NumberFormatException e1) {
             }
 
         } else if (e.getSource().equals(fSigma)) {
             try {
-
-                Integer.parseInt((fSigma.getText()));
+            	int tempSigma = Integer.parseInt((fSigma.getText()));
+                
 //                TreeMap<Double,Double> rms = adapter.getRms();
 //                Set<Double> m = rms.keySet();
 //                for(Double k:m)
 //                {
 //                	System.out.println("RMS: " +k + " : "  + rms.get(k));
 //                }
-                getVGraph().setSigma(Integer.parseInt((fSigma.getText())));
-                getVGraph().update();
-                update();
+                vGraph.setSigma(tempSigma);
+//                update();
             } catch (NumberFormatException e1) {
             }
 
@@ -624,7 +622,6 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     
     public void setLambda(double l){
     	lambda = l;
-    	fLambda.setText(lambda + "");
     	
     }
     
@@ -633,6 +630,18 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     }
 
 	public void setDeltaBaseline(double d) {
-		fThetaMax.setText(d / 2 + "");
+		this.d = d; //TODO I think so...
+	}
+	
+	public void moveVisibilityPoint(double currentPoint, double toy){
+		for(ViewListener vl : listeners){
+			vl.moveVisibilityPoint(currentPoint, toy);
+		}
+	}
+	
+	public void removeRmsPoint(double x){
+		for(ViewListener vl : listeners){
+			vl.removeRmsPoint(x);
+		}
 	}
 }

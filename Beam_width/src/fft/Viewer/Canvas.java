@@ -45,7 +45,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
 
     public TreeMap<Double, Double> points;
     public Viewer view;
-    public Adapter adapter;
     protected  int lPad = 90, rPad = 30, tPad = 50, bPad = 60;
     /**
      * controls the spacing between marks on the x axis
@@ -78,10 +77,9 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     private int titleSize=30;
     Canvas canvas;
 
-    public Canvas(Viewer v, Adapter a, TreeMap<Double, Double> g) {
+    public Canvas(Viewer v, TreeMap<Double, Double> g) {
         canvas = this;
-        setPoints(g);
-        adapter = a;
+        points = g;
         this.setView(v);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -211,32 +209,24 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         menu.add(item2);
     }
 
-    public TreeMap<Double, Double> getPoints() {
-        return points;
-    }
-
-    public void setPoints(TreeMap<Double, Double> points) {
-        this.points = points;
-    }
-
     public void drawDataSet(int count, Graphics2D g) {
-        if (getPoints().size() == 0) {
+        if (points.size() == 0) {
             return;
         }
-        Set<Double> keys = this.getPoints().keySet();
-        Double previousKey = getPoints().firstKey();
+        Set<Double> keys = points.keySet();
+        Double previousKey = points.firstKey();
         for (Double key : keys) {
             if(Math.abs(key)>40)
                 continue;
             g.setColor(Color.BLACK);
             g.setStroke(new BasicStroke(stroke));
             g.drawLine(g2cx(previousKey),
-                    g2cy(getPoints().get(previousKey)),
+                    g2cy(points.get(previousKey)),
                     g2cx(key),
-                    g2cy(getPoints().get(key)));
+                    g2cy(points.get(key)));
             previousKey = key;
             System.out.println("point at "+key+" - ");
-            drawPoint(g, key, getPoints().get(key));
+            drawPoint(g, key, points.get(key));
         }
 
     }
@@ -389,7 +379,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     public double countVerticalLabelStep() {
         double count = this.getPlotHeight() / squareWidth + 1;//30
         double max;
-        if (getPoints() == null || getMaxY() == null) {
+        if (points == null || getMaxY() == null) {
             max = countMax(defaultY);//50
         } else {
             max = countMaxVertical(getMaxY());//50
@@ -449,7 +439,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
 
     public double getRatioX() {
         /*
-    	if (getPoints() == null) {
+    	if (points == null) {
             return (double) getPlotWidth() / (double) countMax(defaultY);
         }
     	*/
@@ -480,18 +470,18 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      * or the default y value.
      */
     public double getMaxY() {
-    	if (getPoints() == null || (getPoints().size() == 0)) {
+    	if (points == null || (points.size() == 0)) {
             if(view.isBeamPatternVisible())
                 return bessel(0.0)*1.1;
             else
                 return defaultY;
         }
     	
-        double max = this.getPoints().firstEntry().getValue();
-        Set<Double> keys = this.getPoints().keySet();
+        double max = this.points.firstEntry().getValue();
+        Set<Double> keys = this.points.keySet();
         for (Double key : keys) {
-            if (this.getPoints().get(key) > max) {
-                max = this.getPoints().get(key);
+            if (this.points.get(key) > max) {
+                max = this.points.get(key);
             }
         }
         if (max < 1) {
@@ -501,17 +491,17 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     }
 
     public double getMaxX() {
-        if (getPoints() == null || getPoints().size() == 0) {
+        if (points == null || points.size() == 0) {
             return defaultXRight;
         }
-        return this.getPoints().lastKey();
+        return this.points.lastKey();
     }
     
     public double getMinX() {
-        if (getPoints() == null || getPoints().size() == 0) {
+        if (points == null || points.size() == 0) {
             return defaultXLeft;
         }
-        return this.getPoints().firstKey();
+        return this.points.firstKey();
     }
 
     public int getLeftShift() {
@@ -625,9 +615,9 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      */
     protected Double getPointOnGraph(int x, int y) {
 
-        Set<Double> keys = this.getPoints().keySet();
+        Set<Double> keys = this.points.keySet();
         for (Double key : keys) {
-            if ((new SquareOrnament()).isInside(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if ((new SquareOrnament()).isInside(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
                 return key;
             }
         }
@@ -636,9 +626,9 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
 
     protected Double getVerticallyPointOnGraph(int x, int y) {
 
-        Set<Double> keys = this.getPoints().keySet();
+        Set<Double> keys = this.points.keySet();
         for (Double key : keys) {
-            if ((new SquareOrnament()).isInsideVertically(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if ((new SquareOrnament()).isInsideVertically(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
                 return key;
             }
         }
@@ -673,7 +663,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         if (getCurrentPoint() != null) {
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             //System.out.println("moving to ["+tox+","+toy+"]");
-            this.adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
+            view.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
             //getCurrentPoint().movePoint(getCurrentPoint(), c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
         }
         //System.out.println("Current point is "+currentPoint);
@@ -732,7 +722,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             //double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             //System.out.println("moving to ["+tox+","+toy+"]");
-            this.adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
+            view.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
             //getCurrentPoint().movePoint(getCurrentPoint(), c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
         }
     }
@@ -744,7 +734,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         DecimalFormat df = new DecimalFormat("#.##");
         if (getPointOnGraph(mCanx,mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
-            this.setToolTipText("["+df.format(p)+"; "+df.format(this.getPoints().get(p))+"]");
+            this.setToolTipText("["+df.format(p)+"; "+df.format(this.points.get(p))+"]");
         }
         if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
             setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));

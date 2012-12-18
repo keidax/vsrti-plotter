@@ -23,7 +23,7 @@ public class Model {
     public void updateListeners() {
         //System.out.println("Model is updating all listeners");
         for (ModelListener ml : listeners) {
-            ml.update();
+            ml.update(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
         }
     }
 

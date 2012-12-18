@@ -15,4 +15,6 @@ public interface ViewListener {
 	public void setExponent(int tempExponent);
 	public void writeSaveFile(File f);
 	public void setRawPoints(ArrayList<InputFile> tempArray);
+	public void moveVisibilityPoint(double currentPoint, double toy);
+	public void removeRmsPoint(double x);
 }
