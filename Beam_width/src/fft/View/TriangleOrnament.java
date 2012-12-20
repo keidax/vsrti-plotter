@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;

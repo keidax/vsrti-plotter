@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -44,7 +44,7 @@ import fft.Model.Adapter;
 public abstract class Canvas extends JPanel implements MouseListener, MouseMotionListener {
 
     public TreeMap<Double, Double> points;
-    public Viewer view;
+    public View view;
     protected  int lPad = 90, rPad = 30, tPad = 50, bPad = 60;
     /**
      * controls the spacing between marks on the x axis
@@ -77,7 +77,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     private int titleSize=30;
     Canvas canvas;
 
-    public Canvas(Viewer v, TreeMap<Double, Double> g) {
+    public Canvas(View v, TreeMap<Double, Double> g) {
         canvas = this;
         points = g;
         this.setView(v);
@@ -510,11 +510,11 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
 
     // GETTERS AND SETTERS
 
-    public Viewer getView() {
+    public View getView() {
         return view;
     }
 
-    public void setView(Viewer view) {
+    public void setView(View view) {
         this.view = view;
     }
 

@@ -87,7 +87,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <!-- ======== START OF CLASS DATA ======== -->
 <H2>
 <FONT SIZE="-1">
-fft.Viewer</FONT>
+fft.View</FONT>
 <BR>
 Class Canvas</H2>
 <PRE>
@@ -96,7 +96,7 @@ java.lang.Object
       <IMG SRC="../../resources/inherit.gif" ALT="extended by ">java.awt.Container
           <IMG SRC="../../resources/inherit.gif" ALT="extended by ">javax.swing.JComponent
               <IMG SRC="../../resources/inherit.gif" ALT="extended by ">javax.swing.JPanel
-                  <IMG SRC="../../resources/inherit.gif" ALT="extended by "><B>fft.Viewer.Canvas</B>
+                  <IMG SRC="../../resources/inherit.gif" ALT="extended by "><B>fft.View.Canvas</B>
 </PRE>
 <DL>
 <DT><B>All Implemented Interfaces:</B> <DD>java.awt.event.MouseListener, java.awt.event.MouseMotionListener, java.awt.image.ImageObserver, java.awt.MenuContainer, java.io.Serializable, java.util.EventListener, javax.accessibility.Accessible</DD>
@@ -108,7 +108,7 @@ java.lang.Object
 
 <P>
 <DL>
-<DT><B>See Also:</B><DD><A HREF="../../serialized-form.html#fft.Viewer.Canvas">Serialized Form</A></DL>
+<DT><B>See Also:</B><DD><A HREF="../../serialized-form.html#fft.View.Canvas">Serialized Form</A></DL>
 <HR>
 
 <P>
@@ -187,7 +187,7 @@ java.lang.Object
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>(package private) &nbsp;<A HREF="../../fft/Viewer/Canvas.html" title="class in fft.Viewer">Canvas</A></CODE></FONT></TD>
+<CODE>(package private) &nbsp;<A HREF="../../fft/Viewer/Canvas.html" title="class in fft.View">Canvas</A></CODE></FONT></TD>
 <TD><CODE><B><A HREF="../../fft/Viewer/Canvas.html#canvas">canvas</A></B></CODE>
 
 <BR>
@@ -339,7 +339,7 @@ java.lang.Object
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;fft.Viewer.Viewer</CODE></FONT></TD>
+<CODE>&nbsp;fft.View.Viewer</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../../fft/Viewer/Canvas.html#view">view</A></B></CODE>
 
 <BR>
@@ -423,7 +423,7 @@ java.lang.Object
 <B>Constructor Summary</B></FONT></TH>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
-<TD><CODE><B><A HREF="../../fft/Viewer/Canvas.html#Canvas(fft.Viewer.Viewer, fft.Model.Adapter, java.util.TreeMap)">Canvas</A></B>(fft.Viewer.Viewer&nbsp;v,
+<TD><CODE><B><A HREF="../../fft/Viewer/Canvas.html#Canvas(fft.View.Viewer, fft.Model.Adapter, java.util.TreeMap)">Canvas</A></B>(fft.View.Viewer&nbsp;v,
        fft.Model.Adapter&nbsp;a,
        java.util.TreeMap&lt;java.lang.Double,java.lang.Double&gt;&nbsp;g)</CODE>
 
@@ -799,7 +799,7 @@ java.lang.Object
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-<CODE>&nbsp;fft.Viewer.Viewer</CODE></FONT></TD>
+<CODE>&nbsp;fft.View.Viewer</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../../fft/Viewer/Canvas.html#getView()">getView</A></B>()</CODE>
 
 <BR>
@@ -1010,7 +1010,7 @@ java.lang.Object
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>&nbsp;void</CODE></FONT></TD>
-<TD><CODE><B><A HREF="../../fft/Viewer/Canvas.html#setView(fft.Viewer.Viewer)">setView</A></B>(fft.Viewer.Viewer&nbsp;view)</CODE>
+<TD><CODE><B><A HREF="../../fft/Viewer/Canvas.html#setView(fft.View.Viewer)">setView</A></B>(fft.View.Viewer&nbsp;view)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
@@ -1119,7 +1119,7 @@ public java.util.TreeMap&lt;java.lang.Double,java.lang.Double&gt; <B>points</B><
 <A NAME="view"><!-- --></A><H3>
 view</H3>
 <PRE>
-public fft.Viewer.Viewer <B>view</B></PRE>
+public fft.View.Viewer <B>view</B></PRE>
 <DL>
 <DL>
 </DL>
@@ -1371,7 +1371,7 @@ private int <B>fontSize</B></PRE>
 <A NAME="canvas"><!-- --></A><H3>
 canvas</H3>
 <PRE>
-<A HREF="../../fft/Viewer/Canvas.html" title="class in fft.Viewer">Canvas</A> <B>canvas</B></PRE>
+<A HREF="../../fft/Viewer/Canvas.html" title="class in fft.View">Canvas</A> <B>canvas</B></PRE>
 <DL>
 <DL>
 </DL>
@@ -1387,10 +1387,10 @@ canvas</H3>
 </TR>
 </TABLE>
 
-<A NAME="Canvas(fft.Viewer.Viewer, fft.Model.Adapter, java.util.TreeMap)"><!-- --></A><H3>
+<A NAME="Canvas(fft.View.Viewer, fft.Model.Adapter, java.util.TreeMap)"><!-- --></A><H3>
 Canvas</H3>
 <PRE>
-public <B>Canvas</B>(fft.Viewer.Viewer&nbsp;v,
+public <B>Canvas</B>(fft.View.Viewer&nbsp;v,
               fft.Model.Adapter&nbsp;a,
               java.util.TreeMap&lt;java.lang.Double,java.lang.Double&gt;&nbsp;g)</PRE>
 <DL>
@@ -1840,7 +1840,7 @@ public void <B>setAdapter</B>(fft.Model.Adapter&nbsp;adapter)</PRE>
 <A NAME="getView()"><!-- --></A><H3>
 getView</H3>
 <PRE>
-public fft.Viewer.Viewer <B>getView</B>()</PRE>
+public fft.View.Viewer <B>getView</B>()</PRE>
 <DL>
 <DD><DL>
 </DL>
@@ -1851,10 +1851,10 @@ public fft.Viewer.Viewer <B>getView</B>()</PRE>
 </DL>
 <HR>
 
-<A NAME="setView(fft.Viewer.Viewer)"><!-- --></A><H3>
+<A NAME="setView(fft.View.Viewer)"><!-- --></A><H3>
 setView</H3>
 <PRE>
-public void <B>setView</B>(fft.Viewer.Viewer&nbsp;view)</PRE>
+public void <B>setView</B>(fft.View.Viewer&nbsp;view)</PRE>
 <DL>
 <DD><DL>
 </DL>

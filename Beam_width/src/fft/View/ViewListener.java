@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.io.File;
 import java.util.ArrayList;

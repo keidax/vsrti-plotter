@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,7 +22,7 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
     protected Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
 
-    public VCanvas(Viewer v, TreeMap<Double, Double> g) {
+    public VCanvas(View v, TreeMap<Double, Double> g) {
         super(v, g);
 //        dataPoints = this.adapter.getVisibilityGraphDataPoints();
         rmsPoints = new TreeMap<Double, Double>();

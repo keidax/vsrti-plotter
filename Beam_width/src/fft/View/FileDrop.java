@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.awt.datatransfer.DataFlavor;
 import java.io.BufferedReader;

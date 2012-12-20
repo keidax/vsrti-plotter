@@ -8,16 +8,16 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeMap;
 
-import fft.Viewer.InputFile;
-import fft.Viewer.Viewer;
-import fft.Viewer.ViewListener;
+import fft.View.InputFile;
+import fft.View.View;
+import fft.View.ViewListener;
 
 public class Adapter implements ViewListener{
 
     private Model model;
-    private Viewer view;
+    private View view;
 
-    public Adapter(Model m, Viewer v) {
+    public Adapter(Model m, View v) {
         model = m;
         view = v;
     }

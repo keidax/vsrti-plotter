@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -38,41 +38,31 @@ import fft.Model.ModelListener;
  *
  */
 
-public class Viewer extends JFrame implements ModelListener, ActionListener {
+public class View extends JFrame implements ModelListener, ActionListener {
 	
 	
 	private List<ViewListener> listeners;
-//    public Adapter adapter;
-    public VCanvas vGraph;
-    //public FFTCanvas iGraph;
-    public JButton exit;
-    //public Model model;
-    public TableModel tableModel;
-    public FileTable jTable;
-    public JTextField fD, fLambda, fThetaMax, fSigma, fNoise;
-    public JLabel lDelta, lLambda, lThetaMax, lSigma;
-    public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
-    public static Viewer viewer;
-    public double d=5,noise=0;
-    public double lambda;
+    private VCanvas vCanvas;
+    private TableModel tableModel;
+    private FileTable jTable;
+    private JTextField fD, fLambda, fThetaMax, fSigma, fNoise;
+    private JLabel lDelta, lLambda, lThetaMax, lSigma;
+    private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
+    private double d=5,noise=0, lambda;//TODO find a good default value for lambda
     private boolean showBeamPattern = false;
-    public String link = "Instructions_Plot_Beam.html";
-    private JFileChooser jfc;
+    private String link = "Instructions_Plot_Beam.html";//TODO get the correct url here
+    private JFileChooser fileChooser;
 
-    public Viewer(/*Adapter a, */String title) {
+    public View(/*Adapter a, */String title) {
         super(title);
         listeners = new ArrayList<ViewListener> ();
-        Viewer.viewer = this;
-        jfc = new JFileChooser();
-        //model = m;
-//        adapter = a;
+        fileChooser = new JFileChooser();
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel);
 
-        vGraph = new VCanvas(this, new TreeMap<Double, Double>()/*adapter.getVisiblityGraphPoints()*/); //TODO just a temporary move...
-        //iGraph = new FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
+        vCanvas = new VCanvas(this, new TreeMap<Double, Double>()/*adapter.getVisiblityGraphPoints()*/); //TODO just a temporary move...
 
-        vGraph.setSize(300, 100);
+        vCanvas.setSize(300, 100);
 
         JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jBlank, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jThetaMax, jLabels, jFields;
         //JPanel jSigma;
@@ -147,7 +137,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
         row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
-        row1col1.add(vGraph);
+        row1col1.add(vCanvas);
         row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col2.setMaximumSize(new Dimension(100, 450));
@@ -222,12 +212,12 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showOpenDialog(Viewer.viewer);
-                File f = jfc.getSelectedFile();
+                fileChooser.showOpenDialog(View.this);
+                File f = fileChooser.getSelectedFile();
                 if (f == null || !f.canRead()) {
                     return;
                 }
-                TreeMap<Double, Double>[] tm = viewer.parseFile(f);
+                TreeMap<Double, Double>[] tm = View.this.parseFile(f);
                 if(tm!=null){
                 	for(ViewListener vl :listeners){
                 		vl.importVisibilityGraphPoints(tm[0]);
@@ -243,8 +233,8 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showSaveDialog(Viewer.viewer);
-                File f = jfc.getSelectedFile();
+                fileChooser.showSaveDialog(View.this);
+                File f = fileChooser.getSelectedFile();
                 if (f == null) {
                     return;
                 }
@@ -338,9 +328,9 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                 try {
                     java.awt.Desktop.getDesktop().browse(new URI(link));
                 } catch (IOException ex) {
-                    Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (URISyntaxException ex) {
-                        Logger.getLogger(Viewer.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                     }
             }
         });
@@ -353,7 +343,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                     if(InputFile.isFormatCorrect(files[i]))
                         tableModel.addInputFile(new InputFile(files[i]));
                     else{
-                        JOptionPane.showMessageDialog(viewer,
+                        JOptionPane.showMessageDialog(View.this,
     "Incorrect data file format",
     "Incorrett format",
     JOptionPane.ERROR_MESSAGE);
@@ -433,7 +423,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
                 } else if (strLine.trim().length()==0)
                         continue;
                 else {
-                    JOptionPane.showMessageDialog(viewer,
+                    JOptionPane.showMessageDialog(this,
     "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
     "Incorrect format",
     JOptionPane.ERROR_MESSAGE);
@@ -504,19 +494,11 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     }
 
     public VCanvas getVGraph() {
-        return vGraph;
+        return vCanvas;
     }
 
     public void setVGraph(VCanvas graph) {
-        vGraph = graph;
-    }
-
-    public JButton getExit() {
-        return exit;
-    }
-
-    public void setExit(JButton exit) {
-        this.exit = exit;
+        vCanvas = graph;
     }
 
     @Override
@@ -526,7 +508,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     	fLambda.setText(lambda + "");
 		fThetaMax.setText(d / 2 + "");
 //        fLambda.setText(viewer.adapter.getLambda()+"");
-        vGraph.update(points, rmsPoints);
+        vCanvas.update(points, rmsPoints);
         //this.getIGraph().update();
         
     }
@@ -598,7 +580,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
 //                {
 //                	System.out.println("RMS: " +k + " : "  + rms.get(k));
 //                }
-                vGraph.setSigma(tempSigma);
+                vCanvas.setSigma(tempSigma);
 //                update();
             } catch (NumberFormatException e1) {
             }
@@ -630,7 +612,7 @@ public class Viewer extends JFrame implements ModelListener, ActionListener {
     }
 
 	public void setDeltaBaseline(double d) {
-		this.d = d; //TODO I think so...
+		this.d = d; //TODO I think this is what Viewer.d is...
 	}
 	
 	public void moveVisibilityPoint(double currentPoint, double toy){

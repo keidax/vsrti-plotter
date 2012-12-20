@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,11 +9,11 @@ import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel {
 
-    public Viewer viewer;
+    public View viewer;
     public ArrayList<InputFile> inputFiles;
     public static String[] columnNames = {"Baseline", "File path"}; //{"Angle", "Data file names"}; //TODO get right names
 
-    public TableModel(Viewer v) {
+    public TableModel(View v) {
         super();
         viewer = v;
         inputFiles = new ArrayList<InputFile>();

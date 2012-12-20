@@ -1,4 +1,4 @@
-package fft.Viewer;
+package fft.View;
 
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
