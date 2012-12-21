@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeMap;
 
-import fft.Viewer.InputFile;
+import fft.View.InputFile;
 
 public class Adapter {
 

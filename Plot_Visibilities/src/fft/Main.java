@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 
 import fft.Model.Adapter;
 import fft.Model.Model;
-import fft.Viewer.Viewer;
+import fft.View.View;
 
 /**
  *
@@ -28,7 +28,7 @@ public class Main {
     public static void main(String[] args) {
             Model m = new Model();
             Adapter a = new Adapter(m);
-            Viewer v = new Viewer(a,"VSRTI Plotter - Plot Visibilities");
+            View v = new View(a,"VSRTI Plotter - Plot Visibilities");
             link = "http://www1.union.edu/marrj/Ast240/Instructions_Plot_Visibilities.html";
             if(!link.equals(""))
                 v.link=link;

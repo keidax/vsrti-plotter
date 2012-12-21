@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeMap;
 
-import fft.Viewer.InputFile;
+import fft.View.InputFile;
 
 /**
- * Adapter is a interface between Viewer and Model. Viewers can use only methods that this Adapter offers to them
+ * Adapter is a interface between View and Model. Viewers can use only methods that this Adapter offers to them
  * @author Karel Durktoa
  */
 

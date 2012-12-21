@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package fft;
 
 import java.io.BufferedReader;
@@ -10,21 +5,22 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
-import fft.Model.Adapter;
+import fft.Model.Controller;
 import fft.Model.Model;
 import fft.View.View;
 
 public class Main {
+	
     public static double lambda = -1;
-    /**
-     * @param args the command line arguments
-     */
+    
     public static void main(String[] args) {
             Model m = new Model();
             View v = new View("VSRTI Plotter - Plot Beam");
-            Adapter a = new Adapter(m, v);
+            Controller c = new Controller(m, v);
             m.addListener(v);
-            v.addListener(a);
+            v.addListener(c);
+            
+            //TODO is the read-from-file business really necessary?
             readFromFile();
             
             if(lambda!=-1.0)

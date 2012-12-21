@@ -1,5 +1,7 @@
 package fft.Model;
 
+import java.util.TreeMap;
+
 /**
  * Interface for views on the model
  *
@@ -7,5 +9,5 @@ package fft.Model;
 
 public interface ModelListener {
 
-    public void update();
+    public void update(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints);
 }

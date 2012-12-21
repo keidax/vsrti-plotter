@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 
 import fft.Model.Adapter;
 import fft.Model.Model;
-import fft.Viewer.Viewer;
+import fft.View.View;
 
 /**
  *
@@ -30,7 +30,7 @@ public class Main {
     public static void main(String[] args) {
             Model m = new Model();
             Adapter a = new Adapter(m);
-            Viewer v = new Viewer(a,"Tool for Interactive Fourier Transform --- Cosine Transform");
+            View v = new View(a,"Tool for Interactive Fourier Transform --- Cosine Transform");
             link = "http://www1.union.edu/marrj/Ast240/ToolforInteractiveFourierTransforms.html";
             if(!link.equals(""))
                 v.link=link;

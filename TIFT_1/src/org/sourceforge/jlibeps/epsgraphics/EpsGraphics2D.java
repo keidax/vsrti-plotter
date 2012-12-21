@@ -281,9 +281,9 @@ public class EpsGraphics2D extends java.awt.Graphics2D
 	 * is enabled (true) by default. When accurate text mode is used, all text
 	 * will be rendered in EPS to appear exactly the same as it would do when
 	 * drawn with a Graphics2D context. With accurate text mode enabled, it is
-	 * not necessary for the EPS viewer to have the required font installed.
+	 * not necessary for the EPS view to have the required font installed.
 	 * <p>
-	 * Turning off accurate text mode will require the EPS viewer to have the
+	 * Turning off accurate text mode will require the EPS view to have the
 	 * necessary fonts installed. If you are using a lot of text, you will find
 	 * that this significantly reduces the file size of your EPS documents.
 	 * AffineTransforms can only affect the starting point of text using this

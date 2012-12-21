@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 
 import fft.Model.Adapter;
 import fft.Model.Model;
-import fft.Viewer.Viewer;
+import fft.View.View;
 
 /**
  *
@@ -28,7 +28,7 @@ public class Main {
     public static void main(String[] args) {
             Model m = new Model();
             Adapter a = new Adapter(m);
-            Viewer v = new Viewer(a,"Small Radio Telescope (SRT) Plotter");
+            View v = new View(a,"Small Radio Telescope (SRT) Plotter");
             link = "";
             readFromFile();
             if(!link.equals(""))

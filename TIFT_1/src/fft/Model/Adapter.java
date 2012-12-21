@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Adapter is a interface between Viewer and Model. Viewers can use only methods that this Adapter offers to them
+ * Adapter is a interface between View and Model. Viewers can use only methods that this Adapter offers to them
  * @author Karel Durktoa
  */
 

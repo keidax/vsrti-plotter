@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.util.Set;
 import java.util.TreeMap;
 
-import fft.Model.Adapter;
+import fft.Model.Controller;
 
 /**
  * Specific implementation of Beam graph

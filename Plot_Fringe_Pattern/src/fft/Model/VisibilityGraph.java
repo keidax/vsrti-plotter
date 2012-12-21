@@ -7,7 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import fft.Viewer.InputFile;
+import fft.View.InputFile;
 
 public class VisibilityGraph extends Graph {
 

@@ -53,7 +53,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     private String link = "Instructions_Plot_Beam.html";//TODO get the correct url here
     private JFileChooser fileChooser;
 
-    public View(/*Adapter a, */String title) {
+    public View(/*Controller a, */String title) {
         super(title);
         listeners = new ArrayList<ViewListener> ();
         fileChooser = new JFileChooser();
