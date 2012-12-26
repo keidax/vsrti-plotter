@@ -11,13 +11,11 @@ import fft.View.InputFile;
 
 public class VisibilityGraph extends Graph {
 
-    public Complex[] compl;
-    public File saveFile;
-    public double lambda = 2.5;
-    public SortedSet<Point> rawPoints;
-    public double halfBZero = 0;
+    private File saveFile;
+    private double lambda = 2.5;
+    private SortedSet<Point> rawPoints;
     private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
-    public TreeMap<Double, InputFile> inputFiles = new TreeMap<Double, InputFile>();
+    private TreeMap<Double, InputFile> inputFiles = new TreeMap<Double, InputFile>();
 
     public VisibilityGraph(Model m) {
         super(m);
@@ -52,17 +50,16 @@ public class VisibilityGraph extends Graph {
     public void reinitializePoints() {
         getPoints().clear();
         gridedRms.clear();
-        compl = null;
         if (!getRawPoints().isEmpty()) {
             for(Point p : this.getRawPoints())
                 addPoint(p.getX(),p.getY());
         }
-        update();
         Set<Double> keys = getPoints().keySet();
+        System.out.println("Reinitializing points...");
     }
 
     public void addPoint(double x, double y) {
-        this.getPoints().put(x, y-noise);//-this.halfBZero);
+        this.getPoints().put(x, y-getNoise());//-this.halfBZero);
     }
 
     public void removePoint(double x) {
@@ -101,9 +98,10 @@ public class VisibilityGraph extends Graph {
         //return Math.floor(new Double(x)/Graph.getDeltaBaseline());
     }
     
+    @Override
     public void setExponent(int e) {
         if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline()) / Math.log(2))) {
-            exponent = e;
+            super.setExponent(e);
             this.reinitializePoints();
         }
 
@@ -179,13 +177,8 @@ public class VisibilityGraph extends Graph {
         p.setY(y);
     }
 
-    public void update() {
-        model.updateListeners();
-    }
-
     public void movePoint(double currentPoint, double toy) {
         this.getPoints().put(currentPoint, toy);
-        update();
     }
 
     public void importPoints(TreeMap<Double, Double> parseFile) {
@@ -197,7 +190,6 @@ public class VisibilityGraph extends Graph {
             getRawPoints().add(new Point(key,parseFile.get(key)));
         }
         this.reinitializePoints();
-        update();
     }
 
     
@@ -235,15 +227,9 @@ public class VisibilityGraph extends Graph {
         //gridedRms.clear();
         getRms().putAll(parseData);
         gridedRms.putAll(parseData);
-        update();
     }
 
     public void removeGridedRmsPoint(double x) {
         getGridedRms().remove(x);
-    }
-
-    void setNoise(double n) {
-        noise=n;
-        this.reinitializePoints();
     }
 }

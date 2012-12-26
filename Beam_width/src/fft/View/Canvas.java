@@ -708,7 +708,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             return;
         mCanx = evt.getX();
         mCany = evt.getY();
-        System.out.println("Button" + evt.getButton());
+//        System.out.println("Button" + evt.getButton());
         if (evt.getButton() != MouseEvent.BUTTON2) {
             if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
                 setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
@@ -723,6 +723,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             //System.out.println("moving to ["+tox+","+toy+"]");
             view.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
+            System.out.println("as.;klhwmnef");
             //getCurrentPoint().movePoint(getCurrentPoint(), c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
         }
     }

@@ -5,38 +5,40 @@ import java.util.TreeMap;
 public abstract class Graph {
 
     private TreeMap<Double, Double> points;
-    public int exponent = 5;
-    public double deltaBaseline = 1;
-    public Model model;
-    public double noise;
+    private int exponent = 5;
+    private double deltaBaseline = 1;
+    private Model model;
+    private double noise;
 
     public Graph(Model m) {
         model = m;
         points = new TreeMap<Double, Double>();
     }
 
-    public  void setDeltaBaseline(double b){
-        deltaBaseline = b;
-        model.getVisibilityGraph().reinitializePoints();
-    }
+    public double getNoise() {
+		return noise;
+	}
 
-    public int getExponent() {
+	public void setNoise(double noise) {
+		this.noise = noise;
+	}
+
+	public int getExponent() {
         return exponent;
     }
 
     public void setExponent(int e) {
         exponent = e;
-        model.getVisibilityGraph().reinitializePoints();
     }
 
     public double getDeltaBaseline() {
         return deltaBaseline;
     }
-    
-    public Graph() {
-        points = new TreeMap<Double, Double>();
-    }
 
+    public  void setDeltaBaseline(double b){
+        deltaBaseline = b;
+    }
+    
     public TreeMap<Double, Double> getPoints() {
         return points;
     }

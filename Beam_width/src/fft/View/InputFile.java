@@ -19,7 +19,6 @@ public class InputFile implements Comparable<InputFile> {
     private double averageIntensity = -1;
     private double rms = 0;
     public List<Double> intensities = new ArrayList<Double>();
-    public static TableModel tableModel;
 
     public InputFile() {
         intensities = new ArrayList<Double>();
@@ -29,6 +28,7 @@ public class InputFile implements Comparable<InputFile> {
         setFile(f);
         if (isBaselineParsable()) {
             setBaseline(parseBaseline());
+            System.out.println("Importing file baseline=" + getBaseline());
         }
     }
 
@@ -196,7 +196,6 @@ public class InputFile implements Comparable<InputFile> {
 
     public void setBaseline(double baseline) {
         this.baseline = baseline;
-        tableModel.viewer.sendAdapterFiles();
     }
 
     public List<Double> getIntensities() {

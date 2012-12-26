@@ -1,25 +1,18 @@
 package fft.View;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
-import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-
-import fft.View.InputFile;
-import fft.View.View;
 
 public class TableModel extends AbstractTableModel {
 
-    public View viewer;
-    public ArrayList<InputFile> inputFiles;
-    public static String[] columnNames = {"Baseline", "Data file name"};
+    private ArrayList<InputFile> inputFiles;
+    private String[] columnNames = {"Baseline", "File path"}; //TODO get right names
 
-    public TableModel(View v) {
+    public TableModel() {
         super();
-        viewer = v;
         inputFiles = new ArrayList<InputFile>();
-        InputFile.tableModel = this;
     }
     
     @Override
@@ -52,6 +45,10 @@ public class TableModel extends AbstractTableModel {
         }
         return null;
     }
+    
+    public ArrayList<InputFile> getInputFiles(){
+    	return inputFiles;
+    }
 
     public void addInputFile(InputFile inputFile) {
         for (InputFile f : inputFiles) {
@@ -60,27 +57,25 @@ public class TableModel extends AbstractTableModel {
             }
         }
         this.inputFiles.add(inputFile);
+        Collections.sort(inputFiles);
     }
 
     public void removeInputFile(int i) {
         System.out.println("delete the " + i + "th row");
-        viewer.adapter.removeRms(inputFiles.get(i).getBaseline());
         try {
             inputFiles.remove(i);
         } catch (IndexOutOfBoundsException e) {
         }
         System.out.println("Size" + inputFiles.size());
-        viewer.sendAdapterFiles();
     }
     
     public void removeAllInputFiles()
-    {
+    {	/*
     	for(int i = 0; i < inputFiles.size(); i++)
     	{
 	        	viewer.adapter.removeRms(inputFiles.get(i).getBaseline());
-    	}
+    	}*/
     	inputFiles.clear();
-        viewer.sendAdapterFiles();
     }
 
     public void removeInputFile(String filename) {

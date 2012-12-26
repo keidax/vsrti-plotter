@@ -14,8 +14,26 @@ import fft.Model.Point;
 import fft.View.InputFile;
 import fft.View.TableModel;
 
-public class InputFile implements Comparable {
+public class InputFile implements Comparable<InputFile> {
+    
+    public File file;
+    public double baseline = -1;
+    private double averageIntensity = -1;
+    private double rms = 0;
+    public List<Double> intensities = new ArrayList<Double>();
 
+    public InputFile() {
+        intensities = new ArrayList<Double>();
+    }
+
+    public InputFile(File f) {
+        setFile(f);
+        if (isBaselineParsable()) {
+            setBaseline(parseBaseline());
+            System.out.println("Importing file baseline=" + getBaseline());
+        }
+    }
+    
     static boolean isFormatCorrect(File file) {
         try {
             FileInputStream fstream = new FileInputStream(file);
@@ -38,25 +56,6 @@ public class InputFile implements Comparable {
             return false;
         }
         return true;
-    }
-    public File file;
-    public double baseline = -1;
-    public double averageIntensity = -1;
-    public double rms = 0;
-    public List<Double> intensities = new ArrayList<Double>();
-    public static TableModel tableModel;
-
-    public InputFile() {
-        intensities = new ArrayList<Double>();
-
-    }
-
-    public InputFile(File f) {
-        setFile(f);
-        if (isBaselineParsable()) {
-            setBaseline(parseBaseline());
-            System.out.println("Importing file baseline=" + getBaseline());
-        }
     }
 
     public double getAverageIntensity() {
@@ -103,8 +102,7 @@ public class InputFile implements Comparable {
     }
 
     @Override
-    public int compareTo(Object arg0) {
-        InputFile f = (InputFile) arg0;
+    public int compareTo(InputFile f) {
         if (f.baseline > this.baseline) {
             return -1;
         } else {
@@ -131,7 +129,7 @@ public class InputFile implements Comparable {
 
     public Double countAverageIntensity() {
         if (intensities == null || intensities.size() == 0) {
-            return 0.0;
+            parseFile();
         }
         int sum = 0;
         for (Double d : intensities) {
@@ -209,7 +207,6 @@ public class InputFile implements Comparable {
 
     public void setBaseline(double baseline) {
         this.baseline = baseline;
-        tableModel.viewer.sendAdapterFiles();
     }
 
     public List<Double> getIntensities() {

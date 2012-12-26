@@ -15,7 +15,7 @@ public class Main {
     
     public static void main(String[] args) {
             Model m = new Model();
-            View v = new View("VSRTI Plotter - Plot Beam");
+            View v = new View(m, "VSRTI Plotter - Plot Beam");
             Controller c = new Controller(m, v);
             m.addListener(v);
             v.addListener(c);
@@ -24,7 +24,7 @@ public class Main {
             readFromFile();
             
             if(lambda!=-1.0)
-                m.getVisibilityGraph().setLambda(lambda);
+                m.setLambda(lambda);
             
             
     }

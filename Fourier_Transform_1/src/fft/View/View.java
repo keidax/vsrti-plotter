@@ -61,8 +61,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
         View.viewer = this;
         //model = m;
         setAdapter(a);
-        tableModel = new TableModel(this);
-        jTable = new FileTable(tableModel);
+        tableModel = new TableModel();
+        jTable = new FileTable(tableModel, this);
         vGraph = new VCanvas(View.this, adapter, adapter.getVisiblityGraphPoints());
         iGraph = new FFTCanvas(this, this.getAdapter(), getAdapter().getImageGraphPoints());
 
@@ -367,7 +367,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         });
         
         bDelete.addActionListener(new ActionListener() {
-        	////FIX ME TO DELETE THE DATA *********____________**************________________*************
+        	////FIX ME TO DELETE THE DATA *********____________**************________________*************  sounds like a //TODO
             @Override
             public void actionPerformed(ActionEvent arg0) {
             	tableModel.removeAllInputFiles();
@@ -584,7 +584,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     }
 
     public void sendAdapterFiles() {
-        this.adapter.setRawPoints(((TableModel) this.jTable.getModel()).inputFiles);
+        this.adapter.setRawPoints(((TableModel) this.jTable.getModel()).getInputFiles());
     }
 
     @Override

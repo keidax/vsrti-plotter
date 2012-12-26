@@ -1,23 +1,18 @@
 package fft.View;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel {
 
-    public View viewer;
-    public ArrayList<InputFile> inputFiles;
-    public static String[] columnNames = {"Baseline", "File path"}; //{"Angle", "Data file names"}; //TODO get right names
+    private ArrayList<InputFile> inputFiles;
+    private String[] columnNames = {"Baseline", "File path"}; //TODO get right names
 
-    public TableModel(View v) {
+    public TableModel() {
         super();
-        viewer = v;
         inputFiles = new ArrayList<InputFile>();
-        InputFile.tableModel = this;
     }
     
     @Override
@@ -50,6 +45,10 @@ public class TableModel extends AbstractTableModel {
         }
         return null;
     }
+    
+    public ArrayList<InputFile> getInputFiles(){
+    	return inputFiles;
+    }
 
     public void addInputFile(InputFile inputFile) {
         for (InputFile f : inputFiles) {
@@ -59,8 +58,6 @@ public class TableModel extends AbstractTableModel {
         }
         this.inputFiles.add(inputFile);
         Collections.sort(inputFiles);
-        viewer.sendAdapterFiles();
-        //viewer.adapter.setRawPoints(inputFiles);
     }
 
     public void removeInputFile(int i) {
@@ -70,13 +67,11 @@ public class TableModel extends AbstractTableModel {
         } catch (IndexOutOfBoundsException e) {
         }
         System.out.println("Size" + inputFiles.size());
-        viewer.sendAdapterFiles();
     }
     
     public void removeAllInputFiles()
     {
     	inputFiles.clear();
-        viewer.sendAdapterFiles();
     }
 
     public void removeInputFile(String filename) {
