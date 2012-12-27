@@ -1,13 +1,13 @@
 package fft.Model;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
 import fft.View.InputFile;
 
-public class Model {
+public class Model implements ModelInterface {
 
     private VisibilityGraph visibilityGraph;
     private Vector<ModelListener> listeners;
@@ -15,12 +15,6 @@ public class Model {
     public Model() {
         listeners = new Vector<ModelListener>();
         visibilityGraph = new VisibilityGraph(this);
-    }
-
-    private void updateListeners() {
-        for (ModelListener ml : listeners) {
-            ml.updateView(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
-        }
     }
     
     public void addListener(ModelListener listener){
@@ -30,8 +24,10 @@ public class Model {
     public void update(){
     	System.out.println("Updating model");
 //    	visibilityGraph.reinitializePoints();
-    	this.updateListeners();
-    	//TODO update everything
+    	for (ModelListener ml : listeners) {
+            ml.updateView(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
+        }
+    	//TODO update other things?
     }
     
     public TreeMap<Double, Double> getPoints() {
@@ -80,7 +76,7 @@ public class Model {
         return visibilityGraph.getExponent();
     }
     
-    public void setRawPoints(ArrayList<InputFile> f) {
+    public void setRawPoints(List<InputFile> f) {
         visibilityGraph.emptyRawPoints();
         visibilityGraph.getInputFiles().clear();
         visibilityGraph.addInputFiles(f);
@@ -117,4 +113,8 @@ public class Model {
     public void reinitialize(){
     	visibilityGraph.reinitializePoints();
     }
+
+	public double getNoise() {
+		return visibilityGraph.getNoise();
+	}
 }

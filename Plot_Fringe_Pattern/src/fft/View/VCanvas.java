@@ -19,9 +19,9 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
         super(v, a, g);
         dataPoints = this.adapter.getVisibilityGraphDataPoints();
         System.out.println(dataPoints.size());
-        xAxisTitle = "angle [�]";
+        xAxisTitle = "angle [degrees]";
         yAxisTitle = "power";
-        graphTitle = "Visibility";
+        graphTitle = "Fringe Function";
     }
 
     @Override

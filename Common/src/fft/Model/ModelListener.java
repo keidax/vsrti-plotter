@@ -9,5 +9,5 @@ import java.util.TreeMap;
 
 public interface ModelListener {
 
-    public void update(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints);
+    public void updateView(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints);
 }

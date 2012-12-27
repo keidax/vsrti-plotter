@@ -2,6 +2,7 @@ package fft.Model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -32,9 +33,9 @@ public class VisibilityGraph extends Graph {
         this.inputFiles = inputFiles;
     }
 
-    public void addInputFiles(ArrayList<InputFile> files) {
+    public void addInputFiles(List<InputFile> f) {
         getInputFiles().clear();
-        for (InputFile i : files) {
+        for (InputFile i : f) {
             getInputFiles().put(i.getBaseline(), i);
         }
     }
@@ -48,6 +49,7 @@ public class VisibilityGraph extends Graph {
     }
 
     public void reinitializePoints() {
+        System.out.println("Reinitializing points...");
         getPoints().clear();
         gridedRms.clear();
         if (!getRawPoints().isEmpty()) {
@@ -55,7 +57,6 @@ public class VisibilityGraph extends Graph {
                 addPoint(p.getX(),p.getY());
         }
         Set<Double> keys = getPoints().keySet();
-        System.out.println("Reinitializing points...");
     }
 
     public void addPoint(double x, double y) {

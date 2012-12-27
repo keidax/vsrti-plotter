@@ -52,7 +52,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     protected double squareWidth = 60;
     protected int yLabelWidth = 10;
     protected double defaultY = 9;
-    protected double defaultXLeft = 0;
+    protected double defaultXLeft = -20;
     protected double defaultXRight = 20;
     protected int mCanx, mCany;
     protected Double currentPoint;

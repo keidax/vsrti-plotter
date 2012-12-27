@@ -18,7 +18,7 @@ public class Main {
             View v = new View(m, "VSRTI Plotter - Plot Beam");
             Controller c = new Controller(m, v);
             m.addListener(v);
-            v.addListener(c);
+            v.setListener(c);
             
             //TODO is the read-from-file business really necessary?
             readFromFile();

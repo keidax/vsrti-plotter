@@ -111,8 +111,7 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
     @Override
     public void setCurrentPoint(Double currentPoint) {
         try {
-        	view.removeRmsPoint(currentPoint);
-//            adapter.removeRmsPoint(currentPoint);
+        	view.removeRmsPoint(currentPoint); //TODO find out if RMS should disappear like this
         } catch (NullPointerException e) {
         }
         this.currentPoint = currentPoint;

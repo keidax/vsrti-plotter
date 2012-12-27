@@ -42,7 +42,7 @@ import fft.Model.ModelListener;
 public class View extends JFrame implements ModelListener, ActionListener {
 	
 	
-	private List<ViewListener> listeners;
+	private ViewListener listener;
     private VCanvas vCanvas;
     private TableModel tableModel;
     private FileTable jTable;
@@ -58,7 +58,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public View(/*Controller a, */Model m, String title) {
         super(title);
         this.model = m;
-        listeners = new ArrayList<ViewListener> ();
         fileChooser = new JFileChooser();
         tableModel = new TableModel();
         jTable = new FileTable(tableModel, this);
@@ -239,9 +238,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 if (f == null) {
                     return;
                 }
-                for(ViewListener vl : listeners){
-                	vl.writeSaveFile(f);
-                }
+                listener.writeSaveFile(f);
                 
             }
 
@@ -262,9 +259,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                for(ViewListener vl : listeners){
-                	vl.reset();
-                }
+            	listener.reset();
             }
         });
         
@@ -273,9 +268,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
             	tableModel.removeAllInputFiles();
-            	for(ViewListener vl : listeners){
-                	vl.fullReset();
-                }
+            listener.fullReset();
             }
         });
 
@@ -582,10 +575,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
             this.d=d;
     }
     
-    public void addListener(ViewListener listener){
-    	listeners.add(listener);
-    }
-    
     public void setLambda(double l){
     	lambda = l;
     	
@@ -608,5 +597,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
 	public void removeRmsPoint(double x){
 		model.removeRmsPoint(x);
 		model.update();
+	}
+	
+	public void setListener(ViewListener listener){
+		this.listener = listener;
 	}
 }

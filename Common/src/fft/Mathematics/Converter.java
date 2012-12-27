@@ -359,7 +359,7 @@ public class Converter {
 					}
 			}
 			Converter con = new Converter(inside);	
-			Double x  = con.evaluate(); 
+			Double x  = con.evaluate();
 			equation[j] = Math.tan(x) + "";
 			return k;	
 	    }
