@@ -7,16 +7,18 @@ import java.util.TreeMap;
 
 import fft.Model.Adapter;
 
-public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMotionListener {
+public class VCanvas extends Canvas {// JPanel implements MouseListener,
+                                     // MouseMotionListener {
 
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
-    protected static Color[] colors = {Color.BLUE, Color.BLACK};
+    protected static AbstractOrnament[] ornaments = { new CircleOrnament(),
+            new SquareOrnament() };
+    protected static Color[] colors = { Color.BLUE, Color.BLACK };
     protected int sigma = 1;
-
+    
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
-        dataPoints = this.adapter.getVisibilityGraphDataPoints();
+        dataPoints = adapter.getVisibilityGraphDataPoints();
         xAxis = "Channel";
         yAxis = "Antenna Temperature (K)";
         graphTitle = "Antenna Temperature vs. Channel";
@@ -32,7 +34,9 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
             g.setColor(Color.BLACK);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x)
+                        * getSigma() / 2), g2cy(y + adapter.getRms().get(x)
+                        * getSigma() / 2));
             }
         } else {
             g.setColor(Color.BLACK);
@@ -44,18 +48,20 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
      * Draws an individual point as a red circle or a red triangle
      */
     @Override
-	public void drawPoint(Graphics2D g, double x, double y, boolean b) {
-  
-            g.setColor(Color.RED);
-            TriangleOrnament t = new TriangleOrnament();
-            if(b == true)
-            	ornaments[1].draw(g, g2cx(x), g2cy(y));
-            else
-            	t.draw(g, g2cx(x), g2cy(y));
+    public void drawPoint(Graphics2D g, double x, double y, boolean b) {
+        
+        g.setColor(Color.RED);
+        TriangleOrnament t = new TriangleOrnament();
+        if (b == true) {
+            ornaments[1].draw(g, g2cx(x), g2cy(y));
+        } else {
+            t.draw(g, g2cx(x), g2cy(y));
+        }
     }
     
     /**
      * Draws RMS values
+     * 
      * @param g
      * @param x
      * @param y1
@@ -66,12 +72,12 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
         g.drawLine(x - 1, y1, x + 1, y1);
         g.drawLine(x - 1, y2, x + 1, y2);
     }
-
+    
     /**
      * Updates the data points
      */
     public void update() {
-        dataPoints = this.adapter.getVisibilityGraphDataPoints();
+        dataPoints = adapter.getVisibilityGraphDataPoints();
     }
     
     /**
@@ -82,15 +88,15 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
         dataPoints = adapter.getVisibilityGraphDataPoints();
         paint(g);
     }
-
+    
     public int getSigma() {
-        return this.sigma;
+        return sigma;
     }
-
+    
     public void setSigma(int i) {
         sigma = i;
     }
-
+    
     @Override
     public void setCurrentPoint(Double currentPoint) {
         try {

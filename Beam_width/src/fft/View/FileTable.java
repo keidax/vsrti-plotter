@@ -8,26 +8,26 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 
 public class FileTable extends JTable implements TableModelListener {
-	
-	private static View v;
-	
+    
+    private static View v;
+    
     public FileTable(TableModel m, View v) {
         super(m);
         this.v = v;
-        //model=m;
-        //table = new JTable();
-        //inputFiles = new TreeSet<InputFile>();
-
-        getModel().addTableModelListener(this);
-        this.setEnabled(true);
-        this.setDragEnabled(true);
-        this.setFillsViewportHeight(true);
-        this.setMinimumSize(new Dimension(100, 600));
-        this.getColumnModel().getColumn(0).setMaxWidth(55);
-        this.getColumnModel().getColumn(1).setPreferredWidth(50);
+        // model=m;
+        // table = new JTable();
+        // inputFiles = new TreeSet<InputFile>();
         
-        this.addKeyListener(new KeyAdapter() {
-
+        getModel().addTableModelListener(this);
+        setEnabled(true);
+        setDragEnabled(true);
+        setFillsViewportHeight(true);
+        setMinimumSize(new Dimension(100, 600));
+        getColumnModel().getColumn(0).setMaxWidth(55);
+        getColumnModel().getColumn(1).setPreferredWidth(50);
+        
+        addKeyListener(new KeyAdapter() {
+            
             @Override
             public void keyPressed(KeyEvent e) {
                 int c = e.getKeyCode();
@@ -35,9 +35,10 @@ public class FileTable extends JTable implements TableModelListener {
                     int[] index = FileTable.this.getSelectedRows();
                     e.consume();
                     for (int i = index.length - 1; i >= 0; --i) {
-                        ((TableModel) FileTable.this.getModel()).removeInputFile(index[i]);
-                        //me.getModel().getValueAt(me.getSelectedRow(), 1));
-                        //model.removeRow(index[i]);
+                        ((TableModel) FileTable.this.getModel())
+                                .removeInputFile(index[i]);
+                        // me.getModel().getValueAt(me.getSelectedRow(), 1));
+                        // model.removeRow(index[i]);
                     }
                     
                     FileTable.v.sendAdapterFiles();

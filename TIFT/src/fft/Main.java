@@ -1,6 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in
+ * the editor.
  */
 
 package fft;
@@ -15,33 +15,37 @@ import fft.Model.Model;
 import fft.View.View;
 
 /**
- *
+ * 
  * @author Administrator
  */
 public class Main {
-
+    
     /**
-     * @param args the command line arguments
+     * @param args
+     *            the command line arguments
      */
-
+    
     public static String link = "";
     public static double lambda = -1;
-
+    
     public static void main(String[] args) {
-            Model m = new Model();
-            Adapter a = new Adapter(m);
-            View v = new View(a,"Tool for Interactive Fourier Transform");
-            link = "http://www1.union.edu/marrj/Ast240/ToolforInteractiveFourierTransforms.html";
-            if(!link.equals(""))
-                v.link=link;
-            if(lambda!=-1.0)
-                m.visibilityGraph.setLambda(lambda);
-            v.go();
+        Model m = new Model();
+        Adapter a = new Adapter(m);
+        View v = new View(a, "Tool for Interactive Fourier Transform");
+        link =
+                "http://www1.union.edu/marrj/Ast240/ToolforInteractiveFourierTransforms.html";
+        if (!link.equals("")) {
+            v.link = link;
+        }
+        if (lambda != -1.0) {
+            m.visibilityGraph.setLambda(lambda);
+        }
+        v.go();
     }
     
-    public static void readFromFile(){
+    public static void readFromFile() {
         try {
-
+            
             FileInputStream fstream = new FileInputStream("default.txt");
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -61,7 +65,7 @@ public class Main {
                 }
             }
             in.close();
-        } catch (Exception e) {//Catch exception if any
+        } catch (Exception e) {// Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
     }

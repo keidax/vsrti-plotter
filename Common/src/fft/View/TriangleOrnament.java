@@ -5,15 +5,15 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 
 public class TriangleOrnament extends AbstractOrnament {
-
+    
     public static int radius = 6;
-
+    
     @Override
     public void draw(Graphics2D g, int x, int y) {
         double[] xs = new double[3];
         xs[0] = x;
-        xs[1] = (x - Math.sqrt(Math.pow(radius, 2) - Math.pow(radius / 2, 2)));
-        xs[2] = (x + Math.sqrt(Math.pow(radius, 2) - Math.pow(radius / 2, 2)));
+        xs[1] = x - Math.sqrt(Math.pow(radius, 2) - Math.pow(radius / 2, 2));
+        xs[2] = x + Math.sqrt(Math.pow(radius, 2) - Math.pow(radius / 2, 2));
         double[] ys = new double[3];
         ys[0] = y - radius;
         ys[1] = y + radius / 2;
@@ -27,7 +27,7 @@ public class TriangleOrnament extends AbstractOrnament {
         polygon.closePath();
         g.fill(polygon);
     }
-
+    
     @Override
     public boolean isInside(int x, int y, int cx, int cy) {
         // NOT CORRECT YET!!!

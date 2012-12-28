@@ -8,16 +8,18 @@ import java.util.TreeMap;
 
 import fft.Model.Adapter;
 
-public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMotionListener {
+public class VCanvas extends Canvas {// JPanel implements MouseListener,
+                                     // MouseMotionListener {
 
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
-    protected static Color[] colors = {Color.BLUE, Color.BLACK};
+    protected static AbstractOrnament[] ornaments = { new CircleOrnament(),
+            new SquareOrnament() };
+    protected static Color[] colors = { Color.BLUE, Color.BLACK };
     protected int sigma = 1;
-
+    
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
-        dataPoints = this.adapter.getVisiblityGraphPoints();
+        dataPoints = adapter.getVisiblityGraphPoints();
         xAxis = "time (s)";
         yAxis = "Amplitude";
         graphTitle = "f(t)";
@@ -28,21 +30,19 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
         if (getPoints().size() == 0) {
             return;
         }
-        Set<Double> keys = this.getPoints().keySet();
+        Set<Double> keys = getPoints().keySet();
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
             g.setColor(Color.BLACK);
-            g.drawLine(g2cx(previousKey),
-                    g2cy(getPoints().get(previousKey)),
-                    g2cx(key),
-                    g2cy(getPoints().get(key)));
+            g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)),
+                    g2cx(key), g2cy(getPoints().get(key)));
             previousKey = key;
             drawPoint(g, key, getPoints().get(key));
-            if (key > Double.parseDouble(View.view.fMaxTime.getText()))  {
+            if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
                 break;
             }
         }
-
+        
     }
     
     @Override
@@ -50,11 +50,11 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
         if (dataPoints.size() == 0) {
             return null;
         }
-        double max = this.dataPoints.firstEntry().getValue();
-        Set<Double> keys = this.dataPoints.keySet();
+        double max = dataPoints.firstEntry().getValue();
+        Set<Double> keys = dataPoints.keySet();
         for (Double key : keys) {
-            if (this.dataPoints.get(key) > max) {
-                max = this.dataPoints.get(key);
+            if (dataPoints.get(key) > max) {
+                max = dataPoints.get(key);
             }
             if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
                 break;
@@ -71,13 +71,13 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
         if (dataPoints.size() == 0) {
             return (double) -Canvas.defaultY;
         }
-        double min = this.dataPoints.firstEntry().getValue();
-        Set<Double> keys = this.dataPoints.keySet();
+        double min = dataPoints.firstEntry().getValue();
+        Set<Double> keys = dataPoints.keySet();
         for (Double key : keys) {
-        	if (this.dataPoints.get(key) < min) {
-                min = this.dataPoints.get(key);
+            if (dataPoints.get(key) < min) {
+                min = dataPoints.get(key);
             }
-            if (key > Double.parseDouble(View.view.fMaxTime.getText()))  {
+            if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
                 break;
             }
         }
@@ -86,66 +86,69 @@ public class VCanvas extends Canvas {//JPanel implements MouseListener, MouseMot
     
     @Override
     public double getMaxX() {
-        //show only half of the points because any points after nyquist frequency/2 are useless
+        // show only half of the points because any points after nyquist
+        // frequency/2 are useless
         if (dataPoints == null || dataPoints.size() == 0) {
             return defaultY;
         }
         Set<Double> keys = dataPoints.keySet();
         for (Double key : keys) {
-            if (key > Double.parseDouble(View.view.fMaxTime.getText()))  {
+            if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
                 return key;
             }
-        	
+            
         }
-        return this.dataPoints.lastKey();
+        return dataPoints.lastKey();
     }
-
+    
     @Override
     public void drawPoint(Graphics2D g, double x, double y) {
-
-        //System.out.println("RMS = "+adapter.getRms().size());
+        
+        // System.out.println("RMS = "+adapter.getRms().size());
         if (adapter.getVisibilityGraphDataPoints().containsKey(x)
                 && adapter.getVisibilityGraphDataPoints().get(x) == y) {
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
-                //System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
-                //System.out.println("RMS ["+x+","+adapter.getRms().get(x));
-                //System.out.println("rms = "+adapter.getRms().get(x));
+                // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x)
+                        * getSigma() / 2), g2cy(y + adapter.getRms().get(x)
+                        * getSigma() / 2));
+                // System.out.println("RMS ["+x+","+adapter.getRms().get(x));
+                // System.out.println("rms = "+adapter.getRms().get(x));
             }
         } else {
             g.setColor(colors[1]);
             ornaments[0].draw(g, g2cx(x), g2cy(y));
         }
     }
-
+    
     public void drawRms(Graphics2D g, int x, int y1, int y2) {
-        //height*=10;
-        //System.out.println("draw:["+x+","+y1+"-"+y2+"]");
+        // height*=10;
+        // System.out.println("draw:["+x+","+y1+"-"+y2+"]");
         g.drawLine(x, y1, x, y2);
         g.drawLine(x - 1, y1, x + 1, y1);
         g.drawLine(x - 1, y2, x + 1, y2);
     }
-
+    
     public void update() {
-    	dataPoints = this.adapter.getVisiblityGraphPoints();
+        dataPoints = adapter.getVisiblityGraphPoints();
     }
-
+    
     @Override
     public void update(Graphics g) {
-    	dataPoints = this.adapter.getVisiblityGraphPoints();
+        dataPoints = adapter.getVisiblityGraphPoints();
         paint(g);
     }
-
+    
     public int getSigma() {
-        return this.sigma;
+        return sigma;
     }
-
+    
     public void setSigma(int i) {
         sigma = i;
     }
-
+    
     @Override
     public void setCurrentPoint(Double currentPoint) {
         try {

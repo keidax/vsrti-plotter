@@ -1,18 +1,16 @@
 package fft.View;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel {
-
+    
     public View viewer;
     public ArrayList<InputFile> inputFiles;
-    public static String[] columnNames = {"Baseline", "Data file names"};
-
+    public static String[] columnNames = { "Baseline", "Data file names" };
+    
     public TableModel(View v) {
         super();
         viewer = v;
@@ -21,20 +19,20 @@ public class TableModel extends AbstractTableModel {
     }
     
     @Override
-    public String getColumnName(int columnIndex){
-    	return columnNames [columnIndex];
+    public String getColumnName(int columnIndex) {
+        return columnNames[columnIndex];
     }
-
+    
     @Override
     public int getColumnCount() {
         return columnNames.length;
     }
-
+    
     @Override
     public int getRowCount() {
         return inputFiles.size();
     }
-
+    
     @Override
     public Object getValueAt(int arg0, int arg1) {
         int i = 0;
@@ -50,19 +48,20 @@ public class TableModel extends AbstractTableModel {
         }
         return null;
     }
-
+    
     public void addInputFile(InputFile inputFile) {
         for (InputFile f : inputFiles) {
-            if (inputFile.file.getAbsolutePath().equals(f.file.getAbsolutePath())) {
+            if (inputFile.file.getAbsolutePath().equals(
+                    f.file.getAbsolutePath())) {
                 return;
             }
         }
-        this.inputFiles.add(inputFile);
+        inputFiles.add(inputFile);
         Collections.sort(inputFiles);
         viewer.sendAdapterFiles();
-        //viewer.adapter.setRawPoints(inputFiles);
+        // viewer.adapter.setRawPoints(inputFiles);
     }
-
+    
     public void removeInputFile(int i) {
         System.out.println("delete the " + i + "th row");
         try {
@@ -73,9 +72,8 @@ public class TableModel extends AbstractTableModel {
         viewer.sendAdapterFiles();
     }
     
-    public void removeAllInputFiles()
-    {
-    	inputFiles.clear();
+    public void removeAllInputFiles() {
+        inputFiles.clear();
         viewer.sendAdapterFiles();
     }
     

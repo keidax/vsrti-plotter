@@ -5,73 +5,72 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * Adapter is a interface between View and Model. Viewers can use only methods that this Adapter offers to them
+ * Adapter is a interface between View and Model. Viewers can use only methods
+ * that this Adapter offers to them
+ * 
  * @author Karel Durktoa
  */
 
 public class Adapter {
-
+    
     private Model model;
-
+    
     public Adapter(Model m) {
         model = m;
     }
-    public void graphEquation(String eqn)
-    {
-    	int num = this.getNumberOfPoints();
-    	
-    	
+    
+    public void graphEquation(String eqn) {
+        int num = getNumberOfPoints();
+        
     }
-
+    
     public TreeMap<Double, Double> getVisiblityGraphPoints() {
         return getModel().getVisibilityGraph().getPoints();
     }
     
-    public void evaluate(String equation)
-    {
-    	getModel().getVisibilityGraph().evaluate(equation);
-    	model.updateListeners();
+    public void evaluate(String equation) {
+        getModel().getVisibilityGraph().evaluate(equation);
+        model.updateListeners();
     }
-
-
-    //GETTERS AND SETTERS
+    
+    // GETTERS AND SETTERS
     public double getLambda() {
         return getModel().getVisibilityGraph().getLambda();
     }
-
+    
     public double getDeltaBaseline() {
         return model.getVisibilityGraph().getDeltaBaseline();
     }
-
+    
     public void setDeltaBaseline(double d) {
         getModel().getVisibilityGraph().setDeltaBaseline(d);
         getModel().getImageGraph().setDeltaBaseline(d);
     }
-
+    
     public void setSaveFile(File f) {
         getModel().getVisibilityGraph().setSaveFile(f);
     }
-
+    
     public void setLambda(double l) {
         getModel().getVisibilityGraph().setLambda(l);
     }
-
+    
     public int getExponent() {
         return model.getVisibilityGraph().getExponent();
     }
-
+    
     public void setExponent(int a) {
         model.getVisibilityGraph().setExponent(a);
     }
-
+    
     public TreeMap<Double, Double> getVisibilityGraphDataPoints() {
-        return this.getModel().getVisibilityGraph().getDataPoints();
+        return getModel().getVisibilityGraph().getDataPoints();
     }
-
+    
     public TreeMap<Double, Double> getVisiblityGraphRms() {
         return getModel().getVisibilityGraph().getRms();
     }
-
+    
     public TreeMap<Double, Double> getImageGraphPoints() {
         TreeMap<Double, Double> reduced = new TreeMap<Double, Double>();
         Set<Double> keys = getModel().getImageGraph().getPoints().keySet();
@@ -84,73 +83,75 @@ public class Adapter {
                 break;
             }
         }
-        reduced.putAll(getModel().getImageGraph().getPoints().headMap(getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
-        //System.out.println("Size of reduced "+reduced.size());
-        //return reduced;
+        reduced.putAll(getModel()
+                .getImageGraph()
+                .getPoints()
+                .headMap(
+                        getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
+        // System.out.println("Size of reduced "+reduced.size());
+        // return reduced;
         return getModel().getImageGraph().getPoints();
     }
-
+    
     public Model getModel() {
         return model;
     }
-
+    
     public void setModel(Model model) {
         this.model = model;
     }
-
     
-
     public TreeMap<Double, Double> getRms() {
         return getModel().getVisibilityGraph().getGridedRms();
     }
-
+    
     public void moveVisibilityPoint(double currentPoint, double toy) {
-        this.getModel().getVisibilityGraph().movePoint(currentPoint, toy);
+        getModel().getVisibilityGraph().movePoint(currentPoint, toy);
     }
-
+    
     public void moveImagePoint(Double currentPoint, double toy) {
-        this.getModel().getImageGraph().movePoint(currentPoint, toy);
+        getModel().getImageGraph().movePoint(currentPoint, toy);
     }
-
+    
     public void importVisibilityGraphPoints(TreeMap<Double, Double> parseFile) {
-        this.getModel().getVisibilityGraph().importPoints(parseFile);
+        getModel().getVisibilityGraph().importPoints(parseFile);
     }
-
+    
     public void importVisibilityGraphRms(TreeMap<Double, Double> parseData) {
         getModel().getVisibilityGraph().importRms(parseData);
     }
-
-    public void importImageGraphPoints(TreeMap<Double, Double> parseFile){
-        this.getModel().getImageGraph().points.putAll(parseFile);
-        this.getModel().getImageGraph().createVisibilityGraph();
+    
+    public void importImageGraphPoints(TreeMap<Double, Double> parseFile) {
+        getModel().getImageGraph().points.putAll(parseFile);
+        getModel().getImageGraph().createVisibilityGraph();
     }
-
+    
     public String exportVisibilityGraphPoints() {
-        return this.getModel().getVisibilityGraph().toString();
+        return getModel().getVisibilityGraph().toString();
     }
-
+    
     public void removeRmsPoint(double x) {
         getModel().getVisibilityGraph().removeGridedRmsPoint(x);
     }
-
+    
     public void reset() {
         getModel().getVisibilityGraph().reinicializePoints();
     }
     
     public void fullReset() {
-    	
-        this.getModel().getVisibilityGraph().fullReset();
-     
+        
+        getModel().getVisibilityGraph().fullReset();
+        
     }
-
-    public int getNumberOfPoints(){
+    
+    public int getNumberOfPoints() {
         return getModel().getVisibilityGraph().numberOfPoints;
     }
-
-    public void setNumberOfPoints(int n){
+    
+    public void setNumberOfPoints(int n) {
         getModel().getVisibilityGraph().setNumberOfPoints(n);
     }
-
+    
     public void removeRms(double i) {
         getModel().getVisibilityGraph().getRawPoints().clear();
         getModel().getVisibilityGraph().removeRms(i);
