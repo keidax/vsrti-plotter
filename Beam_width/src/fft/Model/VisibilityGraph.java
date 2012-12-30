@@ -14,10 +14,8 @@ public class VisibilityGraph extends Graph {
     private File saveFile;
     private double lambda = 2.5;
     private SortedSet<Point> rawPoints;
-    private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(),
-            gridedRms = new TreeMap<Double, Double>();
-    private TreeMap<Double, InputFile> inputFiles =
-            new TreeMap<Double, InputFile>();
+    private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
+    private TreeMap<Double, InputFile> inputFiles = new TreeMap<Double, InputFile>();
     
     public VisibilityGraph(Model m) {
         super(m);
@@ -103,8 +101,7 @@ public class VisibilityGraph extends Graph {
     
     @Override
     public void setExponent(int e) {
-        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline())
-                / Math.log(2))) {
+        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline()) / Math.log(2))) {
             super.setExponent(e);
             reinitializePoints();
         }
@@ -199,13 +196,7 @@ public class VisibilityGraph extends Graph {
         s += "X_Y_RMS" + "\n";
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) { // X Y RMS
-            s +=
-                    key
-                            + " "
-                            + getPoints().get(key)
-                            + " "
-                            + (getGridedRms().containsKey(key) ? getGridedRms()
-                                    .get(key) : 0.0) + "\n";
+            s += key + " " + getPoints().get(key) + " " + (getGridedRms().containsKey(key) ? getGridedRms().get(key) : 0.0) + "\n";
         }
         System.out.println(s);
         return s;

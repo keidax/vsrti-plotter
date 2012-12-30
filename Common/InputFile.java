@@ -28,7 +28,6 @@ public class InputFile implements Comparable<InputFile> {
         setFile(f);
         if (isBaselineParsable()) {
             setBaseline(parseBaseline());
-            System.out.println("Importing file baseline=" + getBaseline());
         }
     }
     
@@ -40,14 +39,12 @@ public class InputFile implements Comparable<InputFile> {
             String strLine;
             while ((strLine = br.readLine()) != null) {
                 
-                if (strLine.trim().length() > 0
-                        && strLine.trim().charAt(0) != '*') {
+                if (strLine.trim().length() > 0 && strLine.trim().charAt(0) != '*') {
                     int li = strLine.trim().lastIndexOf(" ");
                     if (li == -1) {
                         return false;
                     }
-                    Double.parseDouble(strLine.substring(strLine
-                            .lastIndexOf(" ") + 1));
+                    Double.parseDouble(strLine.substring(strLine.lastIndexOf(" ") + 1));
                 }
             }
             in.close();
@@ -147,28 +144,24 @@ public class InputFile implements Comparable<InputFile> {
         for (Double i : intensities) {
             sum += Math.pow(i - getAverageIntensity(), 2);
         }
-        rms = Math.sqrt(sum / intensities.size());// *intensities.size()-1));
+        rms = Math.sqrt(sum / intensities.size());// * intensities.size() - 1));
         // System.out.println("rms = " + rms);
+        //TODO figure out proper way this should be calculated
         return rms;
     }
     
-    public void parseFile() throws NumberFormatException {
+    public void parseFile() {
         try {
             FileInputStream fstream = new FileInputStream(file);
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;
             while ((strLine = br.readLine()) != null) {
-                if (strLine.length() > 0 && strLine.charAt(0) != '*'
-                        && strLine.contains(" ")) {
+                if (strLine.length() > 0 && strLine.charAt(0) != '*' && strLine.contains(" ")) {
                     try {
-                        if (!strLine.contains(" ")) {
-                            continue;
-                        }
-                        Double.parseDouble(strLine.substring(strLine
-                                .lastIndexOf(" ") + 1));
-                        intensities.add(Math.pow(Double.parseDouble(strLine
-                                .substring(strLine.lastIndexOf(" ") + 1)), 2));
+                        // intensities.add(Math.pow(Double.parseDouble(strLine.substring(strLine.lastIndexOf(" ") + 1)), 2));
+                        intensities.add(Double.parseDouble(strLine.substring(strLine.lastIndexOf(" ") + 1)));
+                        // TODO which one? power of 2 or not?
                     } catch (NumberFormatException e) {
                     }
                 }
@@ -194,8 +187,7 @@ public class InputFile implements Comparable<InputFile> {
         return sum / count;
     }
     
-    public static ArrayList<InputFile> getInputFilesByX(
-            TreeMap<Double, InputFile> inputFiles, ArrayList<Point> xs) {
+    public static ArrayList<InputFile> getInputFilesByX(TreeMap<Double, InputFile> inputFiles, ArrayList<Point> xs) {
         ArrayList<InputFile> ret = new ArrayList<InputFile>();
         for (Point d : xs) {
             if (inputFiles.containsKey(d.getX())) {

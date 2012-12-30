@@ -45,16 +45,12 @@ public class View extends JFrame implements ModelListener, ActionListener {
     
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
-    public VCanvas vGraph, vGraph2; // real/magnitude graph and imaginary/phase
-                                    // graph in time domain
-    public FFTCanvas iGraph, iGraph2; // real/magnitude graph and
-                                      // imaginary/phase graph in
-                                      // frequencydomain
+    public VCanvas vGraph, vGraph2; // real/magnitude graph and imaginary/phase graph in time domain
+    public FFTCanvas iGraph, iGraph2; // real/magnitude graph and imaginary/phase graph in frequency
+                                      // domain
     public JButton exit;
-    public JTextField fDelta, fLambda, fThetaMax, fSigma, fNumber, fThetaMin,
-            fMinTime, fMaxTime;
-    public JButton bSave, bOpen, bExit, bImage, bReset, bAbout, bFullReset,
-            bInstruction, bEquation, bRadio;
+    public JTextField fDelta, fLambda, fThetaMax, fSigma, fNumber, fThetaMin, fMinTime, fMaxTime;
+    public JButton bSave, bOpen, bExit, bImage, bReset, bAbout, bFullReset, bInstruction, bEquation, bRadio;
     public static View viewer;
     final JPopupMenu menu = new JPopupMenu();
     public String link = "Instructions_Fourier_Transform.html";
@@ -70,21 +66,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
         View.viewer = this;
         setAdapter(a);
         jfc = new JFileChooser();
-        vGraph =
-                new VCanvas(this, getAdapter(), getAdapter()
-                        .getVisiblityGraphPoints(), "Magnitude",
-                        "f(t) - Magnitude", true);
-        vGraph2 =
-                new VCanvas(this, getAdapter(), getAdapter()
-                        .getVisiblityGraphPoints2(), "Phase", "f(t) - Phase",
-                        false);
-        iGraph =
-                new FFTCanvas(this, getAdapter(), getAdapter()
-                        .getImageGraphPoints(), "Magnitude",
-                        "F(ν) - Magnitude", true);
-        iGraph2 =
-                new FFTCanvas(this, getAdapter(), getAdapter()
-                        .getImageGraphPoints2(), "Phase", "F(ν) - Phase", false);
+        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints(), "Magnitude", "f(t) - Magnitude", true);
+        vGraph2 = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints2(), "Phase", "f(t) - Phase", false);
+        iGraph = new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints(), "Magnitude", "F(ν) - Magnitude", true);
+        iGraph2 = new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints2(), "Phase", "F(ν) - Phase", false);
         radio = true;
         vGraph.setSize(300, 100);
         vGraph2.setSize(300, 100);
@@ -106,17 +91,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bInstruction = new JButton("Instructions");
         bEquation = new JButton("Enter Equation");
         bRadio = new JButton("Show Rectangular");
-        lDelta =
-                new JLabel(
-                        "<HTML><P><b>f(t) Input Paremeters:</b></P><P></P><P>"
-                                + '\u0394'
-                                + "t: </P><P></P><P># of points:</P></HTML>");
-        lMaxF =
-                new JLabel(
-                        "<HTML><P><b>Display Options:</b></P><P></P><P>max time:</P><P></P><P>max frequency:</P></HTML>");
-        lBlank =
-                new JLabel(
-                        "<HTML><P>  </P> <P> </P><P>  </P> <P> </P><P>  </P> </HTML>");
+        lDelta = new JLabel("<HTML><P><b>f(t) Input Paremeters:</b></P><P></P><P>" + '\u0394' + "t: </P><P></P><P># of points:</P></HTML>");
+        lMaxF = new JLabel("<HTML><P><b>Display Options:</b></P><P></P><P>max time:</P><P></P><P>max frequency:</P></HTML>");
+        lBlank = new JLabel("<HTML><P>  </P> <P> </P><P>  </P> <P> </P><P>  </P> </HTML>");
         lBlank.setMaximumSize(new Dimension(110, 100));
         lMaxF.setMaximumSize(new Dimension(110, 160));
         lDelta.setMaximumSize(new Dimension(110, 100));
@@ -128,22 +105,22 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fNumber = new JTextField(adapter.getNumberOfPoints() + ""); // Number of
                                                                     // Points
         fLambda = new JTextField(adapter.getLambda() + ""); // Lambda
-        fThetaMax =
-                new JTextField(adapter.getLambda() / adapter.getDeltaBaseline()
-                        / 2 + ""); // Max Frequency to be displayed
+        fThetaMax = new JTextField(adapter.getLambda() / adapter.getDeltaBaseline() / 2 + ""); // Max
+                                                                                               // Frequency
+                                                                                               // to
+                                                                                               // be
+                                                                                               // displayed
         fThetaMin = new JTextField("0.00"); // Min Frequency to be displayed
         fMinTime = new JTextField("0.00"); // Min Frequency to be displayed
-        fMaxTime =
-                new JTextField(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + ""); // Max Time to be
-                                                             // displayed
+        fMaxTime = new JTextField(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + ""); // Max
+                                                                                                  // Time
+                                                                                                  // to
+                                                                                                  // be
+                                                                                                  // displayed
         fSigma = new JTextField(getVGraph().getSigma() + "");
-        fDelta.setToolTipText("<HTML><P WIDTH='300px'>\u0394t =  x-axis step-size. (Numbers only, do not include "
-                + "units)<BR/>");
-        fThetaMax
-                .setToolTipText("<HTML><P WIDTH='300px'>max frequency = largest frequency displayed in frequency domain.</P></HTML>");
-        fThetaMin
-                .setToolTipText("<HTML><P WIDTH='300px'>min frequency = smallest frequency displayed in frequency domain.</P></HTML>");
+        fDelta.setToolTipText("<HTML><P WIDTH='300px'>\u0394t =  x-axis step-size. (Numbers only, do not include " + "units)<BR/>");
+        fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>max frequency = largest frequency displayed in frequency domain.</P></HTML>");
+        fThetaMin.setToolTipText("<HTML><P WIDTH='300px'>min frequency = smallest frequency displayed in frequency domain.</P></HTML>");
         fMaxTime.setToolTipText("<HTML><P WIDTH='300px'>max time = largest time displayed in time domain.</P></HTML>");
         fMinTime.setToolTipText("<HTML><P WIDTH='300px'>min time = smallest time displayed in time domain.</P></HTML>");
         fNumber.setToolTipText("<HTML><P WIDTH = '300px'>number of points graphed.</P></HTML>");
@@ -151,8 +128,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         fDelta.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -167,8 +143,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         fThetaMax.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -183,8 +158,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         fSigma.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -199,8 +173,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         fNumber.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -215,8 +188,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         fLambda.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -253,8 +225,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fNumber.addActionListener(this);
         
         // Setting up the GUI layout
-        getContentPane().setLayout(
-                new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
         row2 = new JPanel();
@@ -401,8 +372,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 writeIntoFile(f, viewer.adapter.exportVisibilityGraphPoints());
             }
             
-            private void writeIntoFile(File f,
-                    String exportVisibilityGraphPoints) {
+            private void writeIntoFile(File f, String exportVisibilityGraphPoints) {
                 
                 BufferedWriter out;
                 
@@ -434,49 +404,17 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 double a = 255 / View.viewer.getIGraph().getMaxY();
                 double b = 0;
                 ImageFrame frame;
-                if (View.viewer.getIGraph().getPoints()
-                        .ceilingKey(Double.parseDouble(fThetaMax.getText())) == null) {
-                    frame =
-                            new ImageFrame(
-                                    "Grayscale image",
-                                    a,
-                                    b,
-                                    View.viewer
-                                            .getIGraph()
-                                            .getPoints()
-                                            .subMap(0.0,
-                                                    true,
-                                                    View.viewer
-                                                            .getIGraph()
-                                                            .getPoints()
-                                                            .floorKey(
-                                                                    Double.parseDouble(fThetaMax
-                                                                            .getText())),
-                                                    true));
+                if (View.viewer.getIGraph().getPoints().ceilingKey(Double.parseDouble(fThetaMax.getText())) == null) {
+                    frame = new ImageFrame("Grayscale image", a, b, View.viewer.getIGraph().getPoints().subMap(0.0, true,
+                            View.viewer.getIGraph().getPoints().floorKey(Double.parseDouble(fThetaMax.getText())), true));
                 } else {
-                    frame =
-                            new ImageFrame(
-                                    "Grayscale image",
-                                    a,
-                                    b,
-                                    View.viewer
-                                            .getIGraph()
-                                            .getPoints()
-                                            .subMap(0.0,
-                                                    true,
-                                                    View.viewer
-                                                            .getIGraph()
-                                                            .getPoints()
-                                                            .ceilingKey(
-                                                                    Double.parseDouble(fThetaMax
-                                                                            .getText())),
-                                                    true));
+                    frame = new ImageFrame("Grayscale image", a, b, View.viewer.getIGraph().getPoints().subMap(0.0, true,
+                            View.viewer.getIGraph().getPoints().ceilingKey(Double.parseDouble(fThetaMax.getText())), true));
                 }
                 // frame.displayData();
                 frame.setVisible(true);
                 // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setSize(View.viewer.getIGraph().getWidth(), View.viewer
-                        .getIGraph().getHeight());
+                frame.setSize(View.viewer.getIGraph().getWidth(), View.viewer.getIGraph().getHeight());
                 // frame.pack();
             }
         });
@@ -500,8 +438,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 } else {
                     if (!equation.equals("")) {
                         adapter.evaluate(equation, iEquation);
-                        lEquation.setText("Equation: " + equation + " "
-                                + iEquation + "i");
+                        lEquation.setText("Equation: " + equation + " " + iEquation + "i");
                     } else {
                         adapter.fullReset();
                     }
@@ -574,20 +511,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     
                 } else {
                     eqn = new JTextField("Enter Real Part Equation Here");
-                    eqn2 =
-                            new JTextField(
-                                    "Enter Imaginary Part of Equation Here");
+                    eqn2 = new JTextField("Enter Imaginary Part of Equation Here");
                 }
                 // eqn.setMaximumSize(new Dimension(700,100));
-                JLabel jl =
-                        new JLabel(
-                                "<html>Acceptable Inputs:<br><br>"
-                                        + "Use 'x' as the independent variable, e as Euler's Number, and pi as pi.<br>"
-                                        + "use _ to represent negative numbers.<br>"
-                                        + "*, ^, /, +, -, (, and ) are valid operators.<br>"
-                                        + "sin(_), cos(_), tan(_), log(_), ln(_), delta(_) and u(_) (unit step) are also valid.<br>"
-                                        + "Angles are in radians.<br><br>"
-                                        + "</html>");
+                JLabel jl = new JLabel("<html>Acceptable Inputs:<br><br>"
+                        + "Use 'x' as the independent variable, e as Euler's Number, and pi as pi.<br>"
+                        + "use _ to represent negative numbers.<br>" + "*, ^, /, +, -, (, and ) are valid operators.<br>"
+                        + "sin(_), cos(_), tan(_), log(_), ln(_), delta(_) and u(_) (unit step) are also valid.<br>"
+                        + "Angles are in radians.<br><br>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.add(row1);
                 row1.add(jl);
@@ -605,17 +536,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
-                        iEquation =
-                                eqn2.getText().toLowerCase().replace(" ", "");
+                        iEquation = eqn2.getText().toLowerCase().replace(" ", "");
                         try {
                             adapter.evaluate(equation, iEquation);
-                            viewer.lEquation.setText("Equation: " + equation
-                                    + " " + iEquation + "i");
+                            viewer.lEquation.setText("Equation: " + equation + " " + iEquation + "i");
                             jf.setVisible(false);
                             
                         } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf,
-                                    "Equation Error. Try adding parentheses.");
+                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
                             System.out.println(e.getCause());
                         }
                     }
@@ -627,17 +555,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
-                        iEquation =
-                                eqn2.getText().toLowerCase().replace(" ", "");
+                        iEquation = eqn2.getText().toLowerCase().replace(" ", "");
                         try {
                             adapter.evaluate(equation, iEquation);
-                            viewer.lEquation.setText("Equation: " + equation
-                                    + " " + iEquation + "i");
+                            viewer.lEquation.setText("Equation: " + equation + " " + iEquation + "i");
                             jf.setVisible(false);
                             
                         } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf,
-                                    "Equation Error. Try adding parentheses.");
+                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
                         }
                     }
                     
@@ -647,17 +572,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
-                        iEquation =
-                                eqn2.getText().toLowerCase().replace(" ", "");
+                        iEquation = eqn2.getText().toLowerCase().replace(" ", "");
                         try {
                             adapter.evaluate(equation, iEquation);
-                            viewer.lEquation.setText("Equation: " + equation
-                                    + " " + iEquation + "i");
+                            viewer.lEquation.setText("Equation: " + equation + " " + iEquation + "i");
                             jf.setVisible(false);
                             
                         } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf,
-                                    "Equation Error. Try adding parentheses.");
+                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
                         }
                     }
                     
@@ -671,22 +593,19 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 JFrame jf = new JFrame("TIFT");
-                JLabel jl =
-                        new JLabel(
-                                "<html>"
-                                        + "<p>TIFT - Tool for Interactive Fourier Transforms</p>"
-                                        + "<p><table>"
-                                        + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
-                                        + "<tr><td></td><td>Jonathan Marr</td></tr>"
-                                        + "<tr><td></td><td>Adam Pere</td></tr>"
-                                        // + "<tr><td>Funded by:</td><td>Valerie
-                                        // B Barr</td></tr>
-                                        + "</table></p>"
-                                        + "<p></p>"
-                                        + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
-                                        + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
-                                        + "<p>Software is written in Java and it is free open source</p>"
-                                        + "</html>");
+                JLabel jl = new JLabel(
+                        "<html>"
+                                + "<p>TIFT - Tool for Interactive Fourier Transforms</p>"
+                                + "<p><table>"
+                                + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
+                                + "<tr><td></td><td>Jonathan Marr</td></tr>"
+                                + "<tr><td></td><td>Adam Pere</td></tr>"
+                                + "<tr><td>Funded by:</td><td>Valerie B Barr</td></tr>"
+                                + "</table></p>"
+                                + "<p></p>"
+                                + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+                                + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
+                                + "<p>Software is written in Java and it is free open source</p>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(jl);
                 jf.pack();
@@ -702,11 +621,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 try {
                     java.awt.Desktop.getDesktop().browse(new URI(link));
                 } catch (IOException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -762,16 +679,13 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     continue;
                 }
                 if (strLine.trim().startsWith("*lambda")) {
-                    viewer.adapter.setLambda(Double.parseDouble(strLine
-                            .split(" ")[1]));
+                    viewer.adapter.setLambda(Double.parseDouble(strLine.split(" ")[1]));
                     viewer.fLambda.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine
-                            .split(" ")[1]));
+                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                     viewer.fDelta.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("*numberOfPoints")) {
-                    viewer.adapter.setNumberOfPoints(Integer.parseInt(strLine
-                            .split(" ")[1]));
+                    viewer.adapter.setNumberOfPoints(Integer.parseInt(strLine.split(" ")[1]));
                     viewer.fNumber.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("X_Y_Real_Imaginary")) {
                     vis = true;
@@ -877,16 +791,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 Double.parseDouble(fDelta.getText());
                 viewer.lEquation.setText("Equation: ");
                 adapter.setDeltaBaseline(Double.parseDouble(fDelta.getText()));
-                fMaxTime.setText(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + "");
+                fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
             } catch (NumberFormatException e1) {
             }
         } else if (e.getSource().equals(fLambda)) {
             try {
                 Double.parseDouble(fLambda.getText());
                 adapter.setLambda(Double.parseDouble(fLambda.getText()));
-                fMaxTime.setText(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + "");
+                fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
             } catch (NumberFormatException e1) {
             }
         } else if (e.getSource().equals(fNumber)) {
@@ -896,8 +808,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 int x = Integer.parseInt(fNumber.getText().trim());
                 x = (int) (Math.log(x) / Math.log(2));
                 adapter.setNumberOfPoints((int) Math.pow(2, x));
-                fMaxTime.setText(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + "");
+                fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
             } catch (NumberFormatException e1) {
             }
         } else if (e.getSource().equals(fThetaMax)) {

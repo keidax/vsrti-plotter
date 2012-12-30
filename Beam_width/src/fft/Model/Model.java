@@ -27,8 +27,7 @@ public class Model implements ModelInterface {
         System.out.println("Updating model");
         // visibilityGraph.reinitializePoints();
         for (ModelListener ml : listeners) {
-            ml.updateView(visibilityGraph.getPoints(),
-                    visibilityGraph.getGridedRms());
+            ml.updateView(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
         }
         // TODO update other things?
     }
@@ -94,8 +93,7 @@ public class Model implements ModelInterface {
         visibilityGraph.getInputFiles().clear();
         visibilityGraph.addInputFiles(f);
         for (InputFile i : f) {
-            visibilityGraph.addRawPoint(i.getBaseline(),
-                    i.getAverageIntensity());
+            visibilityGraph.addRawPoint(i.getBaseline(), i.getAverageIntensity());
             visibilityGraph.addRms(i.getBaseline(), i.getRms());
         }
     }

@@ -18,7 +18,6 @@ public class TableModel extends AbstractTableModel {
         super();
         viewer = v;
         inputFiles = new ArrayList<InputFile>();
-        InputFile.tableModel = this;
     }
     
     @Override
@@ -54,8 +53,7 @@ public class TableModel extends AbstractTableModel {
     
     public void addInputFile(InputFile inputFile) {
         for (InputFile f : inputFiles) {
-            if (inputFile.file.getAbsolutePath().equals(
-                    f.file.getAbsolutePath())) {
+            if (inputFile.file.getAbsolutePath().equals(f.file.getAbsolutePath())) {
                 return;
             }
         }

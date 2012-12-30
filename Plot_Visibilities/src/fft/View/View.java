@@ -48,11 +48,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
     // public Model model;
     public TableModel tableModel;
     public FileTable jTable;
-    private JTextField fLambda, fThetaMax, fSigma, fT1, fT2, fTheta, fPhi1,
-            fPhi2;
+    private JTextField fLambda, fThetaMax, fSigma, fT1, fT2, fTheta, fPhi1, fPhi2;
     private JComboBox fShape1, fShape2;
-    public JButton bSave, bOpen, bExit, bReset, bDelete, bInstruction, bAbout,
-            bModel;
+    public JButton bSave, bOpen, bExit, bReset, bDelete, bInstruction, bAbout, bModel;
     public static View viewer;
     public String link = "Instructions_Plot_Visibilities.html";
     public boolean showVis = false;
@@ -68,9 +66,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         setAdapter(a);
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel, this);
-        vGraph =
-                new VCanvas(this, getAdapter(), getAdapter()
-                        .getVisiblityGraphPoints());
+        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
         // iGraph = new
         // FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
         
@@ -87,20 +83,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bDelete = new JButton("Delete Data");
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
-        lDelta =
-                new JLabel(
-                        "<HTML><P>"
-                                + '\u03BB'
-                                + ": </P>"
-                                + "<P>"
-                                + "display factor of "
-                                + '\u03C3'
-                                + ": </P>"
-                                + ""
-                                + "<P></P><P><b>Model Parameters:</b></P><P></P><P>\u03A6:</P>"
-                                + "<P>" + "T1" + ": </P>" + "<P>" + "T2"
-                                + ": </P>" + "<P>" + "Position of Lamp 2, θ"
-                                + ": </P>" + "</HTML>");
+        lDelta = new JLabel("<HTML><P>" + '\u03BB' + ": </P>" + "<P>" + "display factor of " + '\u03C3' + ": </P>" + ""
+                + "<P></P><P><b>Model Parameters:</b></P><P></P><P>\u03A6:</P>" + "<P>" + "T1" + ": </P>" + "<P>" + "T2" + ": </P>" + "<P>"
+                + "Position of Lamp 2, θ" + ": </P>" + "</HTML>");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Drag and Drop data files into this box. File names should contain baseline distance in single quotes. <B>Example:</B> file with baseline 23.9 can have these names: \"file_b'23.9'.rad\", \"jun3.12baseline'23.9'.rad\", etc.</P></HTML>");
         
         lDelta.setMaximumSize(new Dimension(140, 220));
@@ -118,8 +103,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fPhi2.addActionListener(this);
         fLambda = new JTextField(adapter.getLambda() + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelenght of radiation. "
-                + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>"
-                + "</P></HTML>");
+                + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
         fSigma = new JTextField(getVGraph().getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         fSigma.addActionListener(this);
@@ -162,8 +146,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         JScrollPane jScroll;
         
-        getContentPane().setLayout(
-                new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
         row2 = new JPanel();
@@ -297,8 +280,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 writeIntoFile(f, viewer.adapter.exportVisibilityGraphPoints());
             }
             
-            private void writeIntoFile(File f,
-                    String exportVisibilityGraphPoints) {
+            private void writeIntoFile(File f, String exportVisibilityGraphPoints) {
                 
                 BufferedWriter out;
                 
@@ -363,23 +345,21 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 JFrame jf = new JFrame("About VRSTI Plotter");
-                JLabel jl =
-                        new JLabel(
-                                "<html>"
-                                        + "<p>VRSTI Plotter version 1.0</p>"
-                                        + "<p><table>"
-                                        + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
-                                        + "<tr><td></td><td>Jonathan Marr</td></tr>"
-                                        + "<tr><td></td><td>Adam Pere</td></tr>"
-                                        // + "<tr><td>Funded by:</td><td>Valerie
-                                        // B Barr</td></tr>
-                                        + "</table></p>"
-                                        + "<p></p>"
-                                        + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
-                                        + "<p>This package was designed to be used with MIT Haystack Observatory VSRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
-                                        + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
-                                        + "<p>Software is written in Java and it is free open source</p>"
-                                        + "</html>");
+                JLabel jl = new JLabel(
+                        "<html>"
+                                + "<p>VRSTI Plotter version 1.0</p>"
+                                + "<p><table>"
+                                + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
+                                + "<tr><td></td><td>Jonathan Marr</td></tr>"
+                                + "<tr><td></td><td>Adam Pere</td></tr>"
+                                // + "<tr><td>Funded by:</td><td>Valerie
+                                // B Barr</td></tr>
+                                + "</table></p>"
+                                + "<p></p>"
+                                + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+                                + "<p>This package was designed to be used with MIT Haystack Observatory VSRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
+                                + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
+                                + "<p>Software is written in Java and it is free open source</p>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(jl);
                 jf.pack();
@@ -395,11 +375,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 try {
                     java.awt.Desktop.getDesktop().browse(new URI(link));
                 } catch (IOException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -414,6 +392,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     tableModel.addInputFile(new InputFile(files[i]));
                     
                 }
+                
+                // TODO sendArrayFiles
                 
             }
         });
@@ -443,11 +423,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 if (strLine.trim().startsWith("*lambda")) {
                     fLambda.setText(strLine.split(" ")[1]);
                     adapter.setLambda(Double.parseDouble(fLambda.getText()));
-                    System.out.println("lambda from file:\t"
-                            + Double.parseDouble(fLambda.getText()));
+                    System.out.println("lambda from file:\t" + Double.parseDouble(fLambda.getText()));
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine
-                            .split(" ")[1]));
+                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("X_Y_RMS")) {
                     im = false;
                     vis = true;
@@ -460,11 +438,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                     try {
                         String[] s = strLine.split(" ");
-                        ret.put(Double.parseDouble(s[0]),
-                                Double.parseDouble(s[1]));
+                        ret.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
                         if (s.length > 2 && !s[2].trim().equals("null")) {
-                            rms.put(Double.parseDouble(s[0]),
-                                    Double.parseDouble(s[2]));
+                            rms.put(Double.parseDouble(s[0]), Double.parseDouble(s[2]));
                         }
                     } catch (NumberFormatException e) {
                     }
@@ -474,19 +450,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                     try {
                         String[] s = strLine.split(" ");
-                        retim.put(Double.parseDouble(s[0]),
-                                Double.parseDouble(s[1]));
+                        retim.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
                     } catch (NumberFormatException e) {
                     }
                 } else if (strLine.trim().length() == 0) {
                     continue;
                 } else {
-                    JOptionPane
-                            .showMessageDialog(
-                                    viewer,
-                                    "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
-                                    "Incorrect format",
-                                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(viewer,
+                            "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.", "Incorrect format",
+                            JOptionPane.ERROR_MESSAGE);
                     return null;
                 }
                 
@@ -647,8 +619,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     }
     
     public boolean isShape1Rect() {
-        if (((String) fShape1.getSelectedItem())
-                .equalsIgnoreCase("rectangular")) {
+        if (((String) fShape1.getSelectedItem()).equalsIgnoreCase("rectangular")) {
             return true;
         }
         
@@ -656,8 +627,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     }
     
     public boolean isShape2Rect() {
-        if (((String) fShape2.getSelectedItem())
-                .equalsIgnoreCase("rectangular")) {
+        if (((String) fShape2.getSelectedItem()).equalsIgnoreCase("rectangular")) {
             return true;
         }
         

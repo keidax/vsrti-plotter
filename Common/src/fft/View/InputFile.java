@@ -40,14 +40,12 @@ public class InputFile implements Comparable<InputFile> {
             String strLine;
             while ((strLine = br.readLine()) != null) {
                 
-                if (strLine.trim().length() > 0
-                        && strLine.trim().charAt(0) != '*') {
+                if (strLine.trim().length() > 0 && strLine.trim().charAt(0) != '*') {
                     int li = strLine.trim().lastIndexOf(" ");
                     if (li == -1) {
                         return false;
                     }
-                    Double.parseDouble(strLine.substring(strLine
-                            .lastIndexOf(" ") + 1));
+                    Double.parseDouble(strLine.substring(strLine.lastIndexOf(" ") + 1));
                 }
             }
             in.close();
@@ -159,8 +157,7 @@ public class InputFile implements Comparable<InputFile> {
             String strLine;
             while ((strLine = br.readLine()) != null) {
                 if (strLine.charAt(0) != '*') {
-                    intensities.add(Double.parseDouble(strLine
-                            .substring(strLine.lastIndexOf(" ") + 1)));
+                    intensities.add(Double.parseDouble(strLine.substring(strLine.lastIndexOf(" ") + 1)));
                 }
             }
             in.close();
@@ -184,8 +181,7 @@ public class InputFile implements Comparable<InputFile> {
         return sum / count;
     }
     
-    public static ArrayList<InputFile> getInputFilesByX(
-            TreeMap<Double, InputFile> inputFiles, ArrayList<Point> xs) {
+    public static ArrayList<InputFile> getInputFilesByX(TreeMap<Double, InputFile> inputFiles, ArrayList<Point> xs) {
         ArrayList<InputFile> ret = new ArrayList<InputFile>();
         for (Point d : xs) {
             if (inputFiles.containsKey(d.getX())) {

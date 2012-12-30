@@ -35,8 +35,7 @@ public class FileTable extends JTable implements TableModelListener {
                     int[] index = FileTable.this.getSelectedRows();
                     e.consume();
                     for (int i = index.length - 1; i >= 0; --i) {
-                        ((TableModel) FileTable.this.getModel())
-                                .removeInputFile(index[i]);
+                        ((TableModel) FileTable.this.getModel()).removeInputFile(index[i]);
                         // me.getModel().getValueAt(me.getSelectedRow(), 1));
                         // model.removeRow(index[i]);
                     }

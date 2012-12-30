@@ -12,18 +12,24 @@ import java.util.Vector;
 
 import fft.Model.Point;
 
-public class InputFile implements Comparable {
+public class InputFile implements Comparable<InputFile> {
     
     public File file;
     public double baseline = -1;
-    public double averageIntensity = -1;
-    public double rms = 0;
+    private double averageIntensity = -1;
+    private double rms = 0;
     public List<Double> intensities = new ArrayList<Double>();
     public static TableModel tableModel;
     
     public InputFile() {
         intensities = new ArrayList<Double>();
-        
+    }
+    
+    public InputFile(File f) {
+        setFile(f);
+        if (isBaselineParsable()) {
+            setBaseline(parseBaseline());
+        }
     }
     
     static boolean isFormatCorrect(File file) {
@@ -50,13 +56,6 @@ public class InputFile implements Comparable {
             return false;
         }
         return true;
-    }
-    
-    public InputFile(File f) {
-        setFile(f);
-        if (isBaselineParsable()) {
-            setBaseline(parseBaseline());
-        }
     }
     
     @Override
@@ -109,8 +108,7 @@ public class InputFile implements Comparable {
     }
     
     @Override
-    public int compareTo(Object arg0) {
-        InputFile f = (InputFile) arg0;
+    public int compareTo(InputFile f) {
         if (f.baseline > baseline) {
             return -1;
         } else {

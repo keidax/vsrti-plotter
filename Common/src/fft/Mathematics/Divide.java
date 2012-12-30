@@ -42,8 +42,7 @@ public class Divide implements Token {
     public String handle(Stack s) {
         String returning = "";
         
-        if (s.size() != 0 && !s.top().toString().equals("(")
-                && precedence <= s.top().getPrecedence()) {
+        if (s.size() != 0 && !s.top().toString().equals("(") && precedence <= s.top().getPrecedence()) {
             returning = returning + s.pop();
         }
         

@@ -72,15 +72,13 @@ public class EpsDocument {
      * 
      * @since 0.1
      */
-    public EpsDocument(String title, OutputStream outputStream, int minX,
-            int minY, int maxX, int maxY) throws IOException {
+    public EpsDocument(String title, OutputStream outputStream, int minX, int minY, int maxX, int maxY) throws IOException {
         _title = title;
         this.minX = minX;
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
-        _bufferedWriter =
-                new BufferedWriter(new OutputStreamWriter(outputStream));
+        _bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
         write(_bufferedWriter);
     }
     
@@ -186,12 +184,10 @@ public class EpsDocument {
         float offsetY = -minY;
         
         writer.write("%!PS-Adobe-3.0 EPSF-3.0\n");
-        writer.write("%%Creator: jlibeps " + EpsGraphics2D.VERSION
-                + ", https://sourceforge.net/projects/jlibeps/" + "\n");
+        writer.write("%%Creator: jlibeps " + EpsGraphics2D.VERSION + ", https://sourceforge.net/projects/jlibeps/" + "\n");
         writer.write("%%Title: " + _title + "\n");
         writer.write("%%CreationDate: " + new Date() + "\n");
-        writer.write("%%BoundingBox: 0 0 " + (int) Math.ceil(maxX + offsetX)
-                + " " + (int) Math.ceil(maxY + offsetY) + "\n");
+        writer.write("%%BoundingBox: 0 0 " + (int) Math.ceil(maxX + offsetX) + " " + (int) Math.ceil(maxY + offsetY) + "\n");
         writer.write("%%DocumentData: Clean7Bit\n");
         writer.write("%%DocumentProcessColors: Black\n");
         writer.write("%%ColorUsage: Color\n");
@@ -214,8 +210,7 @@ public class EpsDocument {
             
             writeFooter(writer);
         } else {
-            writer.write(offsetX + " " + (maxY - minY - offsetY)
-                    + " translate\n");
+            writer.write(offsetX + " " + (maxY - minY - offsetY) + " translate\n");
         }
         
         writer.flush();

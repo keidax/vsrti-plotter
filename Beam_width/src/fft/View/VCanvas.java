@@ -14,11 +14,10 @@ import java.util.TreeMap;
 @SuppressWarnings("serial")
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
-
+    
     // protected TreeMap<Double, Double> dataPoints;
     protected TreeMap<Double, Double> rmsPoints;
-    protected AbstractOrnament[] ornaments = { new CircleOrnament(),
-            new SquareOrnament() };
+    protected AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
     protected Color[] colors = { Color.BLUE, Color.BLACK };
     protected int sigma = 1;
     
@@ -45,8 +44,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         System.out.println("***" + x);
         if (rmsPoints.containsKey(x)) {
             // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-            drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getSigma() / 2),
-                    g2cy(y + rmsPoints.get(x) * getSigma() / 2));
+            drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getSigma() / 2), g2cy(y + rmsPoints.get(x) * getSigma() / 2));
             // System.out.println("RMS ["+x+","+rmsPoints.get(x));
             // System.out.println("rms = "+rmsPoints.get(x));
         }
@@ -65,17 +63,14 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         Double previousKey = points.firstKey();
         for (Double key : keys) {
             g.setColor(Color.BLACK);
-            g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)),
-                    g2cx(key), g2cy(points.get(key)));
+            g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)), g2cx(key), g2cy(points.get(key)));
             previousKey = key;
             drawPoint(g, key, points.get(key));
             System.out.println("** " + key);
             if (rmsPoints.containsKey(key)) {
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-                drawRms(g, g2cx(key), g2cy(points.get(key) - rmsPoints.get(key)
-                        * getSigma() / 2),
-                        g2cy(points.get(key) + rmsPoints.get(key) * getSigma()
-                                / 2));
+                drawRms(g, g2cx(key), g2cy(points.get(key) - rmsPoints.get(key) * getSigma() / 2), g2cy(points.get(key)
+                        + rmsPoints.get(key) * getSigma() / 2));
                 // new SquareOrnament().draw(g,
                 // g2cx(key),g2cy(this.points.get(key)));
                 // System.out.println("Drawing point at ["+key+","+this.points.get(key)+"]");
@@ -93,8 +88,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         g.drawLine(x - 1, y2, x + 1, y2);
     }
     
-    public void update(TreeMap<Double, Double> points,
-            TreeMap<Double, Double> rmsPoints) {
+    public void update(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {
         this.points = points;
         // this.dataPoints = dataPoints;
         this.rmsPoints = rmsPoints;
@@ -102,7 +96,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     
     @Override
     public void update(Graphics g) { // TODO is this necessary?...
-    // dataPoints = adapter.getVisibilityGraphDataPoints();
+        // dataPoints = adapter.getVisibilityGraphDataPoints();
         paint(g);
     }
     

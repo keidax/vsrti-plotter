@@ -14,8 +14,7 @@ public class SquareOrnament extends AbstractOrnament {
     
     @Override
     public boolean isInside(int x, int y, int cx, int cy) {
-        if (Math.abs(x - cx) <= detectSide / 2
-                && Math.abs(y - cy) <= detectSide / 2) {
+        if (Math.abs(x - cx) <= detectSide / 2 && Math.abs(y - cy) <= detectSide / 2) {
             return true;
         } else {
             return false;

@@ -59,8 +59,7 @@ public class Converter {
                     } else {
                         top = top - 1;
                         stack[top] = 0.0;
-                        System.out
-                                .println("********* Tried to Divide by Zero ***********");
+                        System.out.println("********* Tried to Divide by Zero ***********");
                     }
                     
                 } else if (postEq[i].equals("+")) {
@@ -220,8 +219,7 @@ public class Converter {
             k++;
             count++;
             
-            if (equation[k] != null && equation[k].contains(")")
-                    && pCounter == 0) {
+            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
                 equation[k] = "";
                 done = true;
             }
@@ -263,8 +261,7 @@ public class Converter {
             k++;
             count++;
             
-            if (equation[k] != null && equation[k].contains(")")
-                    && pCounter == 0) {
+            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
                 equation[k] = "";
                 done = true;
             }
@@ -306,8 +303,7 @@ public class Converter {
             k++;
             count++;
             
-            if (equation[k] != null && equation[k].contains(")")
-                    && pCounter == 0) {
+            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
                 equation[k] = "";
                 done = true;
             }
@@ -345,8 +341,7 @@ public class Converter {
             k++;
             count++;
             
-            if (equation[k] != null && equation[k].contains(")")
-                    && pCounter == 0) {
+            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
                 equation[k] = "";
                 done = true;
             }
@@ -384,8 +379,7 @@ public class Converter {
             k++;
             count++;
             
-            if (equation[k] != null && equation[k].contains(")")
-                    && pCounter == 0) {
+            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
                 equation[k] = "";
                 done = true;
             }
@@ -423,8 +417,7 @@ public class Converter {
             k++;
             count++;
             
-            if (equation[k] != null && equation[k].contains(")")
-                    && pCounter == 0) {
+            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
                 equation[k] = "";
                 done = true;
             }
@@ -466,8 +459,7 @@ public class Converter {
             k++;
             count++;
             
-            if (equation[k] != null && equation[k].contains(")")
-                    && pCounter == 0) {
+            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
                 equation[k] = "";
                 done = true;
             }

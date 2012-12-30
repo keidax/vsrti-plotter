@@ -65,15 +65,12 @@ import java.util.Map;
  * EpsGraphics2D is suitable for creating high quality EPS graphics for use in
  * documents and papers, and can be used just like a standard Graphics2D object.
  * <p>
- * Many Java programs use Graphics2D to draw stuff on the screen, and while it
- * is easy to save the output as a png or jpeg file, it is a little harder to
- * export it as an EPS for including in a document or paper.
+ * Many Java programs use Graphics2D to draw stuff on the screen, and while it is easy to save the output as a png or
+ * jpeg file, it is a little harder to export it as an EPS for including in a document or paper.
  * <p>
- * This class makes the whole process extremely easy, because you can use it as
- * if it's a Graphics2D object. The only difference is that all of the
- * implemented methods create EPS output, which means the diagrams you draw can
- * be resized without leading to any of the jagged edges you may see when
- * resizing pixel-based images, such as jpeg and png files.
+ * This class makes the whole process extremely easy, because you can use it as if it's a Graphics2D object. The only
+ * difference is that all of the implemented methods create EPS output, which means the diagrams you draw can be resized
+ * without leading to any of the jagged edges you may see when resizing pixel-based images, such as jpeg and png files.
  * <p>
  * Example usage:
  * <p>
@@ -97,9 +94,8 @@ import java.util.Map;
  * </pre>
  * 
  * <p>
- * You do not need to worry about the size of the canvas when drawing on a
- * EpsGraphics2D object. The bounding box of the EPS document will automatically
- * resize to accommodate new items that you draw.
+ * You do not need to worry about the size of the canvas when drawing on a EpsGraphics2D object. The bounding box of the
+ * EPS document will automatically resize to accommodate new items that you draw.
  * <p>
  * Not all methods are implemented yet. Those that are not are clearly labelled.
  * <p>
@@ -143,8 +139,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
     
     private EpsDocument _document;
     
-    private static FontRenderContext _fontRenderContext =
-            new FontRenderContext(null, false, true);
+    private static FontRenderContext _fontRenderContext = new FontRenderContext(null, false, true);
     
     /**
      * Constructs a new EPS document that is initially empty and can be drawn on
@@ -186,8 +181,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * 
      * @since 0.1
      */
-    public EpsGraphics2D(String title, File file, int minX, int minY, int maxX,
-            int maxY) throws IOException {
+    public EpsGraphics2D(String title, File file, int minX, int minY, int maxX, int maxY) throws IOException {
         this(title, new FileOutputStream(file), minX, minY, maxX, maxY);
     }
     
@@ -201,11 +195,9 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * 
      * @since 0.1
      */
-    public EpsGraphics2D(String title, OutputStream outputStream, int minX,
-            int minY, int maxX, int maxY) throws IOException {
+    public EpsGraphics2D(String title, OutputStream outputStream, int minX, int minY, int maxX, int maxY) throws IOException {
         this(title);
-        _document =
-                new EpsDocument(title, outputStream, minX, minY, maxX, maxY);
+        _document = new EpsDocument(title, outputStream, minX, minY, maxX, maxY);
     }
     
     /**
@@ -236,10 +228,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     private void methodNotSupported() {
-        EpsException e =
-                new EpsException(
-                        "Method not currently supported by jlibeps version "
-                                + VERSION);
+        EpsException e = new EpsException("Method not currently supported by jlibeps version " + VERSION);
         e.printStackTrace(System.err);
     }
     
@@ -252,11 +241,10 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * drawn with a Graphics2D context. With accurate text mode enabled, it is
      * not necessary for the EPS viewer to have the required font installed.
      * <p>
-     * Turning off accurate text mode will require the EPS viewer to have the
-     * necessary fonts installed. If you are using a lot of text, you will find
-     * that this significantly reduces the file size of your EPS documents.
-     * AffineTransforms can only affect the starting point of text using this
-     * simpler text mode - all text will be horizontal.
+     * Turning off accurate text mode will require the EPS viewer to have the necessary fonts installed. If you are
+     * using a lot of text, you will find that this significantly reduces the file size of your EPS documents.
+     * AffineTransforms can only affect the starting point of text using this simpler text mode - all text will be
+     * horizontal.
      * 
      * @since 0.1
      */
@@ -394,8 +382,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
                     append("closepath");
                     count++;
                 } else if (type == PathIterator.SEG_CUBICTO) {
-                    append(x1 + " " + y1 + " " + x2 + " " + y2 + " " + x3 + " "
-                            + y3 + " curveto");
+                    append(x1 + " " + y1 + " " + x2 + " " + y2 + " " + x3 + " " + y3 + " curveto");
                     count++;
                     x0 = x3;
                     y0 = y3;
@@ -417,8 +404,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
                     float _y2 = y1 + 1 / 3f * (y2 - y1);
                     float _x3 = x2;
                     float _y3 = y2;
-                    append(_x1 + " " + _y1 + " " + _x2 + " " + _y2 + " " + _x3
-                            + " " + _y3 + " curveto");
+                    append(_x1 + " " + _y1 + " " + _x2 + " " + _y2 + " " + _x3 + " " + _y3 + " curveto");
                     count++;
                     x0 = _x3;
                     y0 = _y3;
@@ -558,11 +544,8 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
         
         ColorModel cm = img.getColorModel();
         WritableRaster wr = img.copyData(null);
-        BufferedImage img1 =
-                new BufferedImage(cm, wr, cm.isAlphaPremultiplied(), properties);
-        AffineTransform at =
-                AffineTransform.getTranslateInstance(img.getMinX(),
-                        img.getMinY());
+        BufferedImage img1 = new BufferedImage(cm, wr, cm.isAlphaPremultiplied(), properties);
+        AffineTransform at = AffineTransform.getTranslateInstance(img.getMinX(), img.getMinY());
         at.preConcatenate(xform);
         drawImage(img1, at, null);
     }
@@ -619,14 +602,10 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public void drawString(AttributedCharacterIterator iterator, float x,
-            float y) {
+    public void drawString(AttributedCharacterIterator iterator, float x, float y) {
         if (getAccurateTextMode()) {
-            TextLayout layout =
-                    new TextLayout(iterator, getFontRenderContext());
-            Shape shape =
-                    layout.getOutline(AffineTransform
-                            .getTranslateInstance(x, y));
+            TextLayout layout = new TextLayout(iterator, getFontRenderContext());
+            Shape shape = layout.getOutline(AffineTransform.getTranslateInstance(x, y));
             draw(shape, "fill");
         } else {
             append("newpath");
@@ -634,8 +613,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
             append(location.getX() + " " + location.getY() + " moveto");
             StringBuffer buffer = new StringBuffer();
             
-            for (char ch = iterator.first(); ch != CharacterIterator.DONE; ch =
-                    iterator.next()) {
+            for (char ch = iterator.first(); ch != CharacterIterator.DONE; ch = iterator.next()) {
                 if (ch == '(' || ch == ')') {
                     buffer.append('\\');
                 }
@@ -688,8 +666,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
     @Override
     public GraphicsConfiguration getDeviceConfiguration() {
         GraphicsConfiguration gc = null;
-        GraphicsEnvironment ge =
-                GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gds = ge.getScreenDevices();
         
         for (int i = 0; i < gds.length; i++) {
@@ -1064,12 +1041,10 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
             
             append(value + " setgray");
         } else if (getColorDepth() == GRAYSCALE) {
-            float value =
-                    (c.getRed() + c.getGreen() + c.getBlue()) / (3 * 255f);
+            float value = (c.getRed() + c.getGreen() + c.getBlue()) / (3 * 255f);
             append(value + " setgray");
         } else {
-            append(c.getRed() / 255f + " " + c.getGreen() / 255f + " "
-                    + c.getBlue() / 255f + " setrgbcolor");
+            append(c.getRed() / 255f + " " + c.getGreen() / 255f + " " + c.getBlue() / 255f + " setrgbcolor");
         }
     }
     
@@ -1119,8 +1094,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
         _font = font;
         
         if (!getAccurateTextMode()) {
-            append("/" + _font.getPSName() + " findfont " + _font.getSize()
-                    + " scalefont setfont");
+            append("/" + _font.getPSName() + " findfont " + _font.getSize() + " scalefont setfont");
         }
     }
     
@@ -1141,8 +1115,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      */
     @Override
     public FontMetrics getFontMetrics(Font f) {
-        BufferedImage image =
-                new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         Graphics g = image.getGraphics();
         
         return g.getFontMetrics(f);
@@ -1201,8 +1174,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
             return t.createTransformedShape(_clip);
             
         } catch (Exception e) {
-            throw new EpsException("Unable to get inverse of matrix: "
-                    + _transform);
+            throw new EpsException("Unable to get inverse of matrix: " + _transform);
         }
     }
     
@@ -1302,11 +1274,8 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public void drawRoundRect(int x, int y, int width, int height,
-            int arcWidth, int arcHeight) {
-        Shape shape =
-                new RoundRectangle2D.Float(x, y, width, height, arcWidth,
-                        arcHeight);
+    public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+        Shape shape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
         draw(shape);
     }
     
@@ -1316,11 +1285,8 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public void fillRoundRect(int x, int y, int width, int height,
-            int arcWidth, int arcHeight) {
-        Shape shape =
-                new RoundRectangle2D.Float(x, y, width, height, arcWidth,
-                        arcHeight);
+    public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+        Shape shape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
         draw(shape, "fill");
     }
     
@@ -1352,11 +1318,8 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public void drawArc(int x, int y, int width, int height, int startAngle,
-            int arcAngle) {
-        Shape shape =
-                new Arc2D.Float(x, y, width, height, startAngle, arcAngle,
-                        Arc2D.OPEN);
+    public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        Shape shape = new Arc2D.Float(x, y, width, height, startAngle, arcAngle, Arc2D.OPEN);
         draw(shape);
     }
     
@@ -1366,11 +1329,8 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public void fillArc(int x, int y, int width, int height, int startAngle,
-            int arcAngle) {
-        Shape shape =
-                new Arc2D.Float(x, y, width, height, startAngle, arcAngle,
-                        Arc2D.PIE);
+    public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        Shape shape = new Arc2D.Float(x, y, width, height, startAngle, arcAngle, Arc2D.PIE);
         draw(shape, "fill");
     }
     
@@ -1473,8 +1433,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public boolean drawImage(Image img, int x, int y, int width, int height,
-            ImageObserver observer) {
+    public boolean drawImage(Image img, int x, int y, int width, int height, ImageObserver observer) {
         return drawImage(img, x, y, width, height, Color.white, observer);
     }
     
@@ -1484,8 +1443,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public boolean drawImage(Image img, int x, int y, Color bgcolor,
-            ImageObserver observer) {
+    public boolean drawImage(Image img, int x, int y, Color bgcolor, ImageObserver observer) {
         int width = img.getWidth(null);
         int height = img.getHeight(null);
         return drawImage(img, x, y, width, height, bgcolor, observer);
@@ -1497,10 +1455,8 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public boolean drawImage(Image img, int x, int y, int width, int height,
-            Color bgcolor, ImageObserver observer) {
-        return drawImage(img, x, y, x + width, y + height, 0, 0, width, height,
-                bgcolor, observer);
+    public boolean drawImage(Image img, int x, int y, int width, int height, Color bgcolor, ImageObserver observer) {
+        return drawImage(img, x, y, x + width, y + height, 0, 0, width, height, bgcolor, observer);
     }
     
     /**
@@ -1509,10 +1465,8 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2,
-            int sx1, int sy1, int sx2, int sy2, ImageObserver observer) {
-        return drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2,
-                Color.white, observer);
+    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, ImageObserver observer) {
+        return drawImage(img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, Color.white, observer);
     }
     
     /**
@@ -1521,8 +1475,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * @since 0.1
      */
     @Override
-    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2,
-            int sx1, int sy1, int sx2, int sy2, Color bgcolor,
+    public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Color bgcolor,
             ImageObserver observer) {
         if (dx1 >= dx2) {
             throw new IllegalArgumentException("dx1 >= dx2");
@@ -1548,9 +1501,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
         int destHeight = dy2 - dy1;
         
         int[] pixels = new int[width * height];
-        PixelGrabber pg =
-                new PixelGrabber(img, sx1, sy1, sx2 - sx1, sy2 - sy1, pixels,
-                        0, width);
+        PixelGrabber pg = new PixelGrabber(img, sx1, sy1, sx2 - sx1, sy2 - sy1, pixels, 0, width);
         
         try {
             pg.grabPixels();
@@ -1576,8 +1527,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
         // if (getColorDepth() == BLACK_AND_WHITE) {
         // bitsPerSample = "true";
         // }
-        append(width + " " + height + " " + bitsPerSample + " [" + m[0] + " "
-                + m[1] + " " + m[2] + " " + m[3] + " " + m[4] + " " + m[5]
+        append(width + " " + height + " " + bitsPerSample + " [" + m[0] + " " + m[1] + " " + m[2] + " " + m[3] + " " + m[4] + " " + m[5]
                 + "]");
         // Fill the background to update the bounding box.
         Color oldColor = getColor();
@@ -1593,8 +1543,7 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
             append("{currentfile " + width + " string readhexstring pop} bind");
             append("image");
         } else {
-            append("{currentfile 3 " + width
-                    + " mul string readhexstring pop} bind");
+            append("{currentfile 3 " + width + " mul string readhexstring pop} bind");
             append("false 3 colorimage");
         }
         
@@ -1613,12 +1562,9 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
                         line.append("00");
                     }
                 } else if (getColorDepth() == GRAYSCALE) {
-                    line.append(toHexString((color.getRed() + color.getGreen() + color
-                            .getBlue()) / 3));
+                    line.append(toHexString((color.getRed() + color.getGreen() + color.getBlue()) / 3));
                 } else {
-                    line.append(toHexString(color.getRed())
-                            + toHexString(color.getGreen())
-                            + toHexString(color.getBlue()));
+                    line.append(toHexString(color.getRed()) + toHexString(color.getGreen()) + toHexString(color.getBlue()));
                 }
                 
                 if (line.length() > 64) {

@@ -39,8 +39,7 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
  */
 
 @SuppressWarnings("serial")
-public abstract class Canvas extends JPanel implements MouseListener,
-        MouseMotionListener {
+public abstract class Canvas extends JPanel implements MouseListener, MouseMotionListener {
     
     public TreeMap<Double, Double> points;
     public View view;
@@ -90,60 +89,52 @@ public abstract class Canvas extends JPanel implements MouseListener,
         item.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileChooser
-                        .setFileFilter(new javax.swing.filechooser.FileFilter() {
-                            
-                            @Override
-                            public boolean accept(File f) {
-                                
-                                if (f.isDirectory()) {
-                                    return true;
-                                }
-                                String s = f.getName();
-                                int i = s.lastIndexOf('.');
-                                
-                                if (i > 0 && i < s.length() - 1) {
-                                    String extension =
-                                            s.substring(i + 1).toLowerCase();
-                                    if ("jpeg".equals(extension)
-                                            || "jpg".equals(extension)) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                    
+                    @Override
+                    public boolean accept(File f) {
+                        
+                        if (f.isDirectory()) {
+                            return true;
+                        }
+                        String s = f.getName();
+                        int i = s.lastIndexOf('.');
+                        
+                        if (i > 0 && i < s.length() - 1) {
+                            String extension = s.substring(i + 1).toLowerCase();
+                            if ("jpeg".equals(extension) || "jpg".equals(extension)) {
+                                return true;
+                            } else {
                                 return false;
                             }
-                            
-                            // The description of this filter
-                            @Override
-                            public String getDescription() {
-                                return "Only JPEG";
-                            }
-                        });
+                        }
+                        return false;
+                    }
+                    
+                    // The description of this filter
+                    @Override
+                    public String getDescription() {
+                        return "Only JPEG";
+                    }
+                });
                 // fileChooser.addChoosableFileFilter(new jpgSaveFilter());
                 if (fileChooser.showSaveDialog(canvas) == JFileChooser.APPROVE_OPTION) {
                     ObjectOutputStream out;
                     try {
                         
                         File f = fileChooser.getSelectedFile();
-                        if (!(f.getName().trim().endsWith(".jpg") || f
-                                .getName().trim().endsWith(".jpeg"))) {
+                        if (!(f.getName().trim().endsWith(".jpg") || f.getName().trim().endsWith(".jpeg"))) {
                             f = new File(f.getAbsolutePath() + ".jpeg");
                         }
                         out = new ObjectOutputStream(new FileOutputStream(f));
-                        BufferedImage image =
-                                new BufferedImage(getWidth() * 2,
-                                        getHeight() * 2,
-                                        BufferedImage.TYPE_INT_RGB);
+                        BufferedImage image = new BufferedImage(getWidth() * 2, getHeight() * 2, BufferedImage.TYPE_INT_RGB);
                         paintForSave(image.createGraphics());
                         ImageIO.write(image, "jpeg", f);
                         out.close();
                     } catch (IOException ex) {
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "cannot save image",
-                            "save error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -153,37 +144,35 @@ public abstract class Canvas extends JPanel implements MouseListener,
             // Allows the user to right click the graph and save it as a jpeg
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileChooser
-                        .setFileFilter(new javax.swing.filechooser.FileFilter() {
-                            
-                            @Override
-                            public boolean accept(File f) {
-                                
-                                if (f.isDirectory()) {
-                                    return true;
-                                }
-                                String s = f.getName();
-                                int i = s.lastIndexOf('.');
-                                
-                                if (i > 0 && i < s.length() - 1) {
-                                    String extension =
-                                            s.substring(i + 1).toLowerCase();
-                                    if ("eps".equals(extension)) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                    
+                    @Override
+                    public boolean accept(File f) {
+                        
+                        if (f.isDirectory()) {
+                            return true;
+                        }
+                        String s = f.getName();
+                        int i = s.lastIndexOf('.');
+                        
+                        if (i > 0 && i < s.length() - 1) {
+                            String extension = s.substring(i + 1).toLowerCase();
+                            if ("eps".equals(extension)) {
+                                return true;
+                            } else {
                                 return false;
                             }
-                            
-                            // The description of this filter
-                            
-                            @Override
-                            public String getDescription() {
-                                return "Only EPS";
-                            }
-                        });
+                        }
+                        return false;
+                    }
+                    
+                    // The description of this filter
+                    
+                    @Override
+                    public String getDescription() {
+                        return "Only EPS";
+                    }
+                });
                 // fileChooser.addChoosableFileFilter(new jpgSaveFilter());
                 if (fileChooser.showSaveDialog(canvas) == JFileChooser.APPROVE_OPTION) {
                     // ObjectOutputStream out;
@@ -195,9 +184,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
                         }
                         // out = new ObjectOutputStream(new
                         // FileOutputStream(f));
-                        EpsGraphics2D g =
-                                new EpsGraphics2D("Title", f, 0, 0,
-                                        getWidth() * 2, getHeight() * 2);
+                        EpsGraphics2D g = new EpsGraphics2D("Title", f, 0, 0, getWidth() * 2, getHeight() * 2);
                         canvas.paintForSave(g);
                         g.flush();
                         // System.out.println(g.toString());
@@ -212,8 +199,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
                     } catch (IOException ex) {
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "cannot save image",
-                            "save error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -234,8 +220,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
             }
             g.setColor(Color.BLACK);
             g.setStroke(new BasicStroke(stroke));
-            g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)),
-                    g2cx(key), g2cy(points.get(key)));
+            g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)), g2cx(key), g2cy(points.get(key)));
             previousKey = key;
             System.out.println("point at " + key + " - ");
             drawPoint(g, key, points.get(key));
@@ -294,21 +279,17 @@ public abstract class Canvas extends JPanel implements MouseListener,
         for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
             // draw vertical lines
             g.setColor(Color.LIGHT_GRAY);
-            g.drawLine((int) (getLeftShift() + i * steps), tPad,
-                    (int) (getLeftShift() + i * steps), getHeight() - bPad);
+            g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() - bPad);
             // draw numbers at each vertical line
             g.setColor(Color.BLACK);
             String lString = df.format(c2gx(getLeftShift() + i * steps));
             
             FontMetrics fm = g.getFontMetrics();
-            g.drawString(
-                    lString,
-                    (int) (getLeftShift() + i * steps - fm.stringWidth(lString) / 2),
-                    getHeight() - bPad + fm.getAscent() + fm.getLeading() + 5);
+            g.drawString(lString, (int) (getLeftShift() + i * steps - fm.stringWidth(lString) / 2), getHeight() - bPad + fm.getAscent()
+                    + fm.getLeading() + 5);
         }
         // draw axis title
-        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth()
-                / 2 - 50, getHeight() - 10);
+        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2 - 50, getHeight() - 10);
         // draw horizontal axis
         g.drawLine(getLeftShift(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
     }
@@ -363,13 +344,9 @@ public abstract class Canvas extends JPanel implements MouseListener,
         for (int i = 0; i <= getPlotHeight() / squareWidth; i++) {// horizontal
             // String tempString="" + Math.round(c2gy(this.getHeight() - bPad -
             // (i) * plotStep) * 10) / 10.0;
-            String tempString =
-                    df.format(c2gy(getHeight() - bPad - i * squareWidth));
-            g.drawString(
-                    tempString,
-                    lPad - fm.stringWidth(tempString) - 5,
-                    (int) (getHeight() - bPad - i * squareWidth)
-                            + fm.getAscent() / 2);
+            String tempString = df.format(c2gy(getHeight() - bPad - i * squareWidth));
+            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5, (int) (getHeight() - bPad - i * squareWidth) + fm.getAscent()
+                    / 2);
         }
     }
     
@@ -380,8 +357,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         g.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
         
-        int translateDown =
-                (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
+        int translateDown = (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
         
         g.translate(yLabelWidth, translateDown);
         g.rotate(-Math.PI / 2.0);
@@ -624,8 +600,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         
         Set<Double> keys = points.keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInside(mCanx, mCany, g2cx(key),
-                    g2cy(points.get(key)))) {
+            if (new SquareOrnament().isInside(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
                 return key;
             }
         }
@@ -636,8 +611,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         
         Set<Double> keys = points.keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInsideVertically(mCanx, mCany,
-                    g2cx(key), g2cy(points.get(key)))) {
+            if (new SquareOrnament().isInsideVertically(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
                 return key;
             }
         }
@@ -707,8 +681,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         mCanx = evt.getX();
         mCany = evt.getY();
         // System.out.println("released");
-        if (currentPoint == null && mCanx >= getLeftShift()
-                && mCanx <= getLeftShift() + getPlotWidth() && mCany >= tPad
+        if (currentPoint == null && mCanx >= getLeftShift() && mCanx <= getLeftShift() + getPlotWidth() && mCany >= tPad
                 && mCany < getWidth() - bPad) {
             // getCurrentDataSet().addPoint(c2gx(mCanx),c2gy(mCany,getCurrentDataSet()));
             // update();
@@ -751,8 +724,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         DecimalFormat df = new DecimalFormat("#.##");
         if (getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
-            setToolTipText("[" + df.format(p) + "; " + df.format(points.get(p))
-                    + "]");
+            setToolTipText("[" + df.format(p) + "; " + df.format(points.get(p)) + "]");
         }
         if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
             setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -775,8 +747,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         int w = getWidth();
         this.setSize(new Dimension(w * 2, h * 2));
         createBackBuffer();
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // Main rendering loop. Volatile images may lose their contents.
         // This loop will continually render to (and produce if neccessary)
         // volatile images
@@ -814,8 +785,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         // create the hardware accelerated image.
         createBackBuffer();
         
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
         // Main rendering loop. Volatile images may lose their contents.
         // This loop will continually render to (and produce if neccessary)
@@ -840,9 +810,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
             }
             
             Graphics offscreenGraphics = volatileImg.getGraphics();
-            ((Graphics2D) offscreenGraphics).setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON);
+            ((Graphics2D) offscreenGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             doPaint(offscreenGraphics); // call core paint method.
             
             // paint back buffer to main graphics
@@ -854,8 +822,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
     // main paint method
     protected void doPaint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         setBackground(Color.WHITE);
         drawXAxis(g2); // draw vertical lines
         g2.setColor(Color.BLACK);
@@ -864,9 +831,8 @@ public abstract class Canvas extends JPanel implements MouseListener,
         // draw axes
         g2.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, titleSize));
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics()
-                .stringWidth(graphTitle)) / 2, (tPad + g2.getFontMetrics()
-                .getHeight() / 2) / 2);
+        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2,
+                (tPad + g2.getFontMetrics().getHeight() / 2) / 2);
         i = 0;
         g2.setColor(colors[0]);
         drawDataSet(i, g2);
@@ -880,10 +846,8 @@ public abstract class Canvas extends JPanel implements MouseListener,
         g.setColor(Color.red);
         double last = getMinX();
         for (double i = getMinX(); i <= getMaxX(); i += .5) {
-            g.drawLine(g2cx(i), g2cy(bessel(i)
-                    * (points.containsKey(0.0) ? points.get(0.0) : 1)),
-                    g2cx(last), g2cy(bessel(last)
-                            * (points.containsKey(0.0) ? points.get(0.0) : 1)));
+            g.drawLine(g2cx(i), g2cy(bessel(i) * (points.containsKey(0.0) ? points.get(0.0) : 1)), g2cx(last), g2cy(bessel(last)
+                    * (points.containsKey(0.0) ? points.get(0.0) : 1)));
             last = i;
         }
     }

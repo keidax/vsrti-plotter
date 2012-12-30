@@ -30,13 +30,13 @@ import javax.swing.JPopupMenu;
  * @author Karel Durktoa
  * 
  */
-public class ImageFrame extends JFrame implements MouseListener {
-    
+public class ImageFrame extends JFrame implements MouseListener { // TODO is this necessary, or can I remove it in this
+                                                                  // project
+
     private JPanel p = new JPanel();
     final JPopupMenu menu = new JPopupMenu();
     
-    public ImageFrame(String title, final double a, final double b,
-            final SortedMap<Double, Double> sortedMap) {
+    public ImageFrame(String title, final double a, final double b, final SortedMap<Double, Double> sortedMap) {
         super(title);
         
         addMouseListener(this);
@@ -48,50 +48,44 @@ public class ImageFrame extends JFrame implements MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
-                fileChooser
-                        .setFileFilter(new javax.swing.filechooser.FileFilter() {
-                            
-                            @Override
-                            public boolean accept(File f) {
-                                if (f.isDirectory()) {
-                                    return true;
-                                }
-                                String s = f.getName();
-                                int i = s.lastIndexOf('.');
-                                
-                                if (i > 0 && i < s.length() - 1) {
-                                    String extension =
-                                            s.substring(i + 1).toLowerCase();
-                                    if ("jpeg".equals(extension)
-                                            || "jpg".equals(extension)) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                    
+                    @Override
+                    public boolean accept(File f) {
+                        if (f.isDirectory()) {
+                            return true;
+                        }
+                        String s = f.getName();
+                        int i = s.lastIndexOf('.');
+                        
+                        if (i > 0 && i < s.length() - 1) {
+                            String extension = s.substring(i + 1).toLowerCase();
+                            if ("jpeg".equals(extension) || "jpg".equals(extension)) {
+                                return true;
+                            } else {
                                 return false;
                             }
-                            
-                            // The description of this filter
-                            
-                            @Override
-                            public String getDescription() {
-                                return "Only JPEG";
-                            }
-                        });
+                        }
+                        return false;
+                    }
+                    
+                    // The description of this filter
+                    
+                    @Override
+                    public String getDescription() {
+                        return "Only JPEG";
+                    }
+                });
                 if (fileChooser.showSaveDialog(p) == JFileChooser.APPROVE_OPTION) {
                     ObjectOutputStream out;
                     try {
                         
                         File f = fileChooser.getSelectedFile();
-                        if (!(f.getName().trim().endsWith(".jpg") || f
-                                .getName().trim().endsWith(".jpeg"))) {
+                        if (!(f.getName().trim().endsWith(".jpg") || f.getName().trim().endsWith(".jpeg"))) {
                             f = new File(f.getAbsolutePath() + ".jpeg");
                         }
                         out = new ObjectOutputStream(new FileOutputStream(f));
-                        BufferedImage image =
-                                new BufferedImage(p.getWidth(), p.getHeight(),
-                                        BufferedImage.TYPE_INT_RGB);
+                        BufferedImage image = new BufferedImage(p.getWidth(), p.getHeight(), BufferedImage.TYPE_INT_RGB);
                         p.paint(image.createGraphics());
                         ImageIO.write(image, "jpeg", f);
                         
@@ -99,8 +93,7 @@ public class ImageFrame extends JFrame implements MouseListener {
                     } catch (IOException ex) {
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "cannot save image",
-                            "save error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -116,26 +109,19 @@ public class ImageFrame extends JFrame implements MouseListener {
                 Double[] keys = sortedMap.keySet().toArray(new Double[0]);
                 for (int i = 0; i < keys.length - 1; i++) {
                     int c1 = (int) Math.max(0, a * sortedMap.get(keys[i]) + b);
-                    int c2 =
-                            (int) Math.max(0, a * sortedMap.get(keys[i + 1])
-                                    + b);
+                    int c2 = (int) Math.max(0, a * sortedMap.get(keys[i + 1]) + b);
                     
                     g.setColor(Color.BLUE);
-                    g.setPaint(new GradientPaint((int) (width * keys[i]), 0,
-                            new Color(c1, c1, c1), (int) (width * keys[i + 1]),
-                            0, new Color(c2, c2, c2)));
-                    Rectangle r =
-                            new Rectangle((int) (width * keys[i]), 0,
-                                    (int) (width * keys[i + 1]), getHeight());
+                    g.setPaint(new GradientPaint((int) (width * keys[i]), 0, new Color(c1, c1, c1), (int) (width * keys[i + 1]), 0,
+                            new Color(c2, c2, c2)));
+                    Rectangle r = new Rectangle((int) (width * keys[i]), 0, (int) (width * keys[i + 1]), getHeight());
                     g.fill(r);
                     g.setColor(new Color(0, 94, 0));
                     
                 }
                 for (int i = 0; i < keys.length - 1; i++) {
-                    g.drawLine((int) (width * keys[i + 1]), getHeight() - 18,
-                            (int) (width * keys[i + 1]), getHeight() - 12);
-                    g.drawString(Math.round(keys[i + 1] * 100) / 100.0 + "",
-                            (int) (width * keys[i + 1]), getHeight() - 1);
+                    g.drawLine((int) (width * keys[i + 1]), getHeight() - 18, (int) (width * keys[i + 1]), getHeight() - 12);
+                    g.drawString(Math.round(keys[i + 1] * 100) / 100.0 + "", (int) (width * keys[i + 1]), getHeight() - 1);
                 }
                 g.drawString(0.0 + "", 0, getHeight() - 1);
                 g.drawLine(0, getHeight() - 15, getWidth(), getHeight() - 15);

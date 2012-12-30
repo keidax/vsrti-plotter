@@ -46,8 +46,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     private FileTable jTable;
     private JTextField fD, fLambda, fThetaMax, fSigma, fNoise;
     private JLabel lDelta, lLambda, lThetaMax, lSigma;
-    private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide,
-            bDelete;
+    private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private double d = 5, noise = 0, lambda;// TODO find a good default value
                                             // for lambda
     private boolean showBeamPattern = false;
@@ -86,13 +85,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bAbout = new JButton("About");
         bHide = new JButton("Show Beam Pattern");
         bDelete = new JButton("Delete Data");
-        lDelta =
-                new JLabel(
-                        "<HTML><P></P>"
-                                + "display factor of "
-                                + '\u03C3'
-                                + ": </P>  </P><P><B>Model Parameters:</B><P>D: </P><P>"
-                                + '\u03BB' + ":" + "</P><P>Noise: </P></HTML>");
+        lDelta = new JLabel("<HTML><P></P>" + "display factor of " + '\u03C3' + ": </P>  </P><P><B>Model Parameters:</B><P>D: </P><P>"
+                + '\u03BB' + ":" + "</P><P>Noise: </P></HTML>");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Drag and Drop data files into this box. File names should contain angle distance in single quotes. <B>Example:</B> file with angle 23.9 can have these names: \"file_a'23.9'.rad\", \"jun3.12angle'23.9'.rad\", etc.</P></HTML>");
         // lDelta.setMaximumSize(100, 22);
         lDelta.setMaximumSize(new Dimension(130, 175));
@@ -105,11 +99,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fD = new JTextField(getD() + "");
         fLambda = new JTextField(lambda + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
-                + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>"
-                + "</P></HTML>");
+                + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
         fThetaMax = new JTextField();
-        fThetaMax
-                .setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
+        fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
         fSigma = new JTextField(vCanvas.getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         // fSigma.setMinimumSize(new Dimension(50,20));
@@ -128,8 +120,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fThetaMax.setMaximumSize(new Dimension(50, 20));
         fThetaMax.addActionListener(this);
         JScrollPane jScroll;
-        getContentPane().setLayout(
-                new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
         row2 = new JPanel();
@@ -302,23 +293,21 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 JFrame jf = new JFrame("About VRSTI Plotter");
-                JLabel jl =
-                        new JLabel(
-                                "<html>"
-                                        + "<p>VRSTI Plotter version 1.0</p>"
-                                        + "<p><table>"
-                                        + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
-                                        + "<tr><td></td><td>Jonathan Marr</td></tr>"
-                                        + "<tr><td></td><td>Adam Pere</td></tr>"
-                                        // + "<tr><td>Funded by:</td><td>Valerie
-                                        // B Barr</td></tr>
-                                        + "</table></p>"
-                                        + "<p></p>"
-                                        + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
-                                        + "<p>This package was designed to be used with MIT Haystack Observatory VSRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
-                                        + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
-                                        + "<p>Software is written in Java and it is free open source</p>"
-                                        + "</html>");
+                JLabel jl = new JLabel(
+                        "<html>"
+                                + "<p>VRSTI Plotter version 1.0</p>"
+                                + "<p><table>"
+                                + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
+                                + "<tr><td></td><td>Jonathan Marr</td></tr>"
+                                + "<tr><td></td><td>Adam Pere</td></tr>"
+                                // + "<tr><td>Funded by:</td><td>Valerie
+                                // B Barr</td></tr>
+                                + "</table></p>"
+                                + "<p></p>"
+                                + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+                                + "<p>This package was designed to be used with MIT Haystack Observatory VSRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
+                                + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
+                                + "<p>Software is written in Java and it is free open source</p>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(jl);
                 jf.pack();
@@ -334,11 +323,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 try {
                     java.awt.Desktop.getDesktop().browse(new URI(link));
                 } catch (IOException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -351,9 +338,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
                     } else {
-                        JOptionPane.showMessageDialog(View.this,
-                                "Incorrect data file format",
-                                "Incorrett format", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(View.this, "Incorrect data file format", "Incorrett format",
+                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 sendAdapterFiles();
@@ -389,12 +375,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     continue;
                 }
                 if (strLine.trim().startsWith("*lambda")) {
-                    double tempLambda =
-                            Double.parseDouble(strLine.split(" ")[1]);
+                    double tempLambda = Double.parseDouble(strLine.split(" ")[1]);
                     model.setLambda(tempLambda);
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    double tempDeltaBaseline =
-                            Double.parseDouble(strLine.split(" ")[1]);
+                    double tempDeltaBaseline = Double.parseDouble(strLine.split(" ")[1]);
                     model.setDeltaBaseline(tempDeltaBaseline);
                     // viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("*exponent")) {
@@ -412,12 +396,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                     try {
                         String[] s = strLine.split(" ");
-                        ret.put(Double.parseDouble(s[0]),
-                                Double.parseDouble(s[1]));
+                        ret.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
                         if (s.length > 2 && !s[2].trim().equals("null")) {
                             System.out.println("********* " + s[2]);
-                            rms.put(Double.parseDouble(s[0]),
-                                    Double.parseDouble(s[2]));
+                            rms.put(Double.parseDouble(s[0]), Double.parseDouble(s[2]));
                         }
                     } catch (NumberFormatException e) {
                     }
@@ -427,19 +409,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                     try {
                         String[] s = strLine.split(" ");
-                        retim.put(Double.parseDouble(s[0]),
-                                Double.parseDouble(s[1]));
+                        retim.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
                     } catch (NumberFormatException e) {
                     }
                 } else if (strLine.trim().length() == 0) {
                     continue;
                 } else {
-                    JOptionPane
-                            .showMessageDialog(
-                                    this,
-                                    "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
-                                    "Incorrect format",
-                                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
+                            "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     in.close();
                     return null;
                 }
@@ -456,42 +433,31 @@ public class View extends JFrame implements ModelListener, ActionListener {
     }
     
     @SuppressWarnings("unchecked")
-    public TreeMap<Double, Double>[] flatten(
-            TreeMap<Double, ArrayList<Double>> data,
-            TreeMap<Double, ArrayList<Double>> rms) {
+    public TreeMap<Double, Double>[] flatten(TreeMap<Double, ArrayList<Double>> data, TreeMap<Double, ArrayList<Double>> rms) {
         TreeMap<Double, Double> retData = new TreeMap<Double, Double>();
         TreeMap<Double, Double> retRms = new TreeMap<Double, Double>();
         Set<Double> dataKeys = data.keySet();
         // Set<Double> rmsKeys = rms.keySet();
         for (Double key : dataKeys) {
             // x has 1 value, rms 0
-            if (data.get(key).size() == 1
-                    && (rms.containsKey(key) ? rms.get(key).size() : 0) == 0) {
+            if (data.get(key).size() == 1 && (rms.containsKey(key) ? rms.get(key).size() : 0) == 0) {
                 retData.put(key, data.get(key).get(0));
             }
             // x has 1 value, rms has 1 value
-            if (data.get(key).size() == 1
-                    && (rms.containsKey(key) ? rms.get(key).size() : 0) == 1) {
+            if (data.get(key).size() == 1 && (rms.containsKey(key) ? rms.get(key).size() : 0) == 1) {
                 retData.put(key, data.get(key).get(0));
                 retRms.put(key, rms.get(key).get(0));
             }
             // x has more then 1, but rms.size != x.size
-            if (data.get(key).size() != (rms.containsKey(key) ? rms.get(key)
-                    .size() : 0)) {
+            if (data.get(key).size() != (rms.containsKey(key) ? rms.get(key).size() : 0)) {
                 retData.put(key, data.get(key).get(0));
             }
             // x.size == rms.size
             else {
-                retData.put(
-                        key,
-                        countAverageValue(data.get(key), rms.containsKey(key)
-                                ? rms.get(key) : null));
-                retRms.put(key,
-                        countAverageRms(rms.containsKey(key) ? rms.get(key)
-                                : null));
+                retData.put(key, countAverageValue(data.get(key), rms.containsKey(key) ? rms.get(key) : null));
+                retRms.put(key, countAverageRms(rms.containsKey(key) ? rms.get(key) : null));
             }
-            System.out.println("Flatten: " + key + ", " + retData.get(key)
-                    + ", " + retRms.get(key));
+            System.out.println("Flatten: " + key + ", " + retData.get(key) + ", " + retRms.get(key));
         }
         TreeMap<Double, Double>[] back = new TreeMap[2];
         back[0] = retData;
@@ -499,8 +465,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         return back;
     }
     
-    public double countAverageValue(ArrayList<Double> data,
-            ArrayList<Double> rms) {
+    public double countAverageValue(ArrayList<Double> data, ArrayList<Double> rms) {
         double num = 0;
         double denom = 0;
         for (int i = 0; i < data.size(); i++) {
@@ -519,8 +484,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     }
     
     @Override
-    public void updateView(TreeMap<Double, Double> points,
-            TreeMap<Double, Double> rmsPoints) {
+    public void updateView(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {
         System.out.println("Updating view");
         repaint();
         fD.setText(getD() + "");
@@ -541,8 +505,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     }
     
     public void sendAdapterFiles() {
-        ArrayList<InputFile> tempArray =
-                ((TableModel) jTable.getModel()).getInputFiles();
+        ArrayList<InputFile> tempArray = ((TableModel) jTable.getModel()).getInputFiles();
         model.setRawPoints(tempArray);
         
         model.update();
