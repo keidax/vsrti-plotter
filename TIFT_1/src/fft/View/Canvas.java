@@ -34,15 +34,20 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import fft.Model.Adapter;
 
+/**
+ * 
+ * @author Karel Durktoa and Adam Pere
+ * 
+ */
 public abstract class Canvas extends JPanel implements MouseListener,
         MouseMotionListener {
     
     public TreeMap<Double, Double> points;
     public View view;
     public Adapter adapter;
-    protected static int lPad = 20, rPad = 30, tPad = 30, bPad = 40;
+    protected static int lPad = 20, rPad = 30, tPad = 30, bPad = 40; // Margins
     protected static int[] steps = { 1, 2, 5 };
-    protected static int squareWidth = 30;
+    protected static int squareWidth = 30; // width of vertical line placement
     protected static int yLabelWidth = 40;
     protected static int xLabelWidth = 30;
     protected static int defaultY = 9;
@@ -71,8 +76,10 @@ public abstract class Canvas extends JPanel implements MouseListener,
         
         JMenuItem item = new JMenuItem("Save as JPEG");
         JMenuItem item2 = new JMenuItem("Save as EPS");
+        
         item.addActionListener(new ActionListener() {
             
+            // Allows the user to right click the graph and save it as a jpeg
             @Override
             public void actionPerformed(ActionEvent e) {
                 fileChooser
@@ -111,7 +118,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
                 if (fileChooser.showSaveDialog(canvas) == JFileChooser.APPROVE_OPTION) {
                     ObjectOutputStream out;
                     try {
-                        
                         File f = fileChooser.getSelectedFile();
                         if (!(f.getName().trim().endsWith(".jpg") || f
                                 .getName().trim().endsWith(".jpeg"))) {
@@ -132,6 +138,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
                 }
             }
         });
+        
         item2.addActionListener(new ActionListener() {
             
             // Allows the user to right click the graph and save it as a jpeg
@@ -206,14 +213,29 @@ public abstract class Canvas extends JPanel implements MouseListener,
         menu.add(item2);
     }
     
+    /**
+     * 
+     * @return The points on the graph
+     */
     public TreeMap<Double, Double> getPoints() {
         return points;
     }
     
+    /**
+     * Set the points on the graph
+     * 
+     * @param points
+     */
     public void setPoints(TreeMap<Double, Double> points) {
         this.points = points;
     }
     
+    /**
+     * Draw the points
+     * 
+     * @param count
+     * @param g
+     */
     public void drawDataSet(int count, Graphics2D g) {
         if (getPoints().size() == 0) {
             return;
@@ -230,6 +252,13 @@ public abstract class Canvas extends JPanel implements MouseListener,
         
     }
     
+    /**
+     * Draw a single point
+     * 
+     * @param g
+     * @param x
+     * @param y
+     */
     public void drawPoint(Graphics2D g, double x, double y) {
     }
     
@@ -289,8 +318,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
         drawVerticalMetric(lPad, countVerticalLabelStep(), countVerticalStep(),
                 g);
         drawVerticalLabel(count / 2 * yLabelWidth + 5, " " + yAxis, g);
-        // new SquareOrnament().draw(g, lPad+(((int)(count/2))*yLabelWidth)+23,
-        // 10);
     }
     
     public void drawVerticalLine(int x, double steps, Graphics2D g) {
@@ -305,20 +332,13 @@ public abstract class Canvas extends JPanel implements MouseListener,
     public void drawVerticalMetric(int x, double strStep, double plotStep,
             Graphics2D g) {
         g.setFont(new Font(g.getFont().getFontName(), 0, 10));
-        // for(int i=0;i<(this.getPlotHeight()-1)/2*plotStep+1;i++){//horizontal
         for (int i = 0; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {// horizontal
-            // g.drawString(""+Math.round(i*strStep*10)/10.0,x,
-            // (int)((this.getHeight()-FFTCanvas.bPad-tPad)/2+tPad-(i)*plotStep));
             g.drawString(
                     ""
                             + Math.round(c2gy((getHeight() - Canvas.bPad - tPad)
                                     / 2 + tPad - i * plotStep) * 10) / 10.0, x,
                     (int) ((getHeight() - Canvas.bPad - tPad) / 2 + tPad - i
                             * plotStep));
-            // g.drawString(""+Math.round(i*strStep*10)/10.0,x,
-            // g2cy((i*plotStep)));
-            // g.drawString(""+Math.round((i*strStep)*10)/10.0,x,
-            // (int)(g2cy(i)*plotStep));
         }
         for (int i = 1; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {// horizontal
             g.drawString(
@@ -329,8 +349,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
                     (int) ((getHeight() - Canvas.bPad - tPad) / 2 + tPad + i
                             * plotStep));
         }
-        // g.drawString(""+Math.round(-i*strStep*10)/10.0,x,
-        // (int)((this.getHeight()-FFTCanvas.bPad-tPad)/2+tPad-(-i)*plotStep));}
     }
     
     public void drawVerticalLabel(int x, String title, Graphics2D g) {
@@ -408,9 +426,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
     
     public double countHorizontalLabelStep() {// NOT FINISHED
         int count = getPlotWidth() / squareWidth + 1;// 30
-        // int max=countMax(this.getMaxX());//50
         double max = getMaxX();// 50
-        DecimalFormat df = new DecimalFormat("#.##");
         return max / count;
     }
     
@@ -426,8 +442,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
             i++;
         }
         i--;
-        // System.out.println("countMax("+max+") = "+steps[i%steps.length]*(int)Math.pow(10,i/steps.length));
-        // return (int)Math.pow(2,(int)(Math.ceil(Math.log(max)/Math.log(2))));
         return (int) Math.pow(
                 2,
                 (int) Math.ceil(Math.log(max / adapter.getDeltaBaseline())
@@ -446,7 +460,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
             i++;
         }
         i -= 2;
-        // System.out.println("countMaxVertical is "+steps[i%steps.length]*(int)Math.pow(10,i/steps.length));
         return steps[i % steps.length] * (int) Math.pow(10, i / steps.length);
     }
     
@@ -659,7 +672,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
      */
     @Override
     public void mousePressed(MouseEvent evt) {
-        // this.getVision().getCare().set(this.getVision().getSoul().newMemento());
         mouseButton = evt.getButton();
         if (evt.getButton() != MouseEvent.BUTTON1) {
             return;
@@ -681,12 +693,8 @@ public abstract class Canvas extends JPanel implements MouseListener,
         }
         if (getCurrentPoint() != null) {
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
-            // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
-            // getCurrentPoint().movePoint(getCurrentPoint(),
-            // c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
         }
-        // System.out.println("Current point is "+currentPoint);
     }
     
     @Override
@@ -715,12 +723,10 @@ public abstract class Canvas extends JPanel implements MouseListener,
         // getViewer().getCurrentDataSet
         mCanx = evt.getX();
         mCany = evt.getY();
-        // System.out.println("released");
+        
         if (currentPoint == null && mCanx >= getLeftShift()
                 && mCanx <= getLeftShift() + getPlotWidth() && mCany >= tPad
                 && mCany < getWidth() - bPad) {
-            // getCurrentDataSet().addPoint(c2gx(mCanx),c2gy(mCany,getCurrentDataSet()));
-            // update();
         }
     }
     
@@ -731,7 +737,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
         }
         mCanx = evt.getX();
         mCany = evt.getY();
-        // System.out.println("Button" + evt.getButton());
         if (evt.getButton() != MouseEvent.BUTTON2) {
             if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
                 setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
@@ -740,16 +745,12 @@ public abstract class Canvas extends JPanel implements MouseListener,
             }
         }
         
-        // System.out.println("currentpoint="+currentPoint);
         if (getCurrentPoint() != null) {
             double tox =
                     Math.min(Math.max(getLeftShift(), mCanx), getLeftShift()
                             + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
-            // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
-            // getCurrentPoint().movePoint(getCurrentPoint(),
-            // c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
         }
     }
     
@@ -770,7 +771,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
             setCursor(Cursor.getDefaultCursor());
             setToolTipText("");
         }
-        // this.drawCoor((Graphics2D)getGraphics());
     }
     
     @Override
@@ -784,7 +784,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         createBackBuffer();
         
         // Main rendering loop. Volatile images may lose their contents.
-        // This loop will continually render to (and produce if neccessary)
+        // This loop will continually render to (and produce if necessary)
         // volatile images
         // until the rendering was completed successfully.
         do {

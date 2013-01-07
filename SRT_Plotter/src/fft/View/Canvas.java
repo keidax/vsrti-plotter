@@ -56,7 +56,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
     protected String graphTitle = "Untitled";
     protected Canvas canvas;
     protected double maxX = 40;
-    protected JFileChooser fileChooser = new JFileChooser();
+    protected JFileChooser fileChooser;
     
     public Canvas(View v, Adapter a, TreeMap<Double, Double> g) {
         canvas = this;
@@ -65,6 +65,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         setView(v);
         addMouseListener(this);
         addMouseMotionListener(this);
+        fileChooser = new JFileChooser();
         setSize(new Dimension(200, 50));
         setVisible(true);
         
@@ -274,7 +275,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
      * @param g
      */
     public void drawXAxis(Graphics2D g) {
-        int count = 1;
         double steps = countHorizontalStep();
         double lstep = countHorizontalLabelStep();
         g.setFont(new Font(g.getFont().getFontName(), 0, 11));
@@ -319,14 +319,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
      */
     public void drawYAxis(int count, Graphics2D g) {
         g.setColor(Color.BLACK);
-        if (graphTitle
-                .equals("Beam Width: Average Antenna Temperature vs. Angle")) {
-            drawVerticalLine(lPad + (count / 2 + 1) * yLabelWidth,
-                    countVerticalStep(), g);
-        } else {
-            drawVerticalLine(lPad + (count / 2 + 1) * yLabelWidth,
-                    countVerticalStep(), g);
-        }
+        drawVerticalLine(lPad + (count / 2 + 1) * yLabelWidth, countVerticalStep(), g);
         g.setColor(colors[count % colors.length]);
         drawVerticalMetric(lPad, countVerticalLabelStep(), countVerticalStep(),
                 g);
@@ -341,9 +334,9 @@ public abstract class Canvas extends JPanel implements MouseListener,
      * @param g
      */
     public void drawVerticalLine(int x, double steps, Graphics2D g) {
-        g.drawLine(x, Canvas.tPad, x, getHeight() - Canvas.bPad);
+        g.drawLine(x, Canvas.tPad, x, getHeight() - Canvas.bPad);// vertical
         g.setColor(Color.LIGHT_GRAY);
-        for (int i = 0; i < (getPlotHeight() - 1) / steps + 1; i++) {
+        for (int i = 0; i < (getPlotHeight() - 1) / steps + 1; i++) {// horizontal
             g.drawLine(x - 2, (int) (getHeight() - Canvas.bPad - i * steps),
                     x + 2, (int) (getHeight() - Canvas.bPad - i * steps));
         }
@@ -408,7 +401,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
     }
     
     /**
-     * Counts the horizontal steo
+     * Counts the horizontal step
      * 
      * @return
      */
@@ -426,8 +419,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         int count = getPlotHeight() / squareWidth + 1;
         int max;
         if (getPoints() == null || getMaxYPoint() == null) {
-            
-            max = countMax(defaultY);
+            max = countMax(defaultY);// 50
         } else {
             max =
                     countMaxVertical(Math.max(Math.abs(getMaxYPoint()),
@@ -762,12 +754,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
     }
     
     /**
-     * records where mouse was pressed and weather there is any point in less
+     * records where mouse was pressed and whether there is any point in less
      * distance then MyCanvas.r
      */
     @Override
     public void mousePressed(MouseEvent evt) {
-        // this.getVision().getCare().set(this.getVision().getSoul().newMemento());
         mCanx = evt.getX();
         mCany = evt.getY();
         double p = 0;

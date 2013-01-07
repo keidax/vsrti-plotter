@@ -34,6 +34,8 @@ import javax.swing.JPopupMenu;
 
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
+import fft.Model.Controller;
+
 /**
  * Base class for graphs
  */
@@ -47,7 +49,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     /**
      * controls the spacing between marks on the x axis
      */
-    protected double squareWidth = 60;
+    protected int squareWidth = 60;
     protected int yLabelWidth = 10;
     protected double defaultY = 9;
     protected double defaultXLeft = -20;
@@ -73,7 +75,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      * determines the size of the title
      */
     private int titleSize = 30;
-    Canvas canvas;
+    
+    private Canvas canvas;
     
     public Canvas(View v, TreeMap<Double, Double> g) {
         canvas = this;
@@ -208,6 +211,14 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         menu.add(item2);
     }
     
+    public TreeMap<Double, Double> getPoints() {
+        return points;
+    }
+    
+    public void setPoints(TreeMap<Double, Double> points) {
+        this.points = points;
+    }
+    
     public void drawDataSet(int count, Graphics2D g) {
         if (points.size() == 0) {
             return;
@@ -314,7 +325,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         g.drawLine(x, tPad, x, getHeight() - bPad);// vertical
         g.setColor(Color.LIGHT_GRAY);
         for (int i = 0; i <= getPlotHeight() / squareWidth; i++) {// horizontal
-            int markHeight = (int) (getHeight() - bPad - i * squareWidth);
+            int markHeight = getHeight() - bPad - i * squareWidth;
             g.drawLine(x - 2, markHeight, x + 2, markHeight);
         }
     }
@@ -530,11 +541,11 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         bPad = pad;
     }
     
-    public double getSquareWidth() {
+    public int getSquareWidth() {
         return squareWidth;
     }
     
-    public void setSquareWidth(double squareWidth) {
+    public void setSquareWidth(int squareWidth) {
         this.squareWidth = squareWidth;
     }
     
@@ -695,7 +706,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         }
         mCanx = evt.getX();
         mCany = evt.getY();
-        // System.out.println("Button" + evt.getButton());
         if (evt.getButton() != MouseEvent.BUTTON2) {
             if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
                 setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
@@ -706,12 +716,10 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         
         // System.out.println("currentpoint="+currentPoint);
         if (getCurrentPoint() != null) {
-            // double tox = Math.min(Math.max(getLeftShift(), mCanx),
-            // getLeftShift() + getPlotWidth());
+            // double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             // System.out.println("moving to ["+tox+","+toy+"]");
             view.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
-            System.out.println("as.;klhwmnef");
             // getCurrentPoint().movePoint(getCurrentPoint(),
             // c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
         }
@@ -827,7 +835,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         drawXAxis(g2); // draw vertical lines
         g2.setColor(Color.BLACK);
         int i = 0;
-        drawYAxis(g2);
+        drawYAxis(g2); // draw vertical axis
         // draw axes
         g2.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, titleSize));

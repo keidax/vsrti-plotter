@@ -36,22 +36,29 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import fft.Model.Adapter;
 
-public abstract class Canvas extends JPanel implements MouseListener,
-        MouseMotionListener {
+/**
+ * Base class for graphs
+ */
+
+@SuppressWarnings("serial")
+public abstract class Canvas extends JPanel implements MouseListener, MouseMotionListener {
     
     public TreeMap<Double, Double> points;
     public View view;
     public Adapter adapter;
-    protected static int lPad = 90, rPad = 30, tPad = 50, bPad = 60;
-    protected static int squareWidth = 60;
-    protected static int yLabelWidth = 10;
-    protected static int xLabelWidth = 30;
-    protected static int defaultY = 9;
-    protected double defaultXLeft = 0;
-    protected double defaultXRight = 25;
+    protected int lPad = 90, rPad = 30, tPad = 50, bPad = 60;
+    /**
+     * controls the spacing between marks on the x axis
+     */
+    protected int squareWidth = 60;
+    protected int yLabelWidth = 10;
+    protected int xLabelWidth = 30;
+    protected double defaultY = 9;
+    protected double defaultXLeft = -20;
+    protected double defaultXRight = 20;
     protected int mCanx, mCany;
     protected Double currentPoint;
-    protected static Color[] colors = { Color.BLACK };
+    protected Color[] colors = { Color.BLACK };
     protected VolatileImage volatileImg;
     protected String xAxisTitle = "x-axis";
     protected String yAxisTitle = "y-axis";
@@ -60,14 +67,22 @@ public abstract class Canvas extends JPanel implements MouseListener,
     protected int mouseButton = 0;
     protected double maxX = 40;
     private JFileChooser fileChooser;
+    // TODO find the right stroke thickness and font size
     private float stroke = 5;
+    /**
+     * determines the size of the axis labels and numbers
+     */
     private int fontSize = 20;
+    /**
+     * determines the size of the title
+     */
     private int titleSize = 30;
-    Canvas canvas;
+    
+    private Canvas canvas;
     
     public Canvas(View v, Adapter a, TreeMap<Double, Double> g) {
         canvas = this;
-        setPoints(g);
+        points = g;
         setAdapter(a);
         setView(v);
         addMouseListener(this);
@@ -80,59 +95,52 @@ public abstract class Canvas extends JPanel implements MouseListener,
         item.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileChooser
-                        .setFileFilter(new javax.swing.filechooser.FileFilter() {
-                            
-                            @Override
-                            public boolean accept(File f) {
-                                
-                                if (f.isDirectory()) {
-                                    return true;
-                                }
-                                String s = f.getName();
-                                int i = s.lastIndexOf('.');
-                                
-                                if (i > 0 && i < s.length() - 1) {
-                                    String extension =
-                                            s.substring(i + 1).toLowerCase();
-                                    if ("jpeg".equals(extension)
-                                            || "jpg".equals(extension)) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                    
+                    @Override
+                    public boolean accept(File f) {
+                        
+                        if (f.isDirectory()) {
+                            return true;
+                        }
+                        String s = f.getName();
+                        int i = s.lastIndexOf('.');
+                        
+                        if (i > 0 && i < s.length() - 1) {
+                            String extension = s.substring(i + 1).toLowerCase();
+                            if ("jpeg".equals(extension) || "jpg".equals(extension)) {
+                                return true;
+                            } else {
                                 return false;
                             }
-                            
-                            // The description of this filter
-                            @Override
-                            public String getDescription() {
-                                return "Only JPEG";
-                            }
-                        });
+                        }
+                        return false;
+                    }
+                    
+                    // The description of this filter
+                    @Override
+                    public String getDescription() {
+                        return "Only JPEG";
+                    }
+                });
                 // fileChooser.addChoosableFileFilter(new jpgSaveFilter());
                 if (fileChooser.showSaveDialog(canvas) == JFileChooser.APPROVE_OPTION) {
                     ObjectOutputStream out;
                     try {
                         
                         File f = fileChooser.getSelectedFile();
-                        if (!(f.getName().trim().endsWith(".jpg") || f
-                                .getName().trim().endsWith(".jpeg"))) {
+                        if (!(f.getName().trim().endsWith(".jpg") || f.getName().trim().endsWith(".jpeg"))) {
                             f = new File(f.getAbsolutePath() + ".jpeg");
                         }
                         out = new ObjectOutputStream(new FileOutputStream(f));
-                        BufferedImage image =
-                                new BufferedImage(getWidth(), getHeight(),
-                                        BufferedImage.TYPE_INT_RGB);
+                        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
                         paint(image.createGraphics());
                         ImageIO.write(image, "jpeg", f);
                         out.close();
                     } catch (IOException ex) {
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "cannot save image",
-                            "save error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -142,40 +150,38 @@ public abstract class Canvas extends JPanel implements MouseListener,
             // Allows the user to right click the graph and save it as a jpeg
             @Override
             public void actionPerformed(ActionEvent e) {
-                fileChooser
-                        .setFileFilter(new javax.swing.filechooser.FileFilter() {
-                            
-                            @Override
-                            public boolean accept(File f) {
-                                
-                                if (f.isDirectory()) {
-                                    return true;
-                                }
-                                String s = f.getName();
-                                int i = s.lastIndexOf('.');
-                                
-                                if (i > 0 && i < s.length() - 1) {
-                                    String extension =
-                                            s.substring(i + 1).toLowerCase();
-                                    if ("eps".equals(extension)) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+                    
+                    @Override
+                    public boolean accept(File f) {
+                        
+                        if (f.isDirectory()) {
+                            return true;
+                        }
+                        String s = f.getName();
+                        int i = s.lastIndexOf('.');
+                        
+                        if (i > 0 && i < s.length() - 1) {
+                            String extension = s.substring(i + 1).toLowerCase();
+                            if ("eps".equals(extension)) {
+                                return true;
+                            } else {
                                 return false;
                             }
-                            
-                            // The description of this filter
-                            
-                            @Override
-                            public String getDescription() {
-                                return "Only EPS";
-                            }
-                        });
+                        }
+                        return false;
+                    }
+                    
+                    // The description of this filter
+                    
+                    @Override
+                    public String getDescription() {
+                        return "Only EPS";
+                    }
+                });
                 // fileChooser.addChoosableFileFilter(new jpgSaveFilter());
                 if (fileChooser.showSaveDialog(canvas) == JFileChooser.APPROVE_OPTION) {
-                    ObjectOutputStream out;
+                    // ObjectOutputStream out;
                     try {
                         
                         File f = fileChooser.getSelectedFile();
@@ -184,12 +190,10 @@ public abstract class Canvas extends JPanel implements MouseListener,
                         }
                         // out = new ObjectOutputStream(new
                         // FileOutputStream(f));
-                        EpsGraphics2D g =
-                                new EpsGraphics2D("Title", f, 0, 0, getWidth(),
-                                        getHeight());
+                        EpsGraphics2D g = new EpsGraphics2D("Title", f, 0, 0, getWidth(), getHeight());
                         canvas.paint(g);
                         g.flush();
-                        System.out.println(g.toString());
+                        // System.out.println(g.toString());
                         g.close();
                         // f.close();
                         
@@ -201,8 +205,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
                     } catch (IOException ex) {
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "cannot save image",
-                            "save error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -220,21 +223,23 @@ public abstract class Canvas extends JPanel implements MouseListener,
     }
     
     public void drawDataSet(int count, Graphics2D g) {
-        if (getPoints().size() == 0) {
+        if (points.size() == 0) {
             return;
         }
-        Set<Double> keys = getPoints().keySet();
-        Double previousKey = getPoints().firstKey();
+        Set<Double> keys = points.keySet();
+        Double previousKey = points.firstKey();
         for (Double key : keys) {
             if (Math.abs(key) > 40) {
                 continue;
             }
             g.setColor(Color.BLACK);
-            g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)),
-                    g2cx(key), g2cy(getPoints().get(key)));
+            g.setStroke(new BasicStroke(stroke));
+            g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)), g2cx(key), g2cy(points.get(key)));
             previousKey = key;
-            drawPoint(g, key, getPoints().get(key));
+            System.out.println("point at " + key + " - ");
+            drawPoint(g, key, points.get(key));
         }
+        
     }
     
     public void drawPoint(Graphics2D g, double x, double y) {
@@ -242,7 +247,9 @@ public abstract class Canvas extends JPanel implements MouseListener,
     
     public int g2cx(double x) {
         double ratio = getRatioX();
-        return (int) (getLeftShift() + (x - getMinX()) * ratio);
+        return (int) (getLeftShift() + (x - getMinX()) * ratio)
+        // + getPlotWidth()/2;
+        ;
     }
     
     /**
@@ -252,7 +259,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
      */
     public int g2cy(double y) {
         double ratio = getRatioY();
+        // height-(height-t-b)/2-bpad-y*ratio
+        // (2*height-heihgt+t+b)/2 - b - y*ratio
         return (int) (getPlotHeight() + tPad - y * ratio);
+        // return (int) (this.getPlotHeight() / 2 + tPad - y * ratio);
+        // return (int)((this.getHeight()+tPad+bPad)/2-y*ratio-bPad);
     }
     
     public double c2gx(double x) {
@@ -282,21 +293,17 @@ public abstract class Canvas extends JPanel implements MouseListener,
         for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
             // draw vertical lines
             g.setColor(Color.LIGHT_GRAY);
-            g.drawLine((int) (getLeftShift() + i * steps), tPad,
-                    (int) (getLeftShift() + i * steps), getHeight() - bPad);
+            g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() - bPad);
             // draw numbers at each vertical line
             g.setColor(Color.BLACK);
             String lString = df.format(c2gx(getLeftShift() + i * steps));
             
             FontMetrics fm = g.getFontMetrics();
-            g.drawString(
-                    lString,
-                    (int) (getLeftShift() + i * steps - fm.stringWidth(lString) / 2),
-                    getHeight() - bPad + fm.getAscent() + fm.getLeading() + 5);
+            g.drawString(lString, (int) (getLeftShift() + i * steps - fm.stringWidth(lString) / 2), getHeight() - bPad + fm.getAscent()
+                    + fm.getLeading() + 5);
         }
         // draw axis title
-        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth()
-                / 2 - 50, getHeight() - 10);
+        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2 - 50, getHeight() - 10);
         // draw horizontal axis
         g.drawLine(getLeftShift(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
     }
@@ -333,15 +340,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
         FontMetrics fm = g.getFontMetrics();
         DecimalFormat df = new DecimalFormat("0.00");
         for (int i = 0; i <= getPlotHeight() / squareWidth; i++) {// horizontal
-            // String tempString="" + Math.round(c2gy(this.getHeight() - bPad -
-            // (i) * plotStep) * 10) / 10.0;
-            String tempString =
-                    df.format(c2gy(getHeight() - bPad - i * squareWidth));
-            // System.out.println(c2gy(this.getHeight() - bPad - (i) *
-            // squareWidth));
+            // String tempString="" + Math.round(c2gy(this.getHeight() - bPad - (i) * plotStep) * 10) / 10.0;
+            String tempString = df.format(c2gy(getHeight() - bPad - i * squareWidth));
+            // System.out.println(c2gy(this.getHeight() - bPad - (i) * squareWidth));
             // System.out.println(this.getHeight() - bPad - (i) * squareWidth);
-            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5,
-                    getHeight() - bPad - i * squareWidth + fm.getAscent() / 2);
+            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5, getHeight() - bPad - i * squareWidth + fm.getAscent() / 2);
         }
     }
     
@@ -352,8 +355,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         g.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
         
-        int translateDown =
-                (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
+        int translateDown = (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
         
         g.translate(yLabelWidth, translateDown);
         g.rotate(-Math.PI / 2.0);
@@ -378,14 +380,14 @@ public abstract class Canvas extends JPanel implements MouseListener,
     }
     
     public Double getMaxYPoint() {
-        if (getPoints() == null || getPoints().size() == 0) {
+        if (points == null || points.size() == 0) {
             return sinc(0);
         }
-        double max = getPoints().firstEntry().getValue();
-        Set<Double> keys = getPoints().keySet();
+        double max = points.firstEntry().getValue();
+        Set<Double> keys = points.keySet();
         for (Double key : keys) {
-            if (getPoints().get(key) > max) {
-                max = getPoints().get(key);
+            if (points.get(key) > max) {
+                max = points.get(key);
             }
         }
         if (max < 1) {
@@ -399,6 +401,10 @@ public abstract class Canvas extends JPanel implements MouseListener,
     }
     
     public double getRatioX() {
+        /*
+         * if (points == null) { return (double) getPlotWidth() / (double)
+         * countMax(defaultY); }
+         */
         return getPlotWidth() / (getMaxX() - getMinX());
     }
     
@@ -406,10 +412,16 @@ public abstract class Canvas extends JPanel implements MouseListener,
         return getPlotHeight() / getMaxY();
     }
     
+    /**
+     * @return The width of the plot section of the canvas, in pixels
+     */
     protected int getPlotWidth() {
         return getWidth() - lPad - rPad;
     }
     
+    /**
+     * @return The height of the plot section of the canvas, in pixels
+     */
     protected int getPlotHeight() {
         return getHeight() - tPad - bPad;
     }
@@ -420,7 +432,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
      *         default y value.
      */
     public double getMaxY() {
-        if (getPoints() == null || getPoints().size() == 0) {
+        if (points == null || points.size() == 0) {
             if (view.showSinc && sinc(0) > 0) {
                 return sinc(0.0) * 1.1;
             } else {
@@ -428,11 +440,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
             }
         }
         
-        double max = getPoints().firstEntry().getValue();
-        Set<Double> keys = getPoints().keySet();
+        double max = points.firstEntry().getValue();
+        Set<Double> keys = points.keySet();
         for (Double key : keys) {
-            if (getPoints().get(key) > max) {
-                max = getPoints().get(key);
+            if (points.get(key) > max) {
+                max = points.get(key);
             }
         }
         if (max < 1) {
@@ -442,17 +454,17 @@ public abstract class Canvas extends JPanel implements MouseListener,
     }
     
     public double getMaxX() {
-        if (getPoints() == null || getPoints().size() == 0) {
+        if (points == null || points.size() == 0) {
             return defaultXRight;
         }
-        return getPoints().lastKey();
+        return points.lastKey();
     }
     
     public double getMinX() {
-        if (getPoints() == null || getPoints().size() == 0) {
+        if (points == null || points.size() == 0) {
             return defaultXLeft;
         }
-        return getPoints().firstKey();
+        return points.firstKey();
     }
     
     public int getLeftShift() {
@@ -476,68 +488,68 @@ public abstract class Canvas extends JPanel implements MouseListener,
         this.view = view;
     }
     
-    public static int getLPad() {
+    public int getLPad() {
         return lPad;
     }
     
-    public static void setLPad(int pad) {
+    public void setLPad(int pad) {
         lPad = pad;
     }
     
-    public static int getRPad() {
+    public int getRPad() {
         return rPad;
     }
     
-    public static void setRPad(int pad) {
+    public void setRPad(int pad) {
         rPad = pad;
     }
     
-    public static int getTPad() {
+    public int getTPad() {
         return tPad;
     }
     
-    public static void setTPad(int pad) {
+    public void setTPad(int pad) {
         tPad = pad;
     }
     
-    public static int getBPad() {
+    public int getBPad() {
         return bPad;
     }
     
-    public static void setBPad(int pad) {
+    public void setBPad(int pad) {
         bPad = pad;
     }
     
-    public static int getSquareWidth() {
+    public int getSquareWidth() {
         return squareWidth;
     }
     
-    public static void setSquareWidth(int squareWidth) {
-        Canvas.squareWidth = squareWidth;
+    public void setSquareWidth(int squareWidth) {
+        this.squareWidth = squareWidth;
     }
     
-    public static int getYLabelWidth() {
+    public int getYLabelWidth() {
         return yLabelWidth;
     }
     
-    public static void setYLabelWidth(int labelWidth) {
+    public void setYLabelWidth(int labelWidth) {
         yLabelWidth = labelWidth;
     }
     
-    public static int getXLabelWidth() {
+    public int getXLabelWidth() {
         return xLabelWidth;
     }
     
-    public static void setXLabelWidth(int labelWidth) {
+    public void setXLabelWidth(int labelWidth) {
         xLabelWidth = labelWidth;
     }
     
-    public static int getDefaultY() {
+    public double getDefaultY() {
         return defaultY;
     }
     
-    public static void setDefaultY(int defaultY) {
-        Canvas.defaultY = defaultY;
+    public void setDefaultY(int defaultY) {
+        this.defaultY = defaultY;
     }
     
     public int getMCanx() {
@@ -564,12 +576,29 @@ public abstract class Canvas extends JPanel implements MouseListener,
         this.currentPoint = currentPoint;
     }
     
-    public static Color[] getColors() {
+    public Color[] getColors() {
         return colors;
     }
     
-    public static void setColors(Color[] colors) {
-        VCanvas.colors = colors;
+    public void setColors(Color[] colors) {
+        this.colors = colors;
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            menu.show(this, e.getX(), e.getY());
+        }
+    }
+    
+    @Override
+    public void mouseEntered(MouseEvent arg0) {
+        // Do nothing
+    }
+    
+    @Override
+    public void mouseExited(MouseEvent arg0) {
+        // Do nothing
     }
     
     /**
@@ -584,10 +613,9 @@ public abstract class Canvas extends JPanel implements MouseListener,
      */
     protected Double getPointOnGraph(int x, int y) {
         
-        Set<Double> keys = getPoints().keySet();
+        Set<Double> keys = points.keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInside(mCanx, mCany, g2cx(key),
-                    g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament().isInside(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
                 return key;
             }
         }
@@ -596,10 +624,9 @@ public abstract class Canvas extends JPanel implements MouseListener,
     
     protected Double getVerticallyPointOnGraph(int x, int y) {
         
-        Set<Double> keys = getPoints().keySet();
+        Set<Double> keys = points.keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInsideVertically(mCanx, mCany,
-                    g2cx(key), g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament().isInsideVertically(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
                 return key;
             }
         }
@@ -607,7 +634,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
     }
     
     /**
-     * records where mouse was pressed and weather there is any point in less
+     * records where mouse was pressed and whether there is any point in less
      * distance then MyCanvas.r
      */
     @Override
@@ -642,21 +669,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
         // System.out.println("Current point is "+currentPoint);
     }
     
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            menu.show(this, e.getX(), e.getY());
-        }
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    
     /**
      * Records coordinates mouse was released and if there was no currentPoint,
      * then creates new point with particular coordinates
@@ -669,8 +681,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         mCanx = evt.getX();
         mCany = evt.getY();
         // System.out.println("released");
-        if (currentPoint == null && mCanx >= getLeftShift()
-                && mCanx <= getLeftShift() + getPlotWidth() && mCany >= tPad
+        if (currentPoint == null && mCanx >= getLeftShift() && mCanx <= getLeftShift() + getPlotWidth() && mCany >= tPad
                 && mCany < getWidth() - bPad) {
             // getCurrentDataSet().addPoint(c2gx(mCanx),c2gy(mCany,getCurrentDataSet()));
             // update();
@@ -684,7 +695,6 @@ public abstract class Canvas extends JPanel implements MouseListener,
         }
         mCanx = evt.getX();
         mCany = evt.getY();
-        System.out.println("Button" + evt.getButton());
         if (evt.getButton() != MouseEvent.BUTTON2) {
             if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
                 setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
@@ -695,9 +705,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
         
         // System.out.println("currentpoint="+currentPoint);
         if (getCurrentPoint() != null) {
-            double tox =
-                    Math.min(Math.max(getLeftShift(), mCanx), getLeftShift()
-                            + getPlotWidth());
+            double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
@@ -708,13 +716,12 @@ public abstract class Canvas extends JPanel implements MouseListener,
     
     @Override
     public void mouseMoved(MouseEvent evt) {
+        DecimalFormat df = new DecimalFormat("#.##");
         mCanx = evt.getX();
         mCany = evt.getY();
-        DecimalFormat df = new DecimalFormat("#.##");
         if (getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
-            setToolTipText("[" + df.format(p) + "; "
-                    + df.format(getPoints().get(p)) + "]");
+            setToolTipText("[" + df.format(p) + "; " + df.format(points.get(p)) + "]");
         }
         if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
             setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -767,11 +774,12 @@ public abstract class Canvas extends JPanel implements MouseListener,
         } while (volatileImg.contentsLost());
     }
     
+    // main paint method
     protected void doPaint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         setBackground(Color.WHITE);
+        
         drawXAxis(g2); // draw vertical lines
         g2.setColor(Color.BLACK);
         int i = 0;
@@ -781,19 +789,23 @@ public abstract class Canvas extends JPanel implements MouseListener,
         // g2.drawLine(this.getLeftShift(), g2cy(0.0), this.getLeftShift() +
         // this.getPlotWidth(), g2cy(0.0));//horizontal// draw horizontal axis
         g.setFont(new Font(g.getFont().getFontName(), 0, titleSize));
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics()
-                .stringWidth(graphTitle)) / 2, (tPad + g2.getFontMetrics()
-                .getHeight() / 2) / 2);
+        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2,
+                (tPad + g2.getFontMetrics().getHeight() / 2) / 2);
         i = 0;
         g2.setColor(colors[0]);
         drawDataSet(i, g2);
         if (view.showSinc) {
-            paintSinc(g2);
+            paintVis(g2);
         }
         i++;
     }
     
-    protected void paintSinc(Graphics2D g) {
+    /**
+     * Draws Model
+     * 
+     * @param g
+     */
+    protected void paintVis(Graphics2D g) {
         g.setColor(Color.red);
         double last = -maxX;
         for (double i = -maxX + getPlotWidth() / 80; i < maxX; i += .2) {
@@ -805,18 +817,8 @@ public abstract class Canvas extends JPanel implements MouseListener,
     
     protected double sinc(double phi) {
         phi = phi * Math.PI / 180;
-        return Math.sqrt(view.t1
-                * view.t1
-                + view.t2
-                * P(phi)
-                * view.t2
-                * P(phi)
-                + 2
-                * view.t1
-                * view.t2
-                * P(phi)
-                * Math.cos(2 * Math.PI * view.b * Math.sin(phi)
-                        / adapter.getLambda()));
+        return Math.sqrt(view.t1 * view.t1 + view.t2 * P(phi) * view.t2 * P(phi) + 2 * view.t1 * view.t2 * P(phi)
+                * Math.cos(2 * Math.PI * view.b * Math.sin(phi) / adapter.getLambda()));
         //
     }
     
@@ -824,12 +826,8 @@ public abstract class Canvas extends JPanel implements MouseListener,
         if (phi == 0.0) {
             return 1;
         }
-        return Math.pow(
-                Math.sin(Math.PI * view.getD() * Math.sin(phi)
-                        / adapter.getLambda()), 2)
-                / Math.pow(
-                        Math.PI * view.getD() * Math.sin(phi)
-                                / adapter.getLambda(), 2);
+        return Math.pow(Math.sin(Math.PI * view.getD() * Math.sin(phi) / adapter.getLambda()), 2)
+                / Math.pow(Math.PI * view.getD() * Math.sin(phi) / adapter.getLambda(), 2);
     }
     
     protected void createBackBuffer() {

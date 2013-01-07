@@ -338,7 +338,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
                     } else {
-                        JOptionPane.showMessageDialog(View.this, "Incorrect data file format", "Incorrett format",
+                        JOptionPane.showMessageDialog(View.this, "Incorrect data file format", "Incorrect format",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }

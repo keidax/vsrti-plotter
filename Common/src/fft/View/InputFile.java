@@ -90,7 +90,7 @@ public class InputFile implements Comparable<InputFile> {
             return false;
         }
         String str = getFile().getName();
-        return str.matches(".*'[0-9]*([.][0-9]*)?'.*"); // 3 3.2 not 2. not .3
+        return str.matches(".*'[-+]?[0-9]+([.][0-9]+)?'.*"); // 3 3.2 not 2. not .3, also +3.0 and -3.0
     }
     
     public double parseBaseline() {

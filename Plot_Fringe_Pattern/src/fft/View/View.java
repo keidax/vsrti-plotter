@@ -340,7 +340,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     viewer.getVGraph().xAxisTitle = "angle [rad]";
                 } else {
                     bDeg.setText("In Radians");
-                    viewer.getVGraph().xAxisTitle = "angle [�]";
+                    viewer.getVGraph().xAxisTitle = "angle [degrees]";
                     viewer.update();
                 }
                 isDegrees = !isDegrees;

@@ -266,7 +266,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
     
     public int g2cx(double x) {
         double ratio = getRatioX();
-        return (int) (x * ratio + getLeftShift());
+        return (int) (x * ratio) + getLeftShift();
     }
     
     public int g2cy(double y) {
@@ -284,9 +284,18 @@ public abstract class Canvas extends JPanel implements MouseListener,
     
     public double c2gy(double toy) {
         double ratio = getRatioY();
+        // return (toy+bPad-getHeight())/-ratio;
         return (getPlotHeight() / 2 + tPad - toy) / ratio;
+        // return ((getHeight()+tPad+bPad)/2-toy-bPad)/ratio;
+        // return (this.getHeight()-bPad-tPad)/2+tPad-toy*ratio;
+        // return ((this.getHeight()-bPad-tPad)/2-toy+tPad)/ratio;
     }
     
+    /**
+     * Draws the x-axis
+     * 
+     * @param g
+     */
     public void drawXAxis(Graphics2D g) {
         double steps = countHorizontalStep();
         double lstep = countHorizontalLabelStep();
@@ -297,9 +306,7 @@ public abstract class Canvas extends JPanel implements MouseListener,
             g.drawLine((int) (getLeftShift() + i * steps), tPad,
                     (int) (getLeftShift() + i * steps), getHeight() - bPad);
             g.setColor(Color.BLACK);
-            g.drawString(
-                    ""
-                            + df.format(Math.round(i * lstep * 100) / 100.0
+            g.drawString("" + df.format(Math.round(i * lstep * 100) / 100.0
                                     + getMinX()), (int) (getLeftShift() + i
                             * steps - xLabelWidth / 4), getHeight() - 17);
         }
@@ -307,16 +314,28 @@ public abstract class Canvas extends JPanel implements MouseListener,
                 getHeight() - 2);
     }
     
+    /**
+     * Draws the y-axis
+     * 
+     * @param count
+     * @param g
+     */
     public void drawYAxis(int count, Graphics2D g) {
         g.setColor(Color.BLACK);
-        drawVerticalLine(lPad + (count / 2 + 1) * yLabelWidth,
-                countVerticalStep(), g);
+        drawVerticalLine(lPad + (count / 2 + 1) * yLabelWidth, countVerticalStep(), g);
         g.setColor(colors[count % colors.length]);
         drawVerticalMetric(lPad, countVerticalLabelStep(), countVerticalStep(),
                 g);
         drawVerticalLabel(count / 2 * yLabelWidth + 5, " " + yAxis, g);
     }
     
+    /**
+     * Draws vertical lines
+     * 
+     * @param x
+     * @param steps
+     * @param g
+     */
     public void drawVerticalLine(int x, double steps, Graphics2D g) {
         g.drawLine(x, Canvas.tPad, x, getHeight() - Canvas.bPad);// vertical
         g.setColor(Color.LIGHT_GRAY);
@@ -326,6 +345,14 @@ public abstract class Canvas extends JPanel implements MouseListener,
         }
     }
     
+    /**
+     * Draws vertical metric
+     * 
+     * @param x
+     * @param strStep
+     * @param plotStep
+     * @param g
+     */
     public void drawVerticalMetric(int x, double strStep, double plotStep,
             Graphics2D g) {
         g.setFont(new Font(g.getFont().getFontName(), 0, 10));
@@ -348,6 +375,13 @@ public abstract class Canvas extends JPanel implements MouseListener,
         }
     }
     
+    /**
+     * Draws the vertical label
+     * 
+     * @param x
+     * @param title
+     * @param g
+     */
     public void drawVerticalLabel(int x, String title, Graphics2D g) {
         g.translate(x, getPlotHeight() / 2);
         g.rotate(-Math.PI / 2.0);
@@ -364,6 +398,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
         return (double) getPlotHeight() / count;
     }
     
+    /**
+     * Counts the horizontal step
+     * 
+     * @return
+     */
     public double countHorizontalStep() {
         int count = getPlotWidth() / squareWidth + 1;
         return (double) getPlotWidth() / count;
@@ -382,6 +421,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
         return (double) max / (double) count;
     }
     
+    /**
+     * Returns the x-value of the point with the largest y-value
+     * 
+     * @return
+     */
     public Double getMaxYPoint() {
         if (getPoints().size() == 0) {
             return null;
@@ -399,6 +443,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
         return max;
     }
     
+    /**
+     * Returns the x-value of the point with the smallest y-value
+     * 
+     * @return
+     */
     public Double getMinYPoint() {
         if (getPoints().size() == 0) {
             return (double) -Canvas.defaultY;
@@ -413,6 +462,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
         return min;
     }
     
+    /**
+     * Returns max y (x-value) - min y (x-value)
+     * 
+     * @return
+     */
     public double getMaxYRange() {
         if (getMaxYPoint() - getMinYPoint() < 2) {
             return 2.0;
@@ -421,6 +475,11 @@ public abstract class Canvas extends JPanel implements MouseListener,
         }
     }
     
+    /**
+     * Horizontal label step
+     * 
+     * @return
+     */
     public double countHorizontalLabelStep() {// NOT FINISHED
         int count = getPlotWidth() / squareWidth + 1;// 30
         double max = getMaxX() - getMinX();// 50
