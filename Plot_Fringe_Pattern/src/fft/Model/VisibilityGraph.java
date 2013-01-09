@@ -13,13 +13,11 @@ public class VisibilityGraph extends Graph {
     
     public Complex[] compl;
     public File saveFile;
-    public double lambda = 2.5;
+    public double lambda = 1; // TODO originally 2.5; why?
     public SortedSet<Point> rawPoints;
     public double halfBZero = 0;
-    private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(),
-            gridedRms = new TreeMap<Double, Double>();
-    public TreeMap<Double, InputFile> inputFiles =
-            new TreeMap<Double, InputFile>();
+    private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
+    public TreeMap<Double, InputFile> inputFiles = new TreeMap<Double, InputFile>();
     
     public VisibilityGraph(Model m) {
         super(m);
@@ -117,8 +115,7 @@ public class VisibilityGraph extends Graph {
     
     @Override
     public void setExponent(int e) {
-        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline())
-                / Math.log(2))) {
+        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline()) / Math.log(2))) {
             exponent = e;
             reinicializePoints();
         }
@@ -227,9 +224,7 @@ public class VisibilityGraph extends Graph {
         s += "BASELINE_POWER_RMS\n";
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) { // X Y RMS
-            s +=
-                    key + " " + getPoints().get(key) + " " + getRms().get(key)
-                            + "\n";
+            s += key + " " + getPoints().get(key) + " " + getRms().get(key) + "\n";
         }
         // System.out.println(s);
         return s;

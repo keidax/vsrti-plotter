@@ -27,7 +27,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         rmsPoints = new TreeMap<Double, Double>();
         // dataPoints = new TreeMap<Double, Double>();
         // System.out.println(dataPoints.size());
-        xAxisTitle = "Angle (degrees)";
+        xAxisTitle = "Angle";
         yAxisTitle = "Power";
         graphTitle = "Beam";
     }
@@ -111,8 +111,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     @Override
     public void setCurrentPoint(Double currentPoint) {
         try {
-            view.removeRmsPoint(currentPoint); // TODO find out if RMS should
-                                               // disappear like this
+            view.removeRmsPoint(currentPoint);
         } catch (NullPointerException e) {
         }
         this.currentPoint = currentPoint;

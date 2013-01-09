@@ -2,7 +2,6 @@ package fft.Model;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.TreeMap;
 
 import fft.View.InputFile;
@@ -55,27 +54,25 @@ public class Adapter {
         return getModel().getVisibilityGraph().getDataPoints();
     }
     
-    public TreeMap<Double, Double> getImageGraphPoints() {
-        TreeMap<Double, Double> reduced = new TreeMap<Double, Double>();
-        Set<Double> keys = getModel().getImageGraph().getPoints().keySet();
-        int sum = keys.size();
-        int count = 0;
-        for (Double key : keys) {
-            count++;
-            reduced.put(key, getModel().getImageGraph().getPoints().get(key));
-            if (count == sum / 2) {
-                break;
-            }
-        }
-        reduced.putAll(getModel()
-                .getImageGraph()
-                .getPoints()
-                .headMap(
-                        getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
-        // System.out.println("Size of reduced "+reduced.size());
-        // return reduced;
-        return getModel().getImageGraph().getPoints();
-    }
+    /*
+     * public TreeMap<Double, Double> getImageGraphPoints() {
+     * TreeMap<Double, Double> reduced = new TreeMap<Double, Double>();
+     * Set<Double> keys = getModel().getImageGraph().getPoints().keySet();
+     * int sum = keys.size();
+     * int count = 0;
+     * for (Double key : keys) {
+     * count++;
+     * reduced.put(key, getModel().getImageGraph().getPoints().get(key));
+     * if (count == sum / 2) {
+     * break;
+     * }
+     * }
+     * reduced.putAll(getModel().getImageGraph().getPoints().headMap(getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
+     * // System.out.println("Size of reduced "+reduced.size());
+     * // return reduced;
+     * return getModel().getImageGraph().getPoints();
+     * }
+     */
     
     public Model getModel() {
         return model;
@@ -90,8 +87,7 @@ public class Adapter {
         getModel().getVisibilityGraph().inputFiles.clear();
         getModel().getVisibilityGraph().addInputFiles(f);
         for (InputFile i : f) {
-            getModel().getVisibilityGraph().addRawPoint(i.getBaseline(),
-                    i.getAverageIntensity());
+            getModel().getVisibilityGraph().addRawPoint(i.getBaseline(), i.getAverageIntensity());
             getModel().getVisibilityGraph().addRms(i.getBaseline(), i.getRms());
         }
         getModel().updateListeners();
@@ -105,9 +101,9 @@ public class Adapter {
         getModel().getVisibilityGraph().movePoint(currentPoint, toy);
     }
     
-    public void moveImagePoint(Double currentPoint, double toy) {
+    /*public void moveImagePoint(Double currentPoint, double toy) {
         getModel().getImageGraph().movePoint(currentPoint, toy);
-    }
+    }*/
     
     public void importVisibilityGraphPoints(TreeMap<Double, Double> parseFile) {
         getModel().getVisibilityGraph().importPoints(parseFile);

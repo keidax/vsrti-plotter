@@ -22,8 +22,7 @@ public class VisibilityGraph extends Graph {
     public double lambda = 1;
     public SortedSet<Point> rawPoints, rawPoints2;
     public double halfBZero = 0;
-    public TreeMap<Double, Double> rms = new TreeMap<Double, Double>(),
-            gridedRms = new TreeMap<Double, Double>();
+    public TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
     public int numberOfPoints = 128;
     public boolean polar;
     
@@ -57,16 +56,12 @@ public class VisibilityGraph extends Graph {
         Object[] keys = getPoints().keySet().toArray();
         for (int i = 0; i < keys.length; i++) {
             if (polar) {
-                getPoints().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].abs());
-                getPoints2().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].phase());
+                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].abs());
+                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].phase());
             } else {
                 
-                getPoints().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].re());
-                getPoints2().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].im());
+                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].re());
+                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
             }
         }
         model.updateListeners();
@@ -123,17 +118,11 @@ public class VisibilityGraph extends Graph {
         if (compl.length != numberOfPoints) {
             compl = new Complex[numberOfPoints];
         }
-        if (getRawPoints() != null
-                && getRawPoints().size() > 0
-                && numberOfPoints < getRawPoints().last().getX()
-                        / getDeltaBaseline()) {
-            numberOfPoints =
-                    (int) Math.ceil(getRawPoints().last().getX()
-                            / getDeltaBaseline());
+        if (getRawPoints() != null && getRawPoints().size() > 0 && numberOfPoints < getRawPoints().last().getX() / getDeltaBaseline()) {
+            numberOfPoints = (int) Math.ceil(getRawPoints().last().getX() / getDeltaBaseline());
         }
         if (getRawPoints().size() != 0) {
-            for (double i = 0; i <= Math.max(numberOfPoints, getRawPoints()
-                    .last().getX() / getDeltaBaseline()); i++) {
+            for (double i = 0; i <= Math.max(numberOfPoints, getRawPoints().last().getX() / getDeltaBaseline()); i++) {
                 getPoints().put(i * getDeltaBaseline() / getLambda(), 0.0);
                 getPoints2().put(i * getDeltaBaseline() / getLambda(), 0.0);
                 compl[(int) i] = new Complex(0, 0);
@@ -156,9 +145,7 @@ public class VisibilityGraph extends Graph {
             // will count their average as well as average
             // of rms and shows puts one average point
             for (int i = 0; i < pointss.length; i++) {
-                if (!subp.isEmpty()
-                        && getGridX(pointss[i].getX()) != getGridX(subp.get(0)
-                                .getX())) {
+                if (!subp.isEmpty() && getGridX(pointss[i].getX()) != getGridX(subp.get(0).getX())) {
                     if (subp.size() == 1) {
                         addPoint(subp.get(0).getX(), subp.get(0).getY());
                     } else {
@@ -208,23 +195,20 @@ public class VisibilityGraph extends Graph {
                                       // equation. Might make more sense for
                                       // this to be it's own method.
         {
-            if (equation.charAt(i) == '*' || equation.charAt(i) == '/'
-                    || equation.charAt(i) == '(' || equation.charAt(i) == ')'
-                    || equation.charAt(i) == '+' || equation.charAt(i) == '-'
-                    || equation.charAt(i) == '^') {
+            if (equation.charAt(i) == '*' || equation.charAt(i) == '/' || equation.charAt(i) == '(' || equation.charAt(i) == ')'
+                    || equation.charAt(i) == '+' || equation.charAt(i) == '-' || equation.charAt(i) == '^') {
                 end = i;
                 if (start == end) {
                     La[index] = equation.charAt(i) + "";
                     start++;
                     index++;
                 } else {
-                    La[index] =
-                            equation.substring(start, end).replace('_', '-'); // Changes
-                                                                              // '_'
-                                                                              // to
-                                                                              // a
-                                                                              // negative
-                                                                              // sign
+                    La[index] = equation.substring(start, end).replace('_', '-'); // Changes
+                                                                                  // '_'
+                                                                                  // to
+                                                                                  // a
+                                                                                  // negative
+                                                                                  // sign
                     if (La[index].equals("e")) {
                         La[index] = Math.E + "";
                     } else if (La[index].equals("-e")) {
@@ -264,49 +248,32 @@ public class VisibilityGraph extends Graph {
         int start = 0, end = 0, index = 0, num = equation.length();
         int start2 = 0, end2 = 0, index2 = 0, num2 = iEquation.length();
         String[] M = new String[num];
-        String[] La = new String[num]; // The reference array. This only changes
-                                       // in the first for loop.
+        String[] La = new String[num]; // The reference array. This only changes in the first for loop.
         String[] M2 = new String[num2];
-        String[] La2 = new String[num2]; // The reference array. This only
-                                         // changes in the first for loop.
+        String[] La2 = new String[num2]; // The reference array. This only changes in the first for loop.
         Object[] keys = getPoints().keySet().toArray();
         TreeMap<Double, Double> allPoints = getPoints();
         Converter con, con2;
         
-        for (int i = 0; i < num; i++) // This for loop breaks up the String
-                                      // equation. Might make more sense for
-                                      // this to be it's own method.
+        for (int i = 0; i < num; i++) // This for loop breaks up the String equation. Might make more sense for this to be it's own method.
         {
-            if (equation.charAt(i) == '*' || equation.charAt(i) == '/'
-                    || equation.charAt(i) == '(' || equation.charAt(i) == ')'
-                    || equation.charAt(i) == '+' || equation.charAt(i) == '-'
-                    || equation.charAt(i) == '^') {
+            char c = equation.charAt(i);
+            if (c == '*' || c == '/' || c == '(' || c == ')' || c == '+' || c == '-' || c == '^') {
                 end = i;
                 if (start == end) {
                     La[index] = equation.charAt(i) + "";
                     start++;
                     index++;
                 } else {
-                    La[index] =
-                            equation.substring(start, end).replace('_', '-'); // Changes
-                                                                              // '_'
-                                                                              // to
-                                                                              // a
-                                                                              // negative
-                                                                              // sign
+                    La[index] = equation.substring(start, end).replace('_', '-'); // Changes '_' to a negative sign
                     if (La[index].equals("e")) {
                         La[index] = Math.E + "";
                     } else if (La[index].equals("-e")) {
                         La[index] = "-" + Math.E + "";
                     } else if (La[index].equals("pi")) {
-                        La[index] = Math.PI + ""; // changes "pi" to the double
-                                                  // version of the mathematical
-                                                  // constant pi.
+                        La[index] = Math.PI + ""; // changes "pi" to the double version of the mathematical constant pi.
                     } else if (La[index].equals("-pi")) {
-                        La[index] = "-" + Math.PI + ""; // changes "pi" to the
-                                                        // double version of the
-                                                        // mathematical constant
-                                                        // pi.
+                        La[index] = "-" + Math.PI + ""; // changes "pi" to the double version of the mathematical constant pi.
                     }
                     
                     index++;
@@ -317,40 +284,25 @@ public class VisibilityGraph extends Graph {
             }
         }
         
-        for (int i = 0; i < num2; i++) // This for loop breaks up the String
-                                       // equation. Might make more sense for
-                                       // this to be it's own method.
+        for (int i = 0; i < num2; i++) // This for loop breaks up the String equation. Might make more sense for this to be it's own method.
         {
-            if (iEquation.charAt(i) == '*' || iEquation.charAt(i) == '/'
-                    || iEquation.charAt(i) == '(' || iEquation.charAt(i) == ')'
-                    || iEquation.charAt(i) == '+' || iEquation.charAt(i) == '-'
-                    || iEquation.charAt(i) == '^') {
+            if (iEquation.charAt(i) == '*' || iEquation.charAt(i) == '/' || iEquation.charAt(i) == '(' || iEquation.charAt(i) == ')'
+                    || iEquation.charAt(i) == '+' || iEquation.charAt(i) == '-' || iEquation.charAt(i) == '^') {
                 end2 = i;
                 if (start2 == end2) {
                     La2[index2] = iEquation.charAt(i) + "";
                     start2++;
                     index2++;
                 } else {
-                    La2[index2] =
-                            iEquation.substring(start2, end2).replace('_', '-'); // Changes
-                                                                                 // '_'
-                                                                                 // to
-                                                                                 // a
-                                                                                 // negative
-                                                                                 // sign
+                    La2[index2] = iEquation.substring(start2, end2).replace('_', '-'); // Changes '_' to a negative sign
                     if (La2[index2].equals("e")) {
                         La2[index2] = Math.E + "";
                     } else if (La2[index2].equals("-e")) {
                         La2[index2] = "-" + Math.E + "";
                     } else if (La2[index2].equals("pi")) {
-                        La2[index2] = Math.PI + ""; // changes "pi" to the
-                                                    // double version of the
-                                                    // mathematical constant pi.
+                        La2[index2] = Math.PI + ""; // changes "pi" to the double version of the mathematical constant pi.
                     } else if (La2[index2].equals("-pi")) {
-                        La2[index2] = "-" + Math.PI + ""; // changes "pi" to the
-                                                          // double version of
-                                                          // the mathematical
-                                                          // constant pi.
+                        La2[index2] = "-" + Math.PI + ""; // changes "pi" to the double version of the mathematical constant pi.
                     }
                     
                     index2++;
@@ -362,30 +314,20 @@ public class VisibilityGraph extends Graph {
         }
         
         if (start < num) {
-            La[index] = equation.substring(start).replace('_', '-'); // Changes
-                                                                     // '_' to a
-                                                                     // negative
-                                                                     // sign
+            La[index] = equation.substring(start).replace('_', '-'); // Changes '_' to a negative sign
             if (La[index].equals("e")) {
                 La[index] = Math.E + "";
             } else if (La[index].equals("-e")) {
                 La[index] = "-" + Math.E + "";
             } else if (La[index].equals("pi")) {
-                La[index] = Math.PI + ""; // changes "pi" to the double version
-                                          // of the mathematical constant pi.
+                La[index] = Math.PI + ""; // changes "pi" to the double version of the mathematical constant pi.
             } else if (La[index].equals("-pi")) {
-                La[index] = "-" + Math.PI + ""; // changes "pi" to the double
-                                                // version of the mathematical
-                                                // constant pi.
+                La[index] = "-" + Math.PI + ""; // changes "pi" to the double version of the mathematical constant pi.
             }
         }
         
         if (start2 < num2) {
-            La2[index2] = iEquation.substring(start).replace('_', '-'); // Changes
-                                                                        // '_'
-                                                                        // to a
-                                                                        // negative
-                                                                        // sign
+            La2[index2] = iEquation.substring(start).replace('_', '-'); // Changes '_' to a negative sign
             if (La2[index2].equals("e")) {
                 La2[index2] = Math.E + "";
             } else if (La2[index2].equals("-e")) {
@@ -425,19 +367,14 @@ public class VisibilityGraph extends Graph {
             Double ans2 = con2.evaluate();
             System.out.println(ans + ": " + ans2);
             
-            compl[i] = new Complex(ans, ans2); // creates the complex number
-                                               // then sets the points
+            compl[i] = new Complex(ans, ans2); // creates the complex number then sets the points
             if (polar) {
-                allPoints.put(Double.parseDouble(keys[i].toString()),
-                        compl[i].abs());
-                getPoints2().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].phase());
+                allPoints.put(Double.parseDouble(keys[i].toString()), compl[i].abs());
+                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].phase());
                 
             } else {
-                allPoints.put(Double.parseDouble(keys[i].toString()),
-                        compl[i].re());
-                getPoints2().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].im());
+                allPoints.put(Double.parseDouble(keys[i].toString()), compl[i].re());
+                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
             }
             createImageGraph();
             model.updateListeners();
@@ -537,23 +474,11 @@ public class VisibilityGraph extends Graph {
         model.imageGraph.setComplex(res);
         for (int i = 0; i < res.length; i++) {
             if (polar) {
-                model.imageGraph.getPoints().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].abs());
-                model.imageGraph.getPoints2().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].phase());
+                model.imageGraph.getPoints().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].abs());
+                model.imageGraph.getPoints2().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].phase());
             } else {
-                model.imageGraph.getPoints().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].re());
-                model.imageGraph.getPoints2().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].im());
+                model.imageGraph.getPoints().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].re());
+                model.imageGraph.getPoints2().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].im());
             }
         }
     }
@@ -689,31 +614,15 @@ public class VisibilityGraph extends Graph {
         for (int i = 0; i < keys.length; i++) {
             // if(gridedRms==null)
             if (polar) {
-                getPoints2().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].phase());
-                getPoints().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].abs());
-                model.imageGraph.getPoints().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].abs());
-                model.imageGraph.getPoints2().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].phase());
+                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].phase());
+                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].abs());
+                model.imageGraph.getPoints().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].abs());
+                model.imageGraph.getPoints2().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].phase());
             } else {
-                getPoints2().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].im());
-                getPoints().put(Double.parseDouble(keys[i].toString()),
-                        compl[i].re());
-                model.imageGraph.getPoints().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].re());
-                model.imageGraph.getPoints2().put(
-                        i * getLambda()
-                                / (getDeltaBaseline() * getPoints().size()),
-                        res[i].im());
+                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
+                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].re());
+                model.imageGraph.getPoints().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].re());
+                model.imageGraph.getPoints2().put(i * getLambda() / (getDeltaBaseline() * getPoints().size()), res[i].im());
             }
         }
         model.updateListeners();
@@ -732,9 +641,7 @@ public class VisibilityGraph extends Graph {
         int n = (int) (currentPoint / getDeltaBaseline());
         if (polar) {
             if (toy != compl[n].abs()) {
-                compl[n] =
-                        new Complex(toy * Math.cos(compl[n].phase()), toy
-                                * Math.sin(compl[n].phase()));
+                compl[n] = new Complex(toy * Math.cos(compl[n].phase()), toy * Math.sin(compl[n].phase()));
                 getPoints2().put(currentPoint, compl[n].phase());
                 getPoints().put(currentPoint, compl[n].abs());
             }
@@ -763,9 +670,7 @@ public class VisibilityGraph extends Graph {
         int n = (int) (currentPoint / getDeltaBaseline());
         if (polar) {
             if (toy != compl[n].phase()) {
-                compl[n] =
-                        new Complex(compl[n].abs() * Math.cos(toy),
-                                compl[n].abs() * Math.sin(toy));
+                compl[n] = new Complex(compl[n].abs() * Math.cos(toy), compl[n].abs() * Math.sin(toy));
                 getPoints2().put(currentPoint, compl[n].phase());
                 getPoints().put(currentPoint, compl[n].abs());
             }
@@ -804,8 +709,7 @@ public class VisibilityGraph extends Graph {
                 getPoints2().put(parseFile[0][i], compl[i].im());
             }
         }
-        System.out.println("Importing raw data, size" + getPoints().size()
-                + ", ");
+        System.out.println("Importing raw data, size" + getPoints().size() + ", ");
         // this.recountExponent();
         // this.setDeltaBaseline(this.countDeltaBaseline());
         update();
@@ -827,9 +731,7 @@ public class VisibilityGraph extends Graph {
         Set<Double> keys = getPoints().keySet();
         int i = 0;
         for (Double key : keys) { // X Y RMS
-            s +=
-                    key * lambda + " " + compl[i].re() + " " + compl[i].im()
-                            + "\n";
+            s += key * lambda + " " + compl[i].re() + " " + compl[i].im() + "\n";
             i++;
         }
         return s;

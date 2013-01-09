@@ -9,7 +9,7 @@ public class TableModel extends AbstractTableModel {
     
     public View viewer;
     public ArrayList<InputFile> inputFiles;
-    public static String[] columnNames = { "Baseline", "File path" }; // TODO find right names
+    public static String[] columnNames = { "Baseline", "File path" };
     
     public TableModel(View v) {
         super();

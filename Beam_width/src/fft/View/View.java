@@ -38,20 +38,21 @@ import fft.Model.ModelListener;
  * 
  */
 
-public class View extends JFrame implements ModelListener, ActionListener {
+public class View extends JFrame implements ModelListener {
     
     private ViewListener listener;
     private VCanvas vCanvas;
     private TableModel tableModel;
     private FileTable jTable;
-    private JTextField fD, fLambda, fThetaMax, fSigma, fNoise;
-    private JLabel lDelta, lLambda, lThetaMax, lSigma;
+    private JTextField fD, fLambda, fSigma, fNoise;
+    private JLabel lDelta, lLambda, lSigma;
+    private JButton updateButton;
+    
     private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private double d = 5, noise = 0, lambda;// TODO find a good default value
                                             // for lambda
     private boolean showBeamPattern = false;
-    private String link = "Instructions_Plot_Beam.html";// TODO get the correct
-                                                        // url here
+    private String link = "Instructions_Plot_Beam.html";// TODO get the correct url here
     private JFileChooser fileChooser;
     private Model model;
     
@@ -62,18 +63,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
         tableModel = new TableModel();
         jTable = new FileTable(tableModel, this);
         
-        vCanvas = new VCanvas(this, new TreeMap<Double, Double>()/*
-                                                                  * adapter.
-                                                                  * getVisiblityGraphPoints
-                                                                  * ()
-                                                                  */); // TODO
-                                                                       // just a
-                                                                       // temporary
-                                                                       // move...
+        vCanvas = new VCanvas(this, new TreeMap<Double, Double>());
         
         vCanvas.setSize(300, 100);
         
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jBlank, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jThetaMax, jLabels, jFields;
+        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jBlank, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jRadioButtons, jThetaMax, jLabels, jFields;
         // JPanel jSigma;
         
         // BUTTONS
@@ -85,6 +79,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bAbout = new JButton("About");
         bHide = new JButton("Show Beam Pattern");
         bDelete = new JButton("Delete Data");
+        
+        updateButton = new JButton("Update");
+        
         lDelta = new JLabel("<HTML><P></P>" + "display factor of " + '\u03C3' + ": </P>  </P><P><B>Model Parameters:</B><P>D: </P><P>"
                 + '\u03BB' + ":" + "</P><P>Noise: </P></HTML>");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Drag and Drop data files into this box. File names should contain angle distance in single quotes. <B>Example:</B> file with angle 23.9 can have these names: \"file_a'23.9'.rad\", \"jun3.12angle'23.9'.rad\", etc.</P></HTML>");
@@ -92,33 +89,26 @@ public class View extends JFrame implements ModelListener, ActionListener {
         lDelta.setMaximumSize(new Dimension(130, 175));
         lLambda = new JLabel('\u03BB' + ": ");
         lLambda.setSize(100, 22);
-        lThetaMax = new JLabel('\u0398' + " max: ");
-        lThetaMax.setSize(100, 22);
         lSigma = new JLabel('\u03C3' + " displaying factor: ");
         lSigma.setSize(100, 22);
         fD = new JTextField(getD() + "");
         fLambda = new JTextField(lambda + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
                 + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
-        fThetaMax = new JTextField();
-        fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
+        // fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
         fSigma = new JTextField(vCanvas.getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         // fSigma.setMinimumSize(new Dimension(50,20));
-        fSigma.addActionListener(this);
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3.  )"
                 + "Error bars are not displayed where there is no RMS to calculate.</P></HTML>");
         fNoise = new JTextField(noise + "");
         fNoise.setMaximumSize(new Dimension(50, 20));
-        fNoise.addActionListener(this);
         fNoise.setToolTipText("<HTML><P WIDTH='300px'>signal due to noise in the system; set this to minimum y-value</P></HTML>");
         fD.setToolTipText("<HTML><P>D = diameter of detector</P></HTML>");
         fD.setMaximumSize(new Dimension(50, 20));
-        fD.addActionListener(this);
         fLambda.setMaximumSize(new Dimension(50, 20));
-        fLambda.addActionListener(this);
-        fThetaMax.setMaximumSize(new Dimension(50, 20));
-        fThetaMax.addActionListener(this);
+        // fThetaMax.setMaximumSize(new Dimension(50, 20));
+        // fThetaMax.addActionListener(this);
         JScrollPane jScroll;
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
@@ -164,6 +154,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jButtons3 = new JPanel();
         jButtons4 = new JPanel();
         jButtons5 = new JPanel();
+        jRadioButtons = new JPanel();
         jBlank = new JPanel();
         jThetaMax = new JPanel();
         // jSigma = new JPanel();
@@ -178,9 +169,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
         row1col2col2.add(jButtons3);
         row1col2col2.add(jButtons2);
         
-        row1col2col2.add(jBlank);
+        row1col2col2.add(jRadioButtons);
         row1col2col2.add(jButtons4);
-        row1col2col2.add(new JPanel());
         row1col2col2.add(jButtons5);
         // labels.add(jButtons);
         jDelta.setLayout(new BoxLayout(jDelta, BoxLayout.X_AXIS));
@@ -189,8 +179,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jThetaMax.setLayout(new BoxLayout(jThetaMax, BoxLayout.X_AXIS));
         jButtons.setLayout(new BoxLayout(jButtons, BoxLayout.X_AXIS));
         jButtons2.setLayout(new BoxLayout(jButtons2, BoxLayout.X_AXIS));
-        jLabels.setLayout(new GridLayout(5, 2, 1, 1));
-        jFields.setLayout(new GridLayout(5, 2, 1, 1));
+        jLabels.setLayout(new GridLayout(6, 2, 1, 1));
+        jFields.setLayout(new GridLayout(6, 2, 1, 1));
+        
+        jRadioButtons.setLayout(new BoxLayout(jRadioButtons, BoxLayout.Y_AXIS));
         
         jButtons3.add(bHide);
         jButtons.add(bOpen);
@@ -212,6 +204,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jFields.add(fD);
         jFields.add(fLambda);
         jFields.add(fNoise);
+        jFields.add(updateButton);
         
         // BUTTONS FUNCTIONS
         bOpen.addActionListener(new ActionListener() {
@@ -346,7 +339,42 @@ public class View extends JFrame implements ModelListener, ActionListener {
             }
         });
         
+        updateButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    noise = Double.parseDouble(fNoise.getText());
+                    model.setNoise(noise);
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    Double.parseDouble(fD.getText());
+                    setD(Double.parseDouble(fD.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    double tempLambda = Double.parseDouble(fLambda.getText());
+                    model.setLambda(tempLambda);
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    int tempSigma = Integer.parseInt(fSigma.getText());
+                    
+                    vCanvas.setSigma(tempSigma);
+                } catch (NumberFormatException e1) {
+                }
+                
+                model.update();
+                
+            }
+        });
+        
         this.setSize(1200, 800);
+        // this.pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -489,7 +517,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         repaint();
         fD.setText(getD() + "");
         fLambda.setText(lambda + "");
-        fThetaMax.setText(d / 2 + "");
+        // fThetaMax.setText(d / 2 + "");
         // fLambda.setText(viewer.adapter.getLambda()+"");
         vCanvas.update(points, rmsPoints);
         // this.getIGraph().update();
@@ -508,61 +536,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
         ArrayList<InputFile> tempArray = ((TableModel) jTable.getModel()).getInputFiles();
         model.setRawPoints(tempArray);
         
-        model.update();
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(fNoise)) {
-            try {
-                
-                noise = Double.parseDouble(fNoise.getText());
-                // System.out.println("setting noise="+noise+"->"+Double.parseDouble(fNoise.getText()));
-                model.setNoise(noise);
-                // adapter.setNoise(noise);
-                // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                // update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fD)) {
-            try {
-                Double.parseDouble(fD.getText());
-                setD(Double.parseDouble(fD.getText()));
-                // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                // update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fLambda)) {
-            try {
-                double tempLambda = Double.parseDouble(fLambda.getText());
-                model.setLambda(tempLambda);
-            } catch (NumberFormatException e1) {
-            }
-        } else if (e.getSource().equals(fThetaMax)) {
-            try {
-                Double.parseDouble(fThetaMax.getText());
-                // update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fSigma)) {
-            try {
-                int tempSigma = Integer.parseInt(fSigma.getText());
-                
-                // TreeMap<Double,Double> rms = adapter.getRms();
-                // Set<Double> model = rms.keySet();
-                // for(Double k:model)
-                // {
-                // System.out.println("RMS: " +k + " : " + rms.get(k));
-                // }
-                vCanvas.setSigma(tempSigma);
-                // update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        }
         model.update();
     }
     

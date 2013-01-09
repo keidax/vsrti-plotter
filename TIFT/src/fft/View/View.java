@@ -510,8 +510,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     eqn2 = new JTextField(iEquation);
                     
                 } else {
-                    eqn = new JTextField("Enter Real Part Equation Here");
-                    eqn2 = new JTextField("Enter Imaginary Part of Equation Here");
+                    eqn = new JTextField();
+                    eqn2 = new JTextField();
                 }
                 // eqn.setMaximumSize(new Dimension(700,100));
                 JLabel jl = new JLabel("<html>Acceptable Inputs:<br><br>"
@@ -522,7 +522,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.add(row1);
                 row1.add(jl);
+                row1.add(new JLabel("Real part of the equation:"));
                 row1.add(eqn);
+                row1.add(new JLabel("Imaginary part of the equation:"));
                 row1.add(eqn2);
                 row1.add(enter);
                 

@@ -34,10 +34,7 @@ public class FileTable extends JTable implements TableModelListener {
         setMinimumSize(new Dimension(50, 50));
         getColumnModel().getColumn(0).setHeaderValue("Data Block");
         if (m.getColumnCount() == 3) {
-            getColumnModel().getColumn(2).setHeaderValue("Angle"); // TODO find
-                                                                   // out what
-                                                                   // this is
-                                                                   // about...
+            getColumnModel().getColumn(2).setHeaderValue("Angle"); // TODO find out what this is about with 2 or 3 columns
             getColumnModel().getColumn(2).setMaxWidth(60);
         }
         
@@ -101,14 +98,10 @@ public class FileTable extends JTable implements TableModelListener {
     public void editingStopped(ChangeEvent e) {
         if (me.getEditingColumn() == 2) {
             try {
-                Double.parseDouble((String) this.getCellEditor()
-                        .getCellEditorValue());
-                ((TableModel) me.getModel()).list.getNode(getEditingRow()).angle =
-                        Double.parseDouble((String) this.getCellEditor()
-                                .getCellEditorValue());
+                Double.parseDouble((String) this.getCellEditor().getCellEditorValue());
+                ((TableModel) me.getModel()).list.getNode(getEditingRow()).angle = Double.parseDouble((String) this.getCellEditor().getCellEditorValue());
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null,
-                        "You can only set the angle to a number.");
+                JOptionPane.showMessageDialog(null, "You can only set the angle to a number.");
             }
         }
         cellEditor.cancelCellEditing();
@@ -119,17 +112,13 @@ public class FileTable extends JTable implements TableModelListener {
      * This is necessary if any points are deleted or changed.
      */
     public void updateGraph() {
-        ((TableModel) me.getModel()).viewer.vGraph.graphTitle =
-                "Antenna Temperature vs. Channel";
+        ((TableModel) me.getModel()).viewer.vGraph.graphTitle = "Antenna Temperature vs. Channel";
         ((TableModel) me.getModel()).viewer.vGraph.xAxis = "Channels";
         int[] index = me.getSelectedRows();
         ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
         
-        if (index.length > 0
-                && ((TableModel) me.getModel()).getRowCount() > index[0]) {
-            double[] data =
-                    ((ListNode) ((TableModel) me.getModel())
-                            .getValueAt(index[0])).data;
+        if (index.length > 0 && ((TableModel) me.getModel()).getRowCount() > index[0]) {
+            double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
             
             TreeMap<Double, Double> points = new TreeMap<Double, Double>();
             TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
@@ -140,13 +129,9 @@ public class FileTable extends JTable implements TableModelListener {
                     
                 }
             }
-            ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms()
-                    .clear();
-            ((TableModel) me.getModel()).viewer.adapter
-                    .importVisibilityGraphPoints(points);
-            ((TableModel) me.getModel()).viewer.currentNode =
-                    (ListNode) ((TableModel) me.getModel())
-                            .getValueAt(index[0]);
+            ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms().clear();
+            ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
+            ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
             
         }
     }
@@ -158,21 +143,15 @@ public class FileTable extends JTable implements TableModelListener {
     public void plotSpectrum() {
         int[] index = me.getSelectedRows();
         
-        if (index.length <= 0
-                || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
-            JOptionPane
-                    .showMessageDialog(null,
-                            "You must select a data block before you can plot its spectrum.");
+        if (index.length <= 0 || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
+            JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
             return;
         }
         ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
         
-        double[] data =
-                ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
-        double start =
-                ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
-        double step =
-                ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
+        double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
+        double start = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
+        double step = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
         
         for (int i = 0; i < data.length; i++) {
@@ -181,12 +160,9 @@ public class FileTable extends JTable implements TableModelListener {
             }
             
         }
-        ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms()
-                .clear();
-        ((TableModel) me.getModel()).viewer.adapter
-                .importVisibilityGraphPoints(points);
-        ((TableModel) me.getModel()).viewer.currentNode =
-                (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
+        ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms().clear();
+        ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
+        ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
     }
     
     /**
@@ -196,11 +172,8 @@ public class FileTable extends JTable implements TableModelListener {
     public boolean plotBeam() {
         int[] index = me.getSelectedRows();
         
-        if (index.length <= 0
-                || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
-            JOptionPane
-                    .showMessageDialog(null,
-                            "You must select at least one data block to plot the beam width.");
+        if (index.length <= 0 || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
+            JOptionPane.showMessageDialog(null, "You must select at least one data block to plot the beam width.");
             return false;
         }
         ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
@@ -214,22 +187,15 @@ public class FileTable extends JTable implements TableModelListener {
         double min = ((TableModel) me.getModel()).viewer.min;
         System.out.println(min);
         for (int i = 0; i < index.length; i++) {
-            avg =
-                    ((ListNode) ((TableModel) me.getModel())
-                            .getValueAt(index[i])).getAverageOverFrequency();
-            angle =
-                    ((ListNode) ((TableModel) me.getModel())
-                            .getValueAt(index[i])).angle - min;
+            avg = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[i])).getAverageOverFrequency();
+            angle = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[i])).angle - min;
             points.put(angle, avg);
             rms.put(angle, avg / Math.sqrt(index.length));
             
         }
-        ((TableModel) me.getModel()).viewer.adapter
-                .importVisibilityGraphRms(rms);
-        ((TableModel) me.getModel()).viewer.adapter
-                .importVisibilityGraphPoints(points);
-        ((TableModel) me.getModel()).viewer.currentNode =
-                (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
+        ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphRms(rms);
+        ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
+        ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
         return true;
     }
     
@@ -250,12 +216,7 @@ public class FileTable extends JTable implements TableModelListener {
         String[] temp, temp1;
         
         for (int i = 0; i < selected.length; i++) {
-            mess =
-                    mess
-                            + selected[i]
-                            + ") "
-                            + ((TableModel) me.getModel()).viewer.list
-                                    .getNode(selected[i]).title + "\n";
+            mess = mess + selected[i] + ") " + ((TableModel) me.getModel()).viewer.list.getNode(selected[i]).title + "\n";
             numb = numb + selected[i] + " ";
         }
         
@@ -274,12 +235,8 @@ public class FileTable extends JTable implements TableModelListener {
             node = node.next;
         }
         
-        int delete =
-                JOptionPane
-                        .showConfirmDialog(
-                                null,
-                                "Are you sure you want to delete these data blocks? The associated SUB and AVG data blocks will also be deleted.\n"
-                                        + mess);
+        int delete = JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to delete these data blocks? The associated SUB and AVG data blocks will also be deleted.\n" + mess);
         
         if (delete == 0) {
             for (int i = selected.length - 1; i >= 0; i--) {
@@ -294,18 +251,15 @@ public class FileTable extends JTable implements TableModelListener {
                     temp1 = numb.split(" ");
                     for (int i = 0; i < temp.length; i++) {
                         if (numb.contains(" " + temp[i] + " ")) {
-                            ((TableModel) me.getModel()).viewer.list
-                                    .remove(node.title);
+                            ((TableModel) me.getModel()).viewer.list.remove(node.title);
                             break;
                         }
                         
                         for (int j = 0; j < temp1.length; j++) {
                             try {
                                 Integer.parseInt(temp[i]);
-                                if (Integer.parseInt(temp[i]) > Integer
-                                        .parseInt(temp1[j])) {
-                                    temp[i] =
-                                            Integer.parseInt(temp[i]) - 1 + "";
+                                if (Integer.parseInt(temp[i]) > Integer.parseInt(temp1[j])) {
+                                    temp[i] = Integer.parseInt(temp[i]) - 1 + "";
                                 }
                             } catch (Exception ex) {
                                 

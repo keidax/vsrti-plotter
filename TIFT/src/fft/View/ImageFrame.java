@@ -30,8 +30,7 @@ import javax.swing.JPopupMenu;
  * @author Karel Durktoa
  * 
  */
-public class ImageFrame extends JFrame implements MouseListener { // TODO is this necessary, or can I remove it in this
-                                                                  // project
+public class ImageFrame extends JFrame implements MouseListener { // TODO is this necessary, or can I remove it in this project
 
     private JPanel p = new JPanel();
     final JPopupMenu menu = new JPopupMenu();

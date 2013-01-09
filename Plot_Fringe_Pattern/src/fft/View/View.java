@@ -35,7 +35,7 @@ import javax.swing.JTextField;
 import fft.Model.Adapter;
 import fft.Model.ModelListener;
 
-public class View extends JFrame implements ModelListener, ActionListener {
+public class View extends JFrame implements ModelListener {
     
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
@@ -47,7 +47,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public FileTable jTable;
     public JTextField fD, fLambda, fThetaMax, fSigma, fT1, fT2, fb;
     public JLabel lDelta, lLambda, lThetaMax, lSigma;
-    public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDeg, bDelete;
+    public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
+    private JButton updateButton;
     public static View viewer;
     public double d = 1, t1 = 1, t2 = 1, b = 5;
     public boolean showSinc = false, isDegrees = true;
@@ -79,7 +80,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
         bHide = new JButton("Show Fringe Pat.");
-        bDeg = new JButton("In Radians");
+        
+        updateButton = new JButton("Update");
+        
         lDelta = new JLabel("<HTML><BODY><table border=\"0px\" style=\"position:relativ;top:-10px;\">"
         
         + "<tr height='10px'><td>" + "display factor of " + '\u03C3' + ": </td></tr>" + "<tr height = '10px'><b>Model Parameters</b></tr>"
@@ -106,7 +109,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fThetaMax = new JTextField(adapter.getDeltaBaseline() / 2 + "");
         fSigma = new JTextField(getVGraph().getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
-        fSigma.addActionListener(this);
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3)"
                 + "Error bars are not displayed where there is no RMS to calculate.</P></HTML>");
         fT1 = new JTextField(1 + "");
@@ -121,15 +123,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fT1.setMaximumSize(new Dimension(50, 20));
         fT2.setMaximumSize(new Dimension(50, 20));
         fb.setMaximumSize(new Dimension(50, 20));
-        fT1.addActionListener(this);
-        fT2.addActionListener(this);
-        fb.addActionListener(this);
         fD.setMaximumSize(new Dimension(50, 20));
-        fD.addActionListener(this);
         fLambda.setMaximumSize(new Dimension(50, 225));
-        fLambda.addActionListener(this);
         fThetaMax.setMaximumSize(new Dimension(50, 200));
-        fThetaMax.addActionListener(this);
         JScrollPane jScroll;
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
@@ -206,8 +202,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jThetaMax.setLayout(new BoxLayout(jThetaMax, BoxLayout.X_AXIS));
         jButtons.setLayout(new BoxLayout(jButtons, BoxLayout.X_AXIS));
         jButtons2.setLayout(new BoxLayout(jButtons2, BoxLayout.X_AXIS));
-        jLabels.setLayout(new GridLayout(7, 2, 1, 1));
-        jFields.setLayout(new GridLayout(7, 2, 1, 1));
+        jLabels.setLayout(new GridLayout(8, 2, 1, 1));
+        jFields.setLayout(new GridLayout(8, 2, 1, 1));
         
         // jDelta.add(lDelta);
         // jDelta.add(fDelta);
@@ -220,7 +216,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
         // jSigma.add(lSigma);
         // jSigma.add(fSigma);
         jButtons3.add(bHide);
-        jButtons3.add(bDeg);
         jButtons.add(bOpen);
         jButtons.add(bSave);
         jButtons2.add(bReset);
@@ -244,6 +239,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jFields.add(fb);
         jFields.add(fD);
         jFields.add(fLambda);
+        jFields.add(updateButton);
         // jFields.add(fThetaMax);
         
         // BUTTONS FUNCTIONS
@@ -331,22 +327,23 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
         });
         
+        /*
         bDeg.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isDegrees) {
                     bDeg.setText("In Degrees");
-                    viewer.getVGraph().xAxisTitle = "angle [rad]";
+                    vGraph.xAxisTitle = "angle [rad]";
                 } else {
                     bDeg.setText("In Radians");
-                    viewer.getVGraph().xAxisTitle = "angle [degrees]";
-                    viewer.update();
+                    vGraph.xAxisTitle = "angle [\u00b0]";
                 }
                 isDegrees = !isDegrees;
+                // TODO make this actually do something
             }
             
-        });
+        });*/
         
         bAbout.addActionListener(new ActionListener() {
             
@@ -402,8 +399,56 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                 }
                 
-                // TODO sendArrayFiles
+                sendAdapterFiles();
                 
+            }
+        });
+        
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Double.parseDouble(fD.getText());
+                    setD(Double.parseDouble(fD.getText()));
+                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                try {
+                    Double.parseDouble(fT1.getText());
+                    t1 = Double.parseDouble(fT1.getText());
+                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                try {
+                    Double.parseDouble(fT2.getText());
+                    t2 = Double.parseDouble(fT2.getText());
+                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                try {
+                    Double.parseDouble(fb.getText());
+                    b = Double.parseDouble(fb.getText());
+                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                try {
+                    Double.parseDouble(fLambda.getText());
+                    adapter.setLambda(Double.parseDouble(fLambda.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                try {
+                    Double.parseDouble(fThetaMax.getText());
+                } catch (NumberFormatException e1) {
+                }
+                try {
+                    
+                    Integer.parseInt(fSigma.getText());
+                    getVGraph().setSigma(Integer.parseInt(fSigma.getText()));
+                    getVGraph().update();
+                } catch (NumberFormatException e1) {
+                }
+                
+                update();
             }
         });
         
@@ -579,70 +624,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
     
     public void sendAdapterFiles() {
         adapter.setRawPoints(((TableModel) jTable.getModel()).inputFiles);
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(fD)) {
-            try {
-                Double.parseDouble(fD.getText());
-                setD(Double.parseDouble(fD.getText()));
-                // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fT1)) {
-            try {
-                Double.parseDouble(fT1.getText());
-                t1 = Double.parseDouble(fT1.getText());
-                // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fT2)) {
-            try {
-                Double.parseDouble(fT2.getText());
-                t2 = Double.parseDouble(fT2.getText());
-                // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fb)) {
-            try {
-                Double.parseDouble(fb.getText());
-                b = Double.parseDouble(fb.getText());
-                // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fLambda)) {
-            try {
-                Double.parseDouble(fLambda.getText());
-                adapter.setLambda(Double.parseDouble(fLambda.getText()));
-            } catch (NumberFormatException e1) {
-            }
-        } else if (e.getSource().equals(fThetaMax)) {
-            try {
-                Double.parseDouble(fThetaMax.getText());
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fSigma)) {
-            try {
-                
-                Integer.parseInt(fSigma.getText());
-                getVGraph().setSigma(Integer.parseInt(fSigma.getText()));
-                getVGraph().update();
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        }
     }
     
     public double getD() {

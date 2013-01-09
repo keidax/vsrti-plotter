@@ -14,6 +14,10 @@ public abstract class Graph {
         points = new TreeMap<Double, Double>();
     }
     
+    public Graph() {
+        points = new TreeMap<Double, Double>();
+    }
+    
     public void setDeltaBaseline(double b) {
         deltaBaseline = b;
         model.getVisibilityGraph().reinicializePoints();
@@ -30,10 +34,6 @@ public abstract class Graph {
     
     public double getDeltaBaseline() {
         return deltaBaseline;
-    }
-    
-    public Graph() {
-        points = new TreeMap<Double, Double>();
     }
     
     public TreeMap<Double, Double> getPoints() {

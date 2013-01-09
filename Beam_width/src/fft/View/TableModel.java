@@ -8,8 +8,7 @@ import javax.swing.table.AbstractTableModel;
 public class TableModel extends AbstractTableModel {
     
     private ArrayList<InputFile> inputFiles;
-    private String[] columnNames = { "Baseline", "File path" }; // TODO get
-                                                                // right names
+    private String[] columnNames = { "Baseline", "File path" };
     
     public TableModel() {
         super();

@@ -56,8 +56,6 @@ public class TableModel extends AbstractTableModel {
         }
         inputFiles.add(inputFile);
         Collections.sort(inputFiles);
-        viewer.sendAdapterFiles();
-        // viewer.adapter.setRawPoints(inputFiles);
     }
     
     public void removeInputFile(int i) {
