@@ -516,12 +516,13 @@ public class View extends JFrame implements ModelListener {
         System.out.println("Updating view");
         repaint();
         fD.setText(getD() + "");
-        fLambda.setText(lambda + "");
+        fLambda.setText(model.getLambda() + "");
         // fThetaMax.setText(d / 2 + "");
         // fLambda.setText(viewer.adapter.getLambda()+"");
         vCanvas.update(points, rmsPoints);
         // this.getIGraph().update();
-        
+        System.out.println("updating with " + points.size() + " points:");
+        System.out.println(points);
     }
     
     public boolean isBeamPatternVisible() {
@@ -567,7 +568,6 @@ public class View extends JFrame implements ModelListener {
     public void moveVisibilityPoint(double currentPoint, double toy) {
         model.movePoint(currentPoint, toy);
         model.update();
-        System.out.println("irururunfndndhhwyquqjwndndslkfcj");
     }
     
     public void removeRmsPoint(double x) {

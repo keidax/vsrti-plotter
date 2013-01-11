@@ -156,8 +156,8 @@ public class VisibilityGraph extends Graph {
         Set<Double> keys = getRms().keySet();
         // System.out.println("rms size " + keys.size());
         for (Double d : keys) {
-            System.out.println(d + " -> " + d / getLambda());
-            gridedRms.put(d, getRms().get(d));
+            // System.out.println(d + " -> " + d / getLambda());
+            gridedRms.put(d / getLambda(), getRms().get(d));
         }
         // System.out.println("returning gridedrms size = "+gridedRms.size());
         return gridedRms;
@@ -206,7 +206,9 @@ public class VisibilityGraph extends Graph {
         TreeMap<Double, Double> al = new TreeMap<Double, Double>();
         for (Point p : rawPoints) {
             // System.out.println("gridX("+p.getX()+"/"+getLambda()+")="+getGridX(p.getX()/getLambda()));
-            al.put(getGridX(p.getX() / getLambda()), p.getY());
+            // al.put(getGridX(p.getX() / getLambda()), p.getY());
+            al.put(p.getX() / getLambda(), p.getY());
+            
         }
         // System.out.println("DataPoints = "+al.size());
         return al;

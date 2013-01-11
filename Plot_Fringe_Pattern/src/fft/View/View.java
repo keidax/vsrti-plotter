@@ -614,7 +614,7 @@ public class View extends JFrame implements ModelListener {
         repaint();
         fD.setText(getD() + "");
         fLambda.setText(viewer.adapter.getLambda() + "");
-        // this.getVGraph().update();
+        vGraph.update();
         // this.getIGraph().update();
     }
     

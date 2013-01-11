@@ -43,7 +43,7 @@ import fft.Model.Adapter;
 @SuppressWarnings("serial")
 public abstract class Canvas extends JPanel implements MouseListener, MouseMotionListener {
     
-    public TreeMap<Double, Double> points;
+    private TreeMap<Double, Double> points;
     public View view;
     public Adapter adapter;
     protected int lPad = 90, rPad = 30, tPad = 50, bPad = 60;

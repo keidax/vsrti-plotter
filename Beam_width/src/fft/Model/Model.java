@@ -27,7 +27,7 @@ public class Model implements ModelInterface {
         System.out.println("Updating model");
         // visibilityGraph.reinitializePoints();
         for (ModelListener ml : listeners) {
-            ml.updateView(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
+            ml.updateView(visibilityGraph.getDataPoints(), visibilityGraph.getGridedRms());
         }
         // TODO update other things?
     }

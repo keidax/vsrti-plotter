@@ -34,8 +34,6 @@ import javax.swing.JPopupMenu;
 
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
-import fft.Model.Controller;
-
 /**
  * Base class for graphs
  */

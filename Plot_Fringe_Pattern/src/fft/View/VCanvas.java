@@ -30,12 +30,14 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void drawPoint(Graphics2D g, double x, double y) {
         
         if (adapter.getVisibilityGraphDataPoints().containsKey(x) && adapter.getVisibilityGraphDataPoints().get(x) == y) {
+            System.out.println("drawing original");
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
                 drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
             }
         } else {
+            System.out.println("drawing changed");
             g.setColor(colors[1]);
             ornaments[0].draw(g, g2cx(x), g2cy(y));
         }
@@ -43,11 +45,11 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     
     @Override
     public void drawDataSet(int count, Graphics2D g) {
-        if (points.size() == 0) {
+        if (dataPoints.size() == 0) {
             return;
         }
-        Set<Double> keys = points.keySet();
-        Double previousKey = points.firstKey();
+        Set<Double> keys = dataPoints.keySet();
+        Double previousKey = dataPoints.firstKey();
         for (Double key : keys) {
             /*
             if (Math.abs(key) > 40) {
@@ -56,9 +58,9 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             }
             */
             g.setColor(Color.BLACK);
-            g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)), g2cx(key), g2cy(points.get(key)));
+            g.drawLine(g2cx(previousKey), g2cy(dataPoints.get(previousKey)), g2cx(key), g2cy(dataPoints.get(key)));
             previousKey = key;
-            drawPoint(g, key, points.get(key));
+            drawPoint(g, key, dataPoints.get(key));
             /*
              * if (adapter.getRms().containsKey(key)) {
              * System.out.println("drawing rms");
@@ -68,6 +70,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
              * }
              */
         }
+        System.out.println(dataPoints);
+        System.out.println(adapter.getVisibilityGraphDataPoints());
     }
     
     public void drawRms(Graphics2D g, int x, int y1, int y2) {

@@ -38,7 +38,7 @@ import javax.swing.JTextField;
 import fft.Model.Adapter;
 import fft.Model.ModelListener;
 
-public class View extends JFrame implements ModelListener, ActionListener {
+public class View extends JFrame implements ModelListener {
     
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
@@ -48,9 +48,12 @@ public class View extends JFrame implements ModelListener, ActionListener {
     // public Model model;
     public TableModel tableModel;
     public FileTable jTable;
-    private JTextField fLambda, fThetaMax, fSigma, fT1, fT2, fTheta, fPhi1, fPhi2;
+    private JTextField fLambda, fSigma, fT1, fT2, fTheta, fPhi1, fPhi2;
     private JComboBox fShape1, fShape2;
     public JButton bSave, bOpen, bExit, bReset, bDelete, bInstruction, bAbout, bModel;
+    
+    private JButton updateButton;
+    
     public static View viewer;
     public String link = "Instructions_Plot_Visibilities.html";
     public boolean showVis = false;
@@ -83,6 +86,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bDelete = new JButton("Delete Data");
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
+        
+        updateButton = new JButton("Update");
+        
         lDelta = new JLabel("<HTML><P>" + '\u03BB' + ": </P>" + "<P>" + "display factor of " + '\u03C3' + ": </P>" + ""
                 + "<P></P><P><b>Model Parameters:</b></P><P></P><P>\u03A6:</P>" + "<P>" + "T1" + ": </P>" + "<P>" + "T2" + ": </P>" + "<P>"
                 + "Position of Lamp 2, θ" + ": </P>" + "</HTML>");
@@ -96,36 +102,29 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fPhi1 = new JTextField(d1 + "");
         fPhi1.setToolTipText("<HTML><P>\u03A6</P></HTML>");
         fPhi1.setMaximumSize(new Dimension(50, 20));
-        fPhi1.addActionListener(this);
         fPhi2 = new JTextField(d2 + "");
         fPhi2.setToolTipText("<HTML><P>\u03A6</P></HTML>");
         fPhi2.setMaximumSize(new Dimension(50, 20));
-        fPhi2.addActionListener(this);
         fLambda = new JTextField(adapter.getLambda() + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelenght of radiation. "
                 + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
         fSigma = new JTextField(getVGraph().getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
-        fSigma.addActionListener(this);
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3). "
                 + "Error bars are not displayed where there is no RMS to calculate.</P></HTML>");
         fT1 = new JTextField(T1 + "");
         fT1.setMaximumSize(new Dimension(50, 20));
-        fT1.addActionListener(this);
         fT1.setToolTipText("<HTML><P WIDTH='300px'>The Temperature of Lamp 1.</P></HTML>");
         
         fT2 = new JTextField(T2 + "");
         fT2.setMaximumSize(new Dimension(50, 20));
-        fT2.addActionListener(this);
         fT2.setToolTipText("<HTML><P WIDTH='300px'>The Temperature of Lamp 2.</P></HTML>");
         
         fTheta = new JTextField(theta + "");
         fTheta.setMaximumSize(new Dimension(50, 20));
-        fTheta.addActionListener(this);
         fTheta.setToolTipText("<HTML><P WIDTH='300px'>The position of Lamp 2. Lamp 1 is at position 0.</P></HTML>");
         
         fLambda.setMaximumSize(new Dimension(50, 20));
-        fLambda.addActionListener(this);
         
         fShape1 = new JComboBox(new String[] { "rectangular", "uniform disk" });
         fShape2 = new JComboBox(new String[] { "rectangular", "uniform disk" });
@@ -218,8 +217,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jThetaMax.setLayout(new BoxLayout(jThetaMax, BoxLayout.X_AXIS));
         jButtons.setLayout(new BoxLayout(jButtons, BoxLayout.X_AXIS));
         jButtons2.setLayout(new BoxLayout(jButtons2, BoxLayout.X_AXIS));
-        jLabels.setLayout(new GridLayout(10, 2, 1, 1));
-        jFields.setLayout(new GridLayout(10, 2, 1, 1));
+        jLabels.setLayout(new GridLayout(11, 2, 1, 1));
+        jFields.setLayout(new GridLayout(11, 2, 1, 1));
         jButtons3.add(bModel);
         jButtons.add(bOpen);
         jButtons.add(bSave);
@@ -250,6 +249,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jFields.add(fT1);
         jFields.add(fT2);
         jFields.add(fTheta);
+        jFields.add(updateButton);
         
         // BUTTONS FUNCTIONS
         bOpen.addActionListener(new ActionListener() {
@@ -398,6 +398,63 @@ public class View extends JFrame implements ModelListener, ActionListener {
             }
         });
         
+        updateButton.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Double.parseDouble(fLambda.getText());
+                    adapter.setLambda(Double.parseDouble(fLambda.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    setD1(Double.parseDouble(fPhi1.getText()));
+                    update();
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    setD2(Double.parseDouble(fPhi2.getText()));
+                    
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    
+                    Integer.parseInt(fSigma.getText());
+                    getVGraph().setSigma(Integer.parseInt(fSigma.getText()));
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    
+                    Double.parseDouble(fT1.getText());
+                    T1 = Double.parseDouble(fT1.getText());
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    
+                    Double.parseDouble(fT2.getText());
+                    T2 = Double.parseDouble(fT2.getText());
+                } catch (NumberFormatException e1) {
+                }
+                
+                try {
+                    
+                    Double.parseDouble(fTheta.getText());
+                    theta = Double.parseDouble(fTheta.getText());
+                    
+                } catch (NumberFormatException e1) {
+                }
+                
+                getVGraph().update();
+                update();
+                
+            }
+        });
+        
         this.setSize(800, 600);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -513,85 +570,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
     
     public void sendAdapterFiles() {
         adapter.setRawPoints(((TableModel) jTable.getModel()).inputFiles);
-    }
-    
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(fLambda)) {
-            try {
-                Double.parseDouble(fLambda.getText());
-                adapter.setLambda(Double.parseDouble(fLambda.getText()));
-            } catch (NumberFormatException e1) {
-            }
-        } else if (e.getSource().equals(fThetaMax)) {
-            try {
-                Double.parseDouble(fThetaMax.getText());
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fPhi1)) {
-            try {
-                setD1(Double.parseDouble(fPhi1.getText()));
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fPhi2)) {
-            try {
-                setD2(Double.parseDouble(fPhi2.getText()));
-                
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        } else if (e.getSource().equals(fSigma)) {
-            try {
-                
-                Integer.parseInt(fSigma.getText());
-                getVGraph().setSigma(Integer.parseInt(fSigma.getText()));
-                getVGraph().update();
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        }
-        
-        else if (e.getSource().equals(fT1)) {
-            try {
-                
-                Double.parseDouble(fT1.getText());
-                T1 = Double.parseDouble(fT1.getText());
-                getVGraph().update();
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        }
-        
-        else if (e.getSource().equals(fT2)) {
-            try {
-                
-                Double.parseDouble(fT2.getText());
-                T2 = Double.parseDouble(fT2.getText());
-                getVGraph().update();
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        }
-        
-        else if (e.getSource().equals(fTheta)) {
-            try {
-                
-                Double.parseDouble(fTheta.getText());
-                theta = Double.parseDouble(fTheta.getText());
-                getVGraph().update();
-                update();
-            } catch (NumberFormatException e1) {
-            }
-            
-        }
     }
     
     public double getD1() {

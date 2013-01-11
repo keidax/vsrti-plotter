@@ -16,10 +16,8 @@ public class VisibilityGraph extends Graph {
     public double lambda = 2.5;
     public SortedSet<Point> rawPoints;
     public double halfBZero = 0;
-    private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(),
-            gridedRms = new TreeMap<Double, Double>();
-    public TreeMap<Double, InputFile> inputFiles =
-            new TreeMap<Double, InputFile>();
+    private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
+    public TreeMap<Double, InputFile> inputFiles = new TreeMap<Double, InputFile>();
     
     public VisibilityGraph(Model m) {
         super(m);
@@ -73,8 +71,7 @@ public class VisibilityGraph extends Graph {
             
             // double maxkey = getPoints().lastKey();
             halfBZero = 0;
-            Point[] points =
-                    getRawPoints().toArray(new Point[getRawPoints().size()]);
+            Point[] points = getRawPoints().toArray(new Point[getRawPoints().size()]);
             
             ArrayList<Point> subp = new ArrayList<Point>();
             for (Point p : rawPoints) {
@@ -84,19 +81,13 @@ public class VisibilityGraph extends Graph {
             for (int i = 0; i < points.length; i++) {
                 // if(points[i].getX()>maxkey)
                 // continue;
-                if (!subp.isEmpty()
-                        && getGridX(points[i].getX()) != getGridX(subp.get(0)
-                                .getX())) {
+                if (!subp.isEmpty() && getGridX(points[i].getX()) != getGridX(subp.get(0).getX())) {
                     if (subp.size() == 1) {
                         addPoint(subp.get(0).getX(), subp.get(0).getY());
                         
                     } else {
-                        addPoint(
-                                subp.get(0).getX(),
-                                InputFile
-                                        .getCollectiveIntensityAverage(InputFile
-                                                .getInputFilesByX(
-                                                        getInputFiles(), subp)));
+                        addPoint(subp.get(0).getX(), InputFile.getCollectiveIntensityAverage(InputFile.getInputFilesByX(getInputFiles(),
+                                subp)));
                         
                     }
                     subp.clear();
@@ -154,8 +145,7 @@ public class VisibilityGraph extends Graph {
     
     @Override
     public void setExponent(int e) {
-        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline())
-                / Math.log(2))) {
+        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline()) / Math.log(2))) {
             exponent = e;
             reinicializePoints();
         }
@@ -264,14 +254,7 @@ public class VisibilityGraph extends Graph {
         s += "X_Y_RMS" + "\n";
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) { // X Y RMS
-            s +=
-                    key
-                            * lambda
-                            + " "
-                            + getPoints().get(key)
-                            + " "
-                            + (getGridedRms().containsKey(key) ? getGridedRms()
-                                    .get(key) : 0.0) + "\n";
+            s += key * lambda + " " + getPoints().get(key) + " " + (getGridedRms().containsKey(key) ? getGridedRms().get(key) : 0.0) + "\n";
         }
         // System.out.println(s);
         return s;

@@ -41,7 +41,6 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
          */// TODO not sure what the point of dataPoints is...
         g.setColor(colors[0]);
         ornaments[1].draw(g, g2cx(x), g2cy(y));
-        System.out.println("***" + x);
         if (rmsPoints.containsKey(x)) {
             // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
             drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getSigma() / 2), g2cy(y + rmsPoints.get(x) * getSigma() / 2));
@@ -77,6 +76,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                 // System.out.println("Draw a point ["+p.getX()+","+p.getY()+"] at ["+g2cx(p.getX())+","+g2cy(p.getY(),ds)+"]");
             }
         }
+        
+        // System.out.println(points);
         
     }
     
