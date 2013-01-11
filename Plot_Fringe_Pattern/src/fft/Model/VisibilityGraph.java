@@ -176,7 +176,7 @@ public class VisibilityGraph extends Graph {
         gridedRms.clear();
         Set<Double> keys = getRms().keySet();
         for (Double d : keys) {
-            gridedRms.put(d, getRms().get(d));
+            gridedRms.put(d / getLambda(), getRms().get(d));
         }
     }
     

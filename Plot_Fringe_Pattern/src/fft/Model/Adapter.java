@@ -94,7 +94,7 @@ public class Adapter {
     }
     
     public TreeMap<Double, Double> getRms() {
-        return getModel().getVisibilityGraph().getRms();
+        return getModel().getVisibilityGraph().getGridedRms();
     }
     
     public void moveVisibilityPoint(double currentPoint, double toy) {
