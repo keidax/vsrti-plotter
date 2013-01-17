@@ -44,11 +44,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public JButton exit;
     public TableModel tableModel;
     public FileTable jTable;
-    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd,
-            bInstruction, bAbout, bAvgFreq, bAvgBlocks, bSpectrum, bTime,
+    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks, bSpectrum, bTime,
             bSubtract, bUndo, bBeam;
     public static View viewer;
-    public String link = "Instructions_SRT_Plotter.html";
+    public String link = "http://www1.union.edu/marrj/radioastro/Instructions_SRT_Plotter.html";
     public boolean canDelete = true;
     public LinkedList list;
     public ListNode currentNode;
@@ -72,9 +71,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         tableModel = new TableModel(this, list);
         jTable = new FileTable(tableModel);
         tableModel.supreme = jTable;
-        vGraph =
-                new VCanvas(this, getAdapter(), getAdapter()
-                        .getVisiblityGraphPoints());
+        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
         setMinimumSize(new Dimension(1300, 500));
         vGraph.setSize(300, 100);
         jfc = new JFileChooser();
@@ -99,8 +96,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         lDelta = new JLabel("");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Select a data block to plot.</HTML>");
         
-        getContentPane().setLayout(
-                new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
         row2 = new JPanel();
@@ -226,8 +222,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
             public void actionPerformed(ActionEvent arg0) {
                 canDelete = false;
                 final int[] a = new int[2];
-                final JFrame jf =
-                        new JFrame("SRT Plotter - Subtract Background");
+                final JFrame jf = new JFrame("SRT Plotter - Subtract Background");
                 jf.setMinimumSize(new Dimension(600, 400));
                 jf.setPreferredSize(new Dimension(600, 400));
                 JButton enter = new JButton("Cancel");
@@ -241,9 +236,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 row1.setLayout(new BoxLayout(row1, BoxLayout.Y_AXIS));
                 row1.add(Box.createRigidArea(new Dimension(10, 5)));
                 row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
-                final JLabel jl =
-                        new JLabel(
-                                "Subtracting A - B. Please select data block A.");
+                final JLabel jl = new JLabel("Subtracting A - B. Please select data block A.");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.add(row1);
                 row1.add(jl);
@@ -284,68 +277,50 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             ListNode A = list.getNode(a[0]);
                             ListNode B = list.getNode(a[1]);
                             
-                            if (A.data.length != B.data.length
-                                    || A.fStart != B.fStart
-                                    || A.fStep != B.fStep) {
-                                JOptionPane
-                                        .showMessageDialog(
-                                                null,
-                                                "Both data blocks must have the same data length, start frequency, and step frequency");
+                            if (A.data.length != B.data.length || A.fStart != B.fStart || A.fStep != B.fStep) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Both data blocks must have the same data length, start frequency, and step frequency");
                                 return;
                             } else {
                                 double[] data = new double[A.data.length];
                                 double[] deleted = new double[A.data.length];
-                                double[] endChannels =
-                                        new double[A.data.length];
+                                double[] endChannels = new double[A.data.length];
                                 
                                 for (int i = 0; i < A.data.length; i++) {
                                     if (A.data[i] != -1 && B.data[i] != -1) {
                                         data[i] = A.data[i] - B.data[i];
-                                    } else if (A.data[i] == -1
-                                            && B.data[i] != -1) {
+                                    } else if (A.data[i] == -1 && B.data[i] != -1) {
                                         data[i] = B.data[i];
-                                    } else if (A.data[i] != -1
-                                            && B.data[i] == -1) {
+                                    } else if (A.data[i] != -1 && B.data[i] == -1) {
                                         data[i] = A.data[i];
                                     } else {
                                         data[i] = -1;
                                     }
                                     
                                     if (A.deleted[i] != 0 && B.deleted[i] != 0) {
-                                        deleted[i] =
-                                                A.deleted[i] - B.deleted[i];
-                                    } else if (A.deleted[i] == 0
-                                            && B.deleted[i] != 0) {
+                                        deleted[i] = A.deleted[i] - B.deleted[i];
+                                    } else if (A.deleted[i] == 0 && B.deleted[i] != 0) {
                                         deleted[i] = B.deleted[i];
-                                    } else if (A.deleted[i] != 0
-                                            && B.deleted[i] == 0) {
+                                    } else if (A.deleted[i] != 0 && B.deleted[i] == 0) {
                                         deleted[i] = A.deleted[i];
                                     } else {
                                         deleted[i] = 0;
                                     }
                                     
-                                    if (A.endChannels[i] != 0
-                                            && B.endChannels[i] != 0) {
-                                        endChannels[i] =
-                                                A.endChannels[i]
-                                                        - B.endChannels[i];
-                                    } else if (A.endChannels[i] == 0
-                                            && B.endChannels[i] != 0) {
+                                    if (A.endChannels[i] != 0 && B.endChannels[i] != 0) {
+                                        endChannels[i] = A.endChannels[i] - B.endChannels[i];
+                                    } else if (A.endChannels[i] == 0 && B.endChannels[i] != 0) {
                                         endChannels[i] = B.endChannels[i];
-                                    } else if (A.endChannels[i] != 0
-                                            && B.endChannels[i] == 0) {
+                                    } else if (A.endChannels[i] != 0 && B.endChannels[i] == 0) {
                                         endChannels[i] = A.endChannels[i];
                                     } else {
                                         endChannels[i] = 0;
                                     }
                                 }
-                                list.insertAtTail(new ListNode("SUB: " + a[0]
-                                        + " - " + a[1], data, A.fStart,
-                                        A.fStep, deleted, endChannels));
+                                list.insertAtTail(new ListNode("SUB: " + a[0] + " - " + a[1], data, A.fStart, A.fStep, deleted, endChannels));
                                 gotB = false;
                                 jTable.clearSelection();
-                                jTable.changeSelection(list.getLength() - 1, 0,
-                                        false, false);
+                                jTable.changeSelection(list.getLength() - 1, 0, false, false);
                                 jTable.updateGraph();
                                 jf.setVisible(false);
                                 canDelete = true;
@@ -363,8 +338,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
             public void actionPerformed(ActionEvent arg0) {
                 View.viewer.lDelta.setText("");
                 viewer.vGraph.xAxis = "Frequency (MHz)";
-                viewer.vGraph.graphTitle =
-                        "Spectrum: Antenna Temperature vs. Frequency";
+                viewer.vGraph.graphTitle = "Spectrum: Antenna Temperature vs. Frequency";
                 viewer.jTable.plotSpectrum();
                 
             }
@@ -422,21 +396,16 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         taPlotted = table.getSelectedRows();
                         
                         if (taPlotted.length == 0) {
-                            JOptionPane
-                                    .showMessageDialog(null,
-                                            "You must select one or more data blocks..");
+                            JOptionPane.showMessageDialog(null, "You must select one or more data blocks..");
                             return;
                         }
                         viewer.vGraph.xAxis = "Data Block";
                         viewer.vGraph.graphTitle = "Averge TA vs. Order";
-                        TreeMap<Double, Double> points =
-                                new TreeMap<Double, Double>();
+                        TreeMap<Double, Double> points = new TreeMap<Double, Double>();
                         viewer.vGraph.points.clear();
                         
                         for (int i = 0; i < taPlotted.length; i++) {
-                            points.put(i + 0.0,
-                                    viewer.list.getNode(taPlotted[i])
-                                            .getAverageOverFrequency());
+                            points.put(i + 0.0, viewer.list.getNode(taPlotted[i]).getAverageOverFrequency());
                         }
                         viewer.adapter.importVisibilityGraphPoints(points);
                         
@@ -468,15 +437,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 jSC.setMaximumSize(new Dimension(800, 300));
                 
                 Object[] o = { "Cancel", "Elevation", "Azimuth" };
-                int opt =
-                        JOptionPane
-                                .showOptionDialog(
-                                        null,
-                                        "Would you like to plot vs. azimuth or vs. elevation?",
-                                        "Plot Beam",
-                                        JOptionPane.DEFAULT_OPTION,
-                                        JOptionPane.WARNING_MESSAGE, null, o,
-                                        o[2]);
+                int opt = JOptionPane.showOptionDialog(null, "Would you like to plot vs. azimuth or vs. elevation?", "Plot Beam",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, o, o[2]);
                 String[] temp;
                 int count = 0;
                 if (opt == 0) {
@@ -487,14 +449,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     ListNode node = list.getFirstNode();
                     while (node != null) {
                         if (node.title.contains("eloff")) {
-                            temp =
-                                    node.title.replace("   ", " ")
-                                            .replace("  ", " ").split(" ");
+                            temp = node.title.replace("   ", " ").replace("  ", " ").split(" ");
                             for (int i = 0; i < temp.length; i++) {
                                 if (temp[i].equals("eloff")) {
                                     table.changeSelection(count, 0, true, false);
-                                    node.angle =
-                                            Double.parseDouble(temp[i + 1]);
+                                    node.angle = Double.parseDouble(temp[i + 1]);
                                     if (node.angle < min) {
                                         min = node.angle;
                                     }
@@ -511,14 +470,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     ListNode node = list.getFirstNode();
                     while (node != null) {
                         if (node.title.contains("azoff")) {
-                            temp =
-                                    node.title.replace("   ", " ")
-                                            .replace("  ", " ").split(" ");
+                            temp = node.title.replace("   ", " ").replace("  ", " ").split(" ");
                             for (int i = 0; i < temp.length; i++) {
                                 if (temp[i].equals("azoff")) {
                                     table.changeSelection(count, 0, true, false);
-                                    node.angle =
-                                            Double.parseDouble(temp[i + 1]);
+                                    node.angle = Double.parseDouble(temp[i + 1]);
                                     if (node.angle < min) {
                                         min = node.angle;
                                     }
@@ -571,8 +527,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         if (table.plotBeam()) {
                             View.viewer.lDelta.setText("");
                             viewer.vGraph.xAxis = "Angle (�)";
-                            viewer.vGraph.graphTitle =
-                                    "Beam Width: Average Antenna Temperature vs. Angle";
+                            viewer.vGraph.graphTitle = "Beam Width: Average Antenna Temperature vs. Angle";
                             
                             // final JFrame jFr = new
                             // JFrame("Beam Model Parameters");
@@ -670,15 +625,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 int opt = 1;
                 File f;
                 if (jTable.getSelectedRows().length != 0) {
-                    opt =
-                            JOptionPane
-                                    .showOptionDialog(
-                                            null,
-                                            "Save only the selected data block? (Choose no to save all)",
-                                            "SRT Plotter - Save File",
-                                            JOptionPane.YES_NO_CANCEL_OPTION,
-                                            JOptionPane.PLAIN_MESSAGE, null,
-                                            null, null);
+                    opt = JOptionPane.showOptionDialog(null, "Save only the selected data block? (Choose no to save all)",
+                            "SRT Plotter - Save File", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
                 }
                 if (opt == 0)// yes
                 {
@@ -704,8 +652,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 }
             }
             
-            private void writeIntoFile(File f,
-                    String exportVisibilityGraphPoints) {
+            private void writeIntoFile(File f, String exportVisibilityGraphPoints) {
                 
                 BufferedWriter out;
                 
@@ -727,8 +674,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 canDelete = false;
-                final JFrame jf =
-                        new JFrame("SRT Plotter - Average Blocks of Data");
+                final JFrame jf = new JFrame("SRT Plotter - Average Blocks of Data");
                 jf.setMinimumSize(new Dimension(600, 400));
                 jf.setPreferredSize(new Dimension(600, 400));
                 JButton enter = new JButton("Cancel");
@@ -742,8 +688,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 row1.setLayout(new BoxLayout(row1, BoxLayout.Y_AXIS));
                 row1.add(Box.createRigidArea(new Dimension(10, 5)));
                 row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
-                JLabel jl =
-                        new JLabel("Select datablocks to average together.");
+                JLabel jl = new JLabel("Select datablocks to average together.");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.add(row1);
                 row1.add(jl);
@@ -780,10 +725,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             String title = "AVG: ";
                             
                             for (int i = 0; i < nodes.length; i++) {
-                                nodes[i] =
-                                        (ListNode) ((TableModel) jTable
-                                                .getModel())
-                                                .getValueAt(selected[i]);
+                                nodes[i] = (ListNode) ((TableModel) jTable.getModel()).getValueAt(selected[i]);
                                 title = title + selected[i] + " & ";
                             }
                             
@@ -792,13 +734,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             for (int i = 0; i < data.length; i++) {
                                 data[i] = nodes[0].data[i];
                                 for (int j = 1; j < nodes.length; j++) {
-                                    if (nodes[j - 1].data.length != nodes[j].data.length
-                                            || nodes[j - 1].fStart != nodes[j].fStart
+                                    if (nodes[j - 1].data.length != nodes[j].data.length || nodes[j - 1].fStart != nodes[j].fStart
                                             || nodes[j - 1].fStep != nodes[j].fStep) {
-                                        JOptionPane
-                                                .showMessageDialog(
-                                                        null,
-                                                        "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
+                                        JOptionPane.showMessageDialog(null,
+                                                "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
                                         return;
                                     }
                                     data[i] = data[i] + nodes[j].data[i];
@@ -807,18 +746,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             }
                             
                             title = title.substring(0, title.length() - 2);
-                            list.insertAtTail(new ListNode(title, data,
-                                    nodes[0].fStart, nodes[0].fStep));
+                            list.insertAtTail(new ListNode(title, data, nodes[0].fStart, nodes[0].fStep));
                             View.viewer.jTable.addNotify();
                             jTable.clearSelection();
-                            jTable.changeSelection(jTable.getRowCount() - 1, 0,
-                                    true, false);
+                            jTable.changeSelection(jTable.getRowCount() - 1, 0, true, false);
                             jTable.updateGraph();
                             jf.setVisible(false);
                             canDelete = true;
                         } else {
-                            JOptionPane.showMessageDialog(null,
-                                    "You must select one or more data blocks.");
+                            JOptionPane.showMessageDialog(null, "You must select one or more data blocks.");
                             return;
                         }
                         
@@ -835,12 +771,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
             public void actionPerformed(ActionEvent e) {
                 DecimalFormat df = new DecimalFormat("#.####");
                 if (currentNode == null) {
-                    JOptionPane
-                            .showMessageDialog(null,
-                                    "You must select a data block before you can find its average over frequency.");
+                    JOptionPane.showMessageDialog(null, "You must select a data block before you can find its average over frequency.");
                 } else {
-                    View.viewer.lDelta.setText("Average Over Frequency: "
-                            + df.format(currentNode.getAverageOverFrequency()));
+                    View.viewer.lDelta.setText("Average Over Frequency: " + df.format(currentNode.getAverageOverFrequency()));
                 }
             }
         });
@@ -860,10 +793,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 View.viewer.lDelta.setText("");
                 choosingDelete = false;
                 bSelectEnd.setText("Delete End Channels");
-                if (View.viewer.vGraph.graphTitle
-                        .equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.viewer.vGraph.graphTitle
-                                .equals("Averge TA vs. Order")) {
+                if (View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order")) {
                     return;
                 }
                 choosingDelete = false;
@@ -889,16 +820,12 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 View.viewer.lDelta.setText("");
-                if (View.viewer.vGraph.graphTitle
-                        .equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.viewer.vGraph.graphTitle
-                                .equals("Averge TA vs. Order")) {
+                if (View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order")) {
                     return;
                 }
                 if (currentNode == null) {
-                    JOptionPane
-                            .showMessageDialog(null,
-                                    "You must first select a data block before you can delete data points.");
+                    JOptionPane.showMessageDialog(null, "You must first select a data block before you can delete data points.");
                     return;
                 }
                 if (!choosingDelete) {
@@ -923,11 +850,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (currentNode == null
-                        || View.viewer.vGraph.graphTitle
-                                .equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.viewer.vGraph.graphTitle
-                                .equals("Averge TA vs. Order")) {
+                if (currentNode == null || View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order")) {
                     return;
                 }
                 for (int i = 0; i < currentNode.data.length; i++) {
@@ -947,8 +871,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 
                 if (!choosingDelete) {
                     canDelete = false;
-                    final JFrame jf =
-                            new JFrame("SRT Plotter - Deleting End Channels");
+                    final JFrame jf = new JFrame("SRT Plotter - Deleting End Channels");
                     jf.setMinimumSize(new Dimension(600, 400));
                     jf.setPreferredSize(new Dimension(600, 400));
                     JButton enter = new JButton("Cancel");
@@ -963,9 +886,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     row1.setLayout(new BoxLayout(row1, BoxLayout.Y_AXIS));
                     row1.add(Box.createRigidArea(new Dimension(10, 5)));
                     row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
-                    JLabel jl =
-                            new JLabel(
-                                    "Select which data blocks to remove end channels from.");
+                    JLabel jl = new JLabel("Select which data blocks to remove end channels from.");
                     jf.getContentPane().setLayout(new FlowLayout());
                     jf.add(row1);
                     row1.add(jl);
@@ -998,37 +919,26 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             selectedRows = table.getSelectedRows();
                             if (selectedRows.length > 0) {
                                 for (int i = 1; i < selectedRows.length; i++) {
-                                    if (list.getNode(selectedRows[i - 1]).data.length != list
-                                            .getNode(selectedRows[i]).data.length
-                                            || list.getNode(selectedRows[i - 1]).fStart != list
-                                                    .getNode(selectedRows[i]).fStart
-                                            || list.getNode(selectedRows[i - 1]).fStep != list
-                                                    .getNode(selectedRows[i]).fStep) {
-                                        JOptionPane
-                                                .showMessageDialog(
-                                                        null,
-                                                        "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
+                                    if (list.getNode(selectedRows[i - 1]).data.length != list.getNode(selectedRows[i]).data.length
+                                            || list.getNode(selectedRows[i - 1]).fStart != list.getNode(selectedRows[i]).fStart
+                                            || list.getNode(selectedRows[i - 1]).fStep != list.getNode(selectedRows[i]).fStep) {
+                                        JOptionPane.showMessageDialog(null,
+                                                "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
                                         return;
                                     }
                                 }
                                 currentNode = list.getNode(selectedRows[0]);
                                 deleting = new double[currentNode.data.length];
                                 jTable.clearSelection();
-                                jTable.changeSelection(selectedRows[0], 0,
-                                        true, false);
+                                jTable.changeSelection(selectedRows[0], 0, true, false);
                                 choosingDelete = true;
-                                bSelectEnd
-                                        .setText("Delete Selected End Channels");
+                                bSelectEnd.setText("Delete Selected End Channels");
                                 jf.setVisible(false);
                                 canDelete = true;
-                                JOptionPane
-                                        .showMessageDialog(
-                                                null,
-                                                "Select the end channels to be deleted and then click the 'delete selected channels' button.");
+                                JOptionPane.showMessageDialog(null,
+                                        "Select the end channels to be deleted and then click the 'delete selected channels' button.");
                             } else {
-                                JOptionPane
-                                        .showMessageDialog(null,
-                                                "You must select one or more data blocks.");
+                                JOptionPane.showMessageDialog(null, "You must select one or more data blocks.");
                             }
                             
                         }
@@ -1043,37 +953,26 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             selectedRows = table.getSelectedRows();
                             if (selectedRows.length > 0) {
                                 for (int i = 1; i < selectedRows.length; i++) {
-                                    if (list.getNode(selectedRows[i - 1]).data.length != list
-                                            .getNode(selectedRows[i]).data.length
-                                            || list.getNode(selectedRows[i - 1]).fStart != list
-                                                    .getNode(selectedRows[i]).fStart
-                                            || list.getNode(selectedRows[i - 1]).fStep != list
-                                                    .getNode(selectedRows[i]).fStep) {
-                                        JOptionPane
-                                                .showMessageDialog(
-                                                        null,
-                                                        "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
+                                    if (list.getNode(selectedRows[i - 1]).data.length != list.getNode(selectedRows[i]).data.length
+                                            || list.getNode(selectedRows[i - 1]).fStart != list.getNode(selectedRows[i]).fStart
+                                            || list.getNode(selectedRows[i - 1]).fStep != list.getNode(selectedRows[i]).fStep) {
+                                        JOptionPane.showMessageDialog(null,
+                                                "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
                                         return;
                                     }
                                 }
                                 currentNode = list.getNode(selectedRows[0]);
                                 deleting = new double[currentNode.data.length];
                                 jTable.clearSelection();
-                                jTable.changeSelection(selectedRows[0], 0,
-                                        true, false);
+                                jTable.changeSelection(selectedRows[0], 0, true, false);
                                 choosingDelete = true;
-                                bSelectEnd
-                                        .setText("Delete Selected End Channels");
+                                bSelectEnd.setText("Delete Selected End Channels");
                                 jf.setVisible(false);
                                 canDelete = true;
-                                JOptionPane
-                                        .showMessageDialog(
-                                                null,
-                                                "Select the end channels to be deleted and then click the 'delete selected channels' button.");
+                                JOptionPane.showMessageDialog(null,
+                                        "Select the end channels to be deleted and then click the 'delete selected channels' button.");
                             } else {
-                                JOptionPane
-                                        .showMessageDialog(null,
-                                                "You must select one or more data blocks.");
+                                JOptionPane.showMessageDialog(null, "You must select one or more data blocks.");
                             }
                             
                         }
@@ -1108,21 +1007,19 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 JFrame jf = new JFrame("About SRT Plotter");
-                JLabel jl =
-                        new JLabel(
-                                "<html>"
-                                        + "<p>SRT Plotter version 1.0</p>"
-                                        + "<p><table>"
-                                        + "<tr><td>Authors:</td><td>Adam Pere</td></tr>"
-                                        + "<tr><td></td><td>Jonathan Marr</td></tr>"
-                                        + "<tr><td></td><td>Karel Durkota</td></tr>"
-                                        + "</table></p>"
-                                        + "<p></p>"
-                                        + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
-                                        + "<p>This package was designed to be used with MIT Haystack Observatory SRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
-                                        + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
-                                        + "<p>Software is written in Java and it is free open source</p>"
-                                        + "</html>");
+                JLabel jl = new JLabel(
+                        "<html>"
+                                + "<p>SRT Plotter version 1.0</p>"
+                                + "<p><table>"
+                                + "<tr><td>Authors:</td><td>Adam Pere</td></tr>"
+                                + "<tr><td></td><td>Jonathan Marr</td></tr>"
+                                + "<tr><td></td><td>Karel Durkota</td></tr>"
+                                + "</table></p>"
+                                + "<p></p>"
+                                + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+                                + "<p>This package was designed to be used with MIT Haystack Observatory SRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
+                                + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
+                                + "<p>Software is written in Java and it is free open source</p>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(jl);
                 jf.pack();
@@ -1138,11 +1035,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 try {
                     java.awt.Desktop.getDesktop().browse(new URI(link));
                 } catch (IOException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -1178,9 +1073,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             while ((strLine = br.readLine()) != null) {
                 
-                if (strLine.trim().startsWith("*")
-                        || strLine.trim().startsWith("AVG")
-                        || strLine.trim().startsWith("SUB")) {
+                if (strLine.trim().startsWith("*") || strLine.trim().startsWith("AVG") || strLine.trim().startsWith("SUB")) {
                     
                     currentBlock++;
                     if (currentBlock != 0 && !first) {
@@ -1188,9 +1081,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             data[i] = data[i] / numRows;
                         }
                         
-                        ListNode n =
-                                new ListNode(title, data, freqStart, freqStep,
-                                        deleted, endChannels);
+                        ListNode n = new ListNode(title, data, freqStart, freqStep, deleted, endChannels);
                         list.insertAtTail(n);
                         
                     }
@@ -1243,12 +1134,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 data[i] = data[i] / numRows;
                 
             }
-            list.insertAtTail(new ListNode(title, data, freqStart, freqStep,
-                    deleted, endChannels));
+            list.insertAtTail(new ListNode(title, data, freqStart, freqStep, deleted, endChannels));
             
         } catch (Exception e) {// Catch exception if any
-            JOptionPane.showMessageDialog(null,
-                    "The file is not formatted correctly.\n" + f);
+            JOptionPane.showMessageDialog(null, "The file is not formatted correctly.\n" + f);
         }
     }
     

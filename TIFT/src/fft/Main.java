@@ -32,8 +32,7 @@ public class Main {
         Model m = new Model();
         Adapter a = new Adapter(m);
         View v = new View(a, "Tool for Interactive Fourier Transform");
-        link =
-                "http://www1.union.edu/marrj/Ast240/ToolforInteractiveFourierTransforms.html";
+        link = "http://www1.union.edu/marrj/radioastro/ToolforInteractiveFourierTransforms.html";
         if (!link.equals("")) {
             v.link = link;
         }

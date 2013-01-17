@@ -31,11 +31,8 @@ public class Main {
     public static void main(String[] args) {
         Model m = new Model();
         Adapter a = new Adapter(m);
-        View v =
-                new View(a,
-                        "Tool for Interactive Fourier Transform --- Cosine Transform");
-        link =
-                "http://www1.union.edu/marrj/Ast240/ToolforInteractiveFourierTransforms.html";
+        View v = new View(a, "Tool for Interactive Fourier Transform --- Cosine Transform");
+        link = "http://www1.union.edu/marrj/radioastro/ToolforInteractiveFourierTransforms.html";
         if (!link.equals("")) {
             v.link = link;
         }

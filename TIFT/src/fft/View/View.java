@@ -53,7 +53,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public JButton bSave, bOpen, bExit, bImage, bReset, bAbout, bFullReset, bInstruction, bEquation, bRadio;
     public static View viewer;
     final JPopupMenu menu = new JPopupMenu();
-    public String link = "Instructions_Fourier_Transform.html";
+    public String link = "http://www1.union.edu/marrj/radioastro/ToolforInteractiveFourierTransforms.html";
     public String equation;
     public String iEquation;
     public JLabel lEquation;

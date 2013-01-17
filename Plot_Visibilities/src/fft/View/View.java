@@ -55,7 +55,7 @@ public class View extends JFrame implements ModelListener {
     private JButton updateButton;
     
     public static View viewer;
-    public String link = "Instructions_Plot_Visibilities.html";
+    public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Visibilities.html";
     public boolean showVis = false;
     public double T1 = 10, T2 = 10, theta = 0;
     private double d1 = 0, d2 = 0;
@@ -421,9 +421,10 @@ public class View extends JFrame implements ModelListener {
                 }
                 
                 try {
+                    int tempSig = Integer.parseInt(fSigma.getText());
                     
-                    Integer.parseInt(fSigma.getText());
-                    getVGraph().setSigma(Integer.parseInt(fSigma.getText()));
+                    getVGraph().setSigma(tempSig);
+                    System.out.println("set sigma to " + tempSig);
                 } catch (NumberFormatException e1) {
                 }
                 
@@ -558,8 +559,8 @@ public class View extends JFrame implements ModelListener {
     
     @Override
     public void update() {
-        fLambda.setText(adapter.getLambda() + "");
-        fSigma.setText(getVGraph().getSigma() + "");
+        // fLambda.setText(adapter.getLambda() + "");
+        // fSigma.setText(getVGraph().getSigma() + "");
         
         repaint();
     }

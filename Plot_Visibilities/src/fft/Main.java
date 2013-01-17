@@ -26,11 +26,6 @@ public class Main {
         Model m = new Model();
         Adapter a = new Adapter(m);
         View v = new View(a, "VSRTI Plotter - Plot Visibilities");
-        link =
-                "http://www1.union.edu/marrj/Ast240/Instructions_Plot_Visibilities.html";
-        if (!link.equals("")) {
-            v.link = link;
-        }
         if (lambda != -1.0) {
             m.getVisibilityGraph().setLambda(lambda);
         }

@@ -52,7 +52,7 @@ public class View extends JFrame implements ModelListener {
     private double d = 5, noise = 0, lambda;// TODO find a good default value
                                             // for lambda
     private boolean showBeamPattern = false;
-    private String link = "Instructions_Plot_Beam.html";// TODO get the correct url here
+    private String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Beam.html";// TODO get the correct url here
     private JFileChooser fileChooser;
     private Model model;
     

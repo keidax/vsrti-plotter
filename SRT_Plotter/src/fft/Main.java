@@ -20,7 +20,7 @@ import fft.View.View;
  */
 public class Main {
     
-    public static String link = "";
+    public static String link = "http://www1.union.edu/marrj/radioastro/Instructions_SRT_Plotter.html";
     public static double lambda = -1;
     
     /**
@@ -33,9 +33,10 @@ public class Main {
         View v = new View(a, "Small Radio Telescope (SRT) Plotter");
         link = "";
         readFromFile();
+        /*
         if (!link.equals("")) {
             v.link = link;
-        }
+        }*/
         v.go();
     }
     

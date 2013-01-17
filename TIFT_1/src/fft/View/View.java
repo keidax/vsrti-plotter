@@ -47,11 +47,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public JButton exit;
     // public Model model;
     public JTextField fDelta, fLambda, fThetaMax, fSigma, fNumber, fMaxTime;
-    public JButton bSave, bOpen, bExit, bReset, bAbout, bFullReset,
-            bInstruction, bEquation;
+    public JButton bSave, bOpen, bExit, bReset, bAbout, bFullReset, bInstruction, bEquation;
     public static View view;
     final JPopupMenu menu = new JPopupMenu();
-    public String link = "Instructions_Fourier_Transform.html";
+    public String link = "http://www1.union.edu/marrj/radioastro/ToolforInteractiveFourierTransforms.html";
     public String equation;
     public JLabel lEquation;
     File f;
@@ -64,12 +63,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
         // model = m;
         setAdapter(a);
         f = null;
-        vGraph =
-                new VCanvas(this, getAdapter(), getAdapter()
-                        .getVisiblityGraphPoints());
-        iGraph =
-                new FFTCanvas(this, getAdapter(), getAdapter()
-                        .getImageGraphPoints());
+        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
+        iGraph = new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints());
         
         vGraph.setSize(300, 100);
         
@@ -85,34 +80,24 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bAbout = new JButton("About");
         bInstruction = new JButton("Instructions");
         bEquation = new JButton("Enter Equation");
-        lDelta =
-                new JLabel(
-                        "<HTML><P><B>f(t) Input Parameters:</P><P>"
-                                + '\u0394'
-                                + "t: </P><P># of points:</P><P> </P><P><B>Display Options:</B></P><P>max time: </P><P>max frequency: </P></HTML>");
+        lDelta = new JLabel("<HTML><P><B>f(t) Input Parameters:</P><P>" + '\u0394'
+                + "t: </P><P># of points:</P><P> </P><P><B>Display Options:</B></P><P>max time: </P><P>max frequency: </P></HTML>");
         lDelta.setMaximumSize(new Dimension(105, 250));
         fDelta = new JTextField(adapter.getDeltaBaseline() + "");
         lEquation = new JLabel("Equation: ");
         
         fNumber = new JTextField(adapter.getNumberOfPoints() + "");
-        fMaxTime =
-                new JTextField(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + ""); // Max Time to be
-                                                             // displayed
+        fMaxTime = new JTextField(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + ""); // Max Time to be
+                                                                                                  // displayed
         fLambda = new JTextField(adapter.getLambda() + "");
-        fThetaMax =
-                new JTextField(adapter.getLambda() / adapter.getDeltaBaseline()
-                        + "");
+        fThetaMax = new JTextField(adapter.getLambda() / adapter.getDeltaBaseline() + "");
         fSigma = new JTextField(getVGraph().getSigma() + "");
-        fDelta.setToolTipText("<HTML><P WIDTH='300px'>\u0394t =  x-axis step-size. (Numbers only, do not include "
-                + "units)<BR/>");
-        fThetaMax
-                .setToolTipText("<HTML><P WIDTH='300px'>max frequency = largest frequency displayed in spectrum window.</P></HTML>");
+        fDelta.setToolTipText("<HTML><P WIDTH='300px'>\u0394t =  x-axis step-size. (Numbers only, do not include " + "units)<BR/>");
+        fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>max frequency = largest frequency displayed in spectrum window.</P></HTML>");
         fMaxTime.setToolTipText("<HTML><P WIDTH='300px'>max time = largest time displayed in time domain.</P></HTML>");
         fDelta.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -126,8 +111,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         });
         fThetaMax.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -141,8 +125,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         });
         fSigma.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -156,8 +139,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         });
         fNumber.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -171,8 +153,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         });
         fLambda.addMouseListener(new MouseAdapter() {
             
-            final int defaultTimeout = ToolTipManager.sharedInstance()
-                    .getInitialDelay();
+            final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
             
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -201,8 +182,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fNumber.setMinimumSize(new Dimension(50, 20));
         fNumber.addActionListener(this);
         JScrollPane jScroll;
-        getContentPane().setLayout(
-                new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
         row2 = new JPanel();
@@ -336,8 +316,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 writeIntoFile(f, view.adapter.exportVisibilityGraphPoints());
             }
             
-            private void writeIntoFile(File f,
-                    String exportVisibilityGraphPoints) {
+            private void writeIntoFile(File f, String exportVisibilityGraphPoints) {
                 
                 BufferedWriter out;
                 
@@ -414,15 +393,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     eqn = new JTextField("Enter Equation Here");
                 }
                 // eqn.setMaximumSize(new Dimension(700,100));
-                JLabel jl =
-                        new JLabel(
-                                "<html>Acceptable Inputs:<br><br>"
-                                        + "Use 'x' as the independent variable, e as Euler's Number, and pi as pi.<br>"
-                                        + "use _ to represent negative numbers.<br>"
-                                        + "*, ^, /, +, -, (, and ) are valid operators.<br>"
-                                        + "sin(_), cos(_), tan(_), log(_), ln(_), delta(_) and u(_) (unit step) are also valid.<br>"
-                                        + "Angles are in radians.<br><br>"
-                                        + "</html>");
+                JLabel jl = new JLabel("<html>Acceptable Inputs:<br><br>"
+                        + "Use 'x' as the independent variable, e as Euler's Number, and pi as pi.<br>"
+                        + "use _ to represent negative numbers.<br>" + "*, ^, /, +, -, (, and ) are valid operators.<br>"
+                        + "sin(_), cos(_), tan(_), log(_), ln(_), delta(_) and u(_) (unit step) are also valid.<br>"
+                        + "Angles are in radians.<br><br>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.add(row1);
                 row1.add(jl);
@@ -445,8 +420,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             jf.setVisible(false);
                             graphEquation();
                         } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf,
-                                    "Equation Error. Try adding parentheses.");
+                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
                         }
                     }
                     
@@ -463,8 +437,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             jf.setVisible(false);
                             graphEquation();
                         } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf,
-                                    "Equation Error. Try adding parentheses.");
+                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
                         }
                     }
                     
@@ -478,22 +451,20 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 JFrame jf = new JFrame("TIFT");
-                JLabel jl =
-                        new JLabel(
-                                "<html>"
-                                        + "<p>TIFT - Tool for Interactive Fourier Transforms</p>"
-                                        + "<p><table>"
-                                        + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
-                                        + "<tr><td></td><td>Jonathan Marr</td></tr>"
-                                        + "<tr><td></td><td>Adam Pere</td></tr>"
-                                        // + "<tr><td>Funded by:</td><td>Valerie
-                                        // B Barr</td></tr>
-                                        + "</table></p>"
-                                        + "<p></p>"
-                                        + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
-                                        + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
-                                        + "<p>Software is written in Java and it is free open source</p>"
-                                        + "</html>");
+                JLabel jl = new JLabel(
+                        "<html>"
+                                + "<p>TIFT - Tool for Interactive Fourier Transforms</p>"
+                                + "<p><table>"
+                                + "<tr><td>Authors:</td><td>Karel Durkota</td></tr>"
+                                + "<tr><td></td><td>Jonathan Marr</td></tr>"
+                                + "<tr><td></td><td>Adam Pere</td></tr>"
+                                // + "<tr><td>Funded by:</td><td>Valerie
+                                // B Barr</td></tr>
+                                + "</table></p>"
+                                + "<p></p>"
+                                + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+                                + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
+                                + "<p>Software is written in Java and it is free open source</p>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(jl);
                 jf.pack();
@@ -509,11 +480,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 try {
                     java.awt.Desktop.getDesktop().browse(new URI(link));
                 } catch (IOException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(View.class.getName()).log(Level.SEVERE,
-                            null, ex);
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -569,16 +538,13 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     continue;
                 }
                 if (strLine.trim().startsWith("*lambda")) {
-                    view.adapter.setLambda(Double.parseDouble(strLine
-                            .split(" ")[1]));
+                    view.adapter.setLambda(Double.parseDouble(strLine.split(" ")[1]));
                     view.fLambda.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    view.adapter.setDeltaBaseline(Double.parseDouble(strLine
-                            .split(" ")[1]));
+                    view.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                     view.fDelta.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("*numberOfPoints")) {
-                    view.adapter.setNumberOfPoints(Integer.parseInt(strLine
-                            .split(" ")[1]));
+                    view.adapter.setNumberOfPoints(Integer.parseInt(strLine.split(" ")[1]));
                     view.fNumber.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("X_Y_RMS")) {
                     im = false;
@@ -592,11 +558,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                     try {
                         String[] s = strLine.split(" ");
-                        ret.put(Double.parseDouble(s[0]),
-                                Double.parseDouble(s[1]));
+                        ret.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
                         if (s.length > 2 && !s[2].trim().equals("null")) {
-                            rms.put(Double.parseDouble(s[0]),
-                                    Double.parseDouble(s[2]));
+                            rms.put(Double.parseDouble(s[0]), Double.parseDouble(s[2]));
                         }
                     } catch (NumberFormatException e) {
                     }
@@ -606,8 +570,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                     try {
                         String[] s = strLine.split(" ");
-                        retim.put(Double.parseDouble(s[0]),
-                                Double.parseDouble(s[1]));
+                        retim.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
                     } catch (NumberFormatException e) {
                     }
                 } else {
@@ -685,26 +648,22 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 Double.parseDouble(fDelta.getText());
                 view.lEquation.setText("");
                 adapter.setDeltaBaseline(Double.parseDouble(fDelta.getText()));
-                fMaxTime.setText(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + "");
+                fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
             } catch (NumberFormatException e1) {
             }
         } else if (e.getSource().equals(fLambda)) {
             try {
                 Double.parseDouble(fLambda.getText());
                 adapter.setLambda(Double.parseDouble(fLambda.getText()));
-                fMaxTime.setText(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + "");
+                fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
             } catch (NumberFormatException e1) {
             }
         } else if (e.getSource().equals(fNumber)) {
             try {
                 view.lEquation.setText("");
                 Integer.parseInt(fNumber.getText().trim());
-                adapter.setNumberOfPoints(Integer.parseInt(fNumber.getText()
-                        .trim()));
-                fMaxTime.setText(adapter.getDeltaBaseline()
-                        * adapter.getNumberOfPoints() + "");
+                adapter.setNumberOfPoints(Integer.parseInt(fNumber.getText().trim()));
+                fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
             } catch (NumberFormatException e1) {
             }
         } else if (e.getSource().equals(fThetaMax)) {

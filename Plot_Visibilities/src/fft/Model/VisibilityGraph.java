@@ -104,7 +104,7 @@ public class VisibilityGraph extends Graph {
     }
     
     public void addPoint(double x, double y) {
-        getPoints().put(getGridX(x / getLambda()), y);// -this.halfBZero);
+        getPoints().put(x / getLambda(), y);// -this.halfBZero);
     }
     
     public void removePoint(double x) {
@@ -207,7 +207,7 @@ public class VisibilityGraph extends Graph {
         for (Double d : keys) {
             // System.out.println(d/getLambda() +" -> " +
             // getGridX(d/getLambda()));
-            gridedRms.put(getGridX(d / getLambda()), getRms().get(d));
+            gridedRms.put(d / getLambda(), getRms().get(d));
         }
         // System.out.println("returning gridedrms size = "+gridedRms.size());
         return gridedRms;
@@ -264,7 +264,7 @@ public class VisibilityGraph extends Graph {
         TreeMap<Double, Double> al = new TreeMap<Double, Double>();
         for (Point p : rawPoints) {
             // System.out.println("gridX("+p.getX()+"/"+getLambda()+")="+getGridX(p.getX()/getLambda()));
-            al.put(getGridX(p.getX() / getLambda()), p.getY());
+            al.put(p.getX() / getLambda(), p.getY());
         }
         // System.out.println("DataPoints = "+al.size());
         return al;

@@ -26,8 +26,7 @@ public class Main {
         Model m = new Model();
         Adapter a = new Adapter(m);
         View v = new View(a, "VSRTI Plotter - Fringe Pattern");
-        link =
-                "http://www1.union.edu/marrj/Ast240/Instructions_Plot_Fringe_Pattern.html";
+        link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Fringe_Pattern.html";
         if (!link.equals("")) {
             v.link = link;
         }

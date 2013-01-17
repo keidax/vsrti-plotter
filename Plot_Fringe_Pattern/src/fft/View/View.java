@@ -52,7 +52,7 @@ public class View extends JFrame implements ModelListener {
     public static View viewer;
     public double d = 1, t1 = 1, t2 = 1, b = 5;
     public boolean showSinc = false, isDegrees = true;
-    public String link = "Instructions_Plot_Fringe_Pattern.html";
+    public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Fringe_Pattern.html";
     private JFileChooser jfc;
     
     public View(Adapter a, String title) {
