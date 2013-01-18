@@ -1,4 +1,8 @@
-package fftchooser;
+package tiftchooser;
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -13,25 +17,15 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import beam.Main;
-
-
 /**
  * 
- * @author Karel Durkota
- * @author Adam Pere
- * @author Gabriel Holodak
+ * @author Administrator
  */
-
 public class Form extends JFrame {
     public int i = 0;
-    public final String[] filenames = { "Plot_Beam.jar", "Plot_Fringe_Pattern.jar", "Plot_Visibilities.jar" };
-    public final String[] buttonnames = { "Plot Beam", "Plot Fringe Pattern", "Plot Visibilities" };
-    public JButton[] b = new JButton[3];
-    
-    public static void main(String[] args) {
-        new Form("VRSTI Plotter");
-    }
+    public final String[] filenames = { "TIFT.jar", "TIFT_1.jar" };
+    public final String[] buttonnames = { "Full Complex TIFT", "Cosine TIFT" };
+    public JButton[] b = new JButton[2];
     
     public Form(String str) {
         super(str);
@@ -44,7 +38,7 @@ public class Form extends JFrame {
         b[0].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*try {
+                try {
                     String[] cmd = new String[3];
                     // cmd[0]="cmd.exe";
                     // cmd[1]="/C";
@@ -67,10 +61,7 @@ public class Form extends JFrame {
                     // int exitVal = proc.waitFor();
                 } catch (IOException ex) {
                     Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
-                }*/
-                
-                System.out.println("asdf");
-                Main.main(null);
+                }
             }
             
         });
@@ -85,33 +76,6 @@ public class Form extends JFrame {
                     cmd[2] = filenames[1];
                     Runtime rt = Runtime.getRuntime();
                     System.out.println("Execing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
-                    Process proc = rt.exec(cmd);
-                    // any error message?
-                    StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
-                    // any output?
-                    StreamGobbler outputGobbler = new StreamGobbler(proc.getInputStream(), "OUTPUT");
-                    // kick them off
-                    errorGobbler.start();
-                    outputGobbler.start();
-                    // any error???
-                    // int exitVal = proc.waitFor();
-                } catch (IOException ex) {
-                    Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            
-        });
-        
-        b[2].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String[] cmd = new String[3];
-                    cmd[0] = "java";
-                    cmd[1] = "-jar";
-                    cmd[2] = filenames[2];
-                    Runtime rt = Runtime.getRuntime();
-                    // System.out.println("Execing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
                     Process proc = rt.exec(cmd);
                     // any error message?
                     StreamGobbler errorGobbler = new StreamGobbler(proc.getErrorStream(), "ERROR");
@@ -148,7 +112,6 @@ public class Form extends JFrame {
             try {
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
-                @SuppressWarnings("unused")
                 String line = null;
                 while ((line = br.readLine()) != null) {
                     // System.out.println(type + ">" + line);
