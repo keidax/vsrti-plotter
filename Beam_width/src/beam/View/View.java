@@ -30,12 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import beam.Model.Model;
+
 import common.Model.ModelListener;
 import common.View.FileDrop;
 import common.View.InputFile;
-
-import beam.Model.Model;
-
 
 /**
  * main GUI class
@@ -249,7 +248,7 @@ public class View extends JFrame implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                System.exit(0);
+                dispose();
             }
         });
         
@@ -380,7 +379,7 @@ public class View extends JFrame implements ModelListener {
         this.setSize(1200, 800);
         // this.pack();
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
     }
     

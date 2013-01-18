@@ -133,7 +133,7 @@ public class Form extends JFrame {
         
         this.setVisible(true);
         this.pack();
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     
     class StreamGobbler extends Thread {

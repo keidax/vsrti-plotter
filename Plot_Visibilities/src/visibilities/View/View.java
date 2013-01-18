@@ -318,7 +318,7 @@ public class View extends JFrame implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                System.exit(0);
+                dispose();
             }
         });
         
@@ -461,7 +461,7 @@ public class View extends JFrame implements ModelListener {
         
         this.setSize(800, 600);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
     }
     
