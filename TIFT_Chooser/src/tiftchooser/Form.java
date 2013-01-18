@@ -1,8 +1,4 @@
 package tiftchooser;
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -23,22 +19,25 @@ import javax.swing.JFrame;
  */
 public class Form extends JFrame {
     public int i = 0;
-    public final String[] filenames = { "TIFT.jar", "TIFT_1.jar" };
+    // public final String[] filenames = { "TIFT.jar", "TIFT_1.jar" };
     public final String[] buttonnames = { "Full Complex TIFT", "Cosine TIFT" };
     public JButton[] b = new JButton[2];
+    
+    public static void main(String[] args) {
+        new Form("TIFT - Tool for Interactive Fourier Transform");
+    }
     
     public Form(String str) {
         super(str);
         getContentPane().setLayout(new FlowLayout());
         for (i = 0; i < b.length; i++) {
-            System.out.println(i + ":" + filenames[i]);
             b[i] = new JButton(buttonnames[i]);
             getContentPane().add(b[i]);
         }
         b[0].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
+                /*try {
                     String[] cmd = new String[3];
                     // cmd[0]="cmd.exe";
                     // cmd[1]="/C";
@@ -61,7 +60,9 @@ public class Form extends JFrame {
                     // int exitVal = proc.waitFor();
                 } catch (IOException ex) {
                     Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
+                
+                tift.Main.main(null);
             }
             
         });
@@ -69,7 +70,7 @@ public class Form extends JFrame {
         b[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
+                /*try {
                     String[] cmd = new String[3];
                     cmd[0] = "java";
                     cmd[1] = "-jar";
@@ -88,14 +89,16 @@ public class Form extends JFrame {
                     // int exitVal = proc.waitFor();
                 } catch (IOException ex) {
                     Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
+                
+                tift2.Main.main(null);
             }
             
         });
         
         this.setVisible(true);
         this.pack();
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     
     class StreamGobbler extends Thread {
