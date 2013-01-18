@@ -13,9 +13,6 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import beam.Main;
-
-
 /**
  * 
  * @author Karel Durkota
@@ -70,7 +67,7 @@ public class Form extends JFrame {
                 }*/
                 
                 System.out.println("asdf");
-                Main.main(null);
+                beam.Main.main(null);
             }
             
         });
@@ -78,7 +75,8 @@ public class Form extends JFrame {
         b[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
+                
+                /*try {
                     String[] cmd = new String[3];
                     cmd[0] = "java";
                     cmd[1] = "-jar";
@@ -97,7 +95,9 @@ public class Form extends JFrame {
                     // int exitVal = proc.waitFor();
                 } catch (IOException ex) {
                     Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
+                
+                fringe.Main.main(null);
             }
             
         });
@@ -105,7 +105,7 @@ public class Form extends JFrame {
         b[2].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
+                /*try {
                     String[] cmd = new String[3];
                     cmd[0] = "java";
                     cmd[1] = "-jar";
@@ -124,7 +124,9 @@ public class Form extends JFrame {
                     // int exitVal = proc.waitFor();
                 } catch (IOException ex) {
                     Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
+                
+                visibilities.Main.main(null);
             }
             
         });
