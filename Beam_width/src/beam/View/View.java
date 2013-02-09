@@ -279,7 +279,7 @@ public class View extends JFrame implements ModelListener {
                     bHide.setText("Hide Beam Pattern");
                 }
                 setBeamPatternVisible(!isBeamPatternVisible());
-                // update();
+                vCanvas.repaint();
             }
             
         });
@@ -506,6 +506,7 @@ public class View extends JFrame implements ModelListener {
         repaint();
         fD.setText(getD() + "");
         fLambda.setText(model.getLambda() + "");
+        lambda = model.getLambda();
         // fThetaMax.setText(d / 2 + "");
         // fLambda.setText(viewer.adapter.getLambda()+"");
         vCanvas.update(points, rmsPoints);

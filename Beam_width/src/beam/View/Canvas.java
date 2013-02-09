@@ -36,7 +36,6 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import common.View.SquareOrnament;
 
-
 /**
  * Base class for graphs
  */
@@ -852,13 +851,24 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     }
     
     protected void paintPattern(Graphics2D g) {
+        System.out.println("painting model");
         g.setColor(Color.red);
-        double last = getMinX();
+        double previous = getMinX();
+        /*
+        for (Double p : points.keySet()) {
+            // System.out.println("drawing from " + previous + " to " + p + ", bessel = " + bessel(p));
+            g.drawLine(g2cx(p), g2cy(bessel(p) * points.get(p)), g2cx(previous), g2cy(bessel(previous) * points.get(previous)));
+            previous = p;
+        }*/
+        
+        g.setColor(Color.blue);
+        previous = getMinX();
         for (double i = getMinX(); i <= getMaxX(); i += .5) {
-            g.drawLine(g2cx(i), g2cy(bessel(i) * (points.containsKey(0.0) ? points.get(0.0) : 1)), g2cx(last), g2cy(bessel(last)
-                    * (points.containsKey(0.0) ? points.get(0.0) : 1)));
-            last = i;
+            g.drawLine(g2cx(i), g2cy(bessel(i) * (points.containsKey(0.0) ? points.get(0.0) : getMaxY())), g2cx(previous),
+                    g2cy(bessel(previous) * (points.containsKey(0.0) ? points.get(0.0) : getMaxY())));
+            previous = i;
         }
+        System.out.println("Min x: " + getMinX() + "\nMax x: " + getMaxX() + "\nmax y: " + getMaxY() + "\npoints(0): " + points.get(0.0));
     }
     
     /*
@@ -875,10 +885,12 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      * @return
      */
     protected double bessel(double theta) {
+        // System.out.println("bessel call: " + theta);
         if (theta == 0) {
             return 1;
         }
         double x = besselX(theta);
+        // System.out.println("bessel x = " + x);
         return Math.pow(2 * besselJ(x) / x, 2);
     }
     
@@ -889,6 +901,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      * @return x where x equals pi*D*theta(in radians)/lambda
      */
     private double besselX(double theta) {
+        // System.out.println("view d = " + view.getD() + "view lambda = " + view.getLambda());
         return Math.PI * view.getD() * theta * Math.PI / 180 / view.getLambda();
     }
     
