@@ -13,10 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-/**
- * 
- * @author Administrator
- */
+@SuppressWarnings("serial")
 public class Form extends JFrame {
     public int i = 0;
     // public final String[] filenames = { "TIFT.jar", "TIFT_1.jar" };
@@ -117,9 +114,9 @@ public class Form extends JFrame {
                 BufferedReader br = new BufferedReader(isr);
                 String line = null;
                 while ((line = br.readLine()) != null) {
-                    // System.out.println(type + ">" + line);
+                    System.out.println(type + ">" + line);
                 }
-                // System.out.println(type + ">" + line);
+                System.out.println(type + ">" + line);
             } catch (IOException ex) {
                 Logger.getLogger(Form.class.getName()).log(Level.SEVERE, null, ex);
             }
