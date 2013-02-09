@@ -52,8 +52,7 @@ public class View extends JFrame implements ModelListener {
     private JButton updateButton;
     
     private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
-    private double d = 5, noise = 0, lambda;// TODO find a good default value
-                                            // for lambda
+    private double d = 5, noise = 0, lambda = 2.5;// TODO update so these draw from model correctly
     private boolean showBeamPattern = false;
     private String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Beam.html";// TODO get the correct url here
     private JFileChooser fileChooser;
