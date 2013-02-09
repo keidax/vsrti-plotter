@@ -1,4 +1,4 @@
-<project name="VSRTI_Plotter" default="dist" basedir=".">
+<project name="TIFT_Chooser" default="dist" basedir="..">
   <property name="src" location="${ant.project.name}/src"/>
   <property name="build" location="${ant.project.name}/build"/>
   <property name="dist" location="${ant.project.name}/dist"/>
@@ -10,14 +10,11 @@
 
   <target name="compile" depends="init" description="compile the source">
     <!-- Compile the java code from ${src} into ${build} -->
-    <javac srcdir="."
-      destdir="${build}"
-      includes="Beam_width/**,
-      Common/**,
-      Plot_Fringe_Pattern/**,
-      Plot_Visibilities/**,
-      VSRTI_Plotter/src/**"
-      includeantruntime="false"/>
+    <javac srcdir="." destdir="${build}" includeantruntime="false"
+      includes="Common/**,
+      TIFT_Chooser/src/**,
+      TIFT/src/**,
+      TIFT_1/src/**"/>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
@@ -26,8 +23,7 @@
     <!-- Build the jar file -->
     <jar destfile="${dist}/${ant.project.name}.jar" basedir="${build}">
       <manifest>
-        <attribute name="Main-Class"
-            value="chooser.Form"/>
+        <attribute name="Main-Class" value="tiftchooser.Form"/>
       </manifest>
     </jar>
   </target>

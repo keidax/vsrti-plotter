@@ -1,0 +1,38 @@
+<project name="VSRTI_Plotter" default="dist" basedir="..">
+  <property name="src" location="${ant.project.name}/src"/>
+  <property name="build" location="${ant.project.name}/build"/>
+  <property name="dist" location="${ant.project.name}/dist"/>
+
+  <target name="init">
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="." destdir="${build}" includeantruntime="false"
+      includes="Beam_width/**,
+      Common/**,
+      Plot_Fringe_Pattern/**,
+      Plot_Visibilities/**,
+      VSRTI_Plotter/src/**"/>
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution">
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist}"/>
+    <!-- Build the jar file -->
+    <jar destfile="${dist}/${ant.project.name}.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="chooser.Form"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean" description="clean up">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+</project>
