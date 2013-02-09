@@ -1007,19 +1007,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 JFrame jf = new JFrame("About SRT Plotter");
-                JLabel jl = new JLabel(
-                        "<html>"
-                                + "<p>SRT Plotter version 1.0</p>"
-                                + "<p><table>"
-                                + "<tr><td>Authors:</td><td>Adam Pere</td></tr>"
-                                + "<tr><td></td><td>Jonathan Marr</td></tr>"
-                                + "<tr><td></td><td>Karel Durkota</td></tr>"
-                                + "</table></p>"
-                                + "<p></p>"
-                                + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
-                                + "<p>This package was designed to be used with MIT Haystack Observatory SRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
-                                + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
-                                + "<p>Software is written in Java and it is free open source</p>" + "</html>");
+                
+                JLabel jl = new JLabel(common.View.ViewUtilities.SRT_ABOUT_TEXT);
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(jl);
                 jf.pack();
