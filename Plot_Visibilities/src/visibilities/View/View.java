@@ -57,7 +57,6 @@ public class View extends BaseView implements ModelListener {
     
     private JButton updateButton;
     
-    public static View viewer;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Visibilities.html";
     public boolean showVis = false;
     public double T1 = 10, T2 = 10, theta = 0;
@@ -66,7 +65,6 @@ public class View extends BaseView implements ModelListener {
     
     public View(Adapter a, String title) {
         super(title);
-        View.viewer = this;
         jfc = new JFileChooser();
         // model = m;
         setAdapter(a);
@@ -258,14 +256,14 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showOpenDialog(View.viewer);
+                jfc.showOpenDialog(View.this);
                 File f = jfc.getSelectedFile();
                 if (f == null || !f.canRead()) {
                     return;
                 }
                 TreeMap<Double, Double>[] tm = parseFile(f);
-                viewer.adapter.importVisibilityGraphPoints(tm[0]);
-                viewer.adapter.importVisibilityGraphRms(tm[1]);
+                View.this.adapter.importVisibilityGraphPoints(tm[0]);
+                View.this.adapter.importVisibilityGraphRms(tm[1]);
                 update();
             }
         });
@@ -274,12 +272,12 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showSaveDialog(View.viewer);
+                jfc.showSaveDialog(View.this);
                 File f = jfc.getSelectedFile();
                 if (f == null) {
                     return;
                 }
-                writeIntoFile(f, viewer.adapter.exportVisibilityGraphPoints());
+                writeIntoFile(f, View.this.adapter.exportVisibilityGraphPoints());
             }
             
             private void writeIntoFile(File f, String exportVisibilityGraphPoints) {
@@ -326,9 +324,9 @@ public class View extends BaseView implements ModelListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 // if(!tableModel.inputFiles.isEmpty())
-                // viewer.adapter.resetF();
+                // View.this.adapter.resetF();
                 // else
-                viewer.adapter.reset();
+                View.this.adapter.reset();
             }
         });
         
@@ -338,7 +336,7 @@ public class View extends BaseView implements ModelListener {
             public void actionPerformed(ActionEvent arg0) {
                 tableModel.removeAllInputFiles();
                 jTable.repaint();
-                viewer.adapter.fullReset();
+                View.this.adapter.fullReset();
             }
         });
         
@@ -471,7 +469,7 @@ public class View extends BaseView implements ModelListener {
                     adapter.setLambda(Double.parseDouble(fLambda.getText()));
                     System.out.println("lambda from file:\t" + Double.parseDouble(fLambda.getText()));
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
+                    adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("X_Y_RMS")) {
                     im = false;
                     vis = true;
@@ -502,9 +500,8 @@ public class View extends BaseView implements ModelListener {
                 } else if (strLine.trim().length() == 0) {
                     continue;
                 } else {
-                    JOptionPane.showMessageDialog(viewer,
-                            "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.", "Incorrect format",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
+                            "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     return null;
                 }
                 

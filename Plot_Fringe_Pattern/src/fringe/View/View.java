@@ -52,7 +52,6 @@ public class View extends BaseView implements ModelListener {
     public JLabel lDelta, lLambda, lThetaMax, lSigma;
     public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private JButton updateButton;
-    public static View viewer;
     public double d = 1, t1 = 1, t2 = 1, b = 5;
     public boolean showSinc = false, isDegrees = true;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Fringe_Pattern.html";
@@ -60,7 +59,6 @@ public class View extends BaseView implements ModelListener {
     
     public View(Adapter a, String title) {
         super(title);
-        View.viewer = this;
         jfc = new JFileChooser();
         // model = m;
         setAdapter(a);
@@ -251,14 +249,14 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showOpenDialog(View.viewer);
+                jfc.showOpenDialog(View.this);
                 File f = jfc.getSelectedFile();
                 if (f == null || !f.canRead()) {
                     return;
                 }
-                TreeMap<Double, Double>[] tm = viewer.parseFile(f);
-                viewer.adapter.importVisibilityGraphPoints(tm[0]);
-                viewer.adapter.importVisibilityGraphRms(tm[1]);
+                TreeMap<Double, Double>[] tm = View.this.parseFile(f);
+                View.this.adapter.importVisibilityGraphPoints(tm[0]);
+                View.this.adapter.importVisibilityGraphRms(tm[1]);
                 
             }
         });
@@ -267,12 +265,12 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showSaveDialog(View.viewer);
+                jfc.showSaveDialog(View.this);
                 File f = jfc.getSelectedFile();
                 if (f == null) {
                     return;
                 }
-                writeIntoFile(f, viewer.adapter.exportVisibilityGraphPoints());
+                writeIntoFile(f, View.this.adapter.exportVisibilityGraphPoints());
             }
             
             private void writeIntoFile(File f, String exportVisibilityGraphPoints) {
@@ -303,7 +301,7 @@ public class View extends BaseView implements ModelListener {
         bReset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                viewer.adapter.reset();
+                View.this.adapter.reset();
             }
         });
         
@@ -312,7 +310,7 @@ public class View extends BaseView implements ModelListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 tableModel.removeAllInputFiles();
-                viewer.adapter.fullReset();
+                View.this.adapter.fullReset();
             }
         });
         
@@ -384,7 +382,7 @@ public class View extends BaseView implements ModelListener {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
                     } else {
-                        JOptionPane.showMessageDialog(viewer, "Incorrect data file format. Try to open file instead of drag-and-drop.",
+                        JOptionPane.showMessageDialog(View.this, "Incorrect data file format. Try to open file instead of drag-and-drop.",
                                 "Incorrett format", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -470,12 +468,12 @@ public class View extends BaseView implements ModelListener {
                     continue;
                 }
                 if (strLine.trim().startsWith("*lambda")) {
-                    viewer.adapter.setLambda(Double.parseDouble(strLine.split(" ")[1]));
-                    viewer.fLambda.setText(strLine.split(" ")[1]);
+                    adapter.setLambda(Double.parseDouble(strLine.split(" ")[1]));
+                    fLambda.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    viewer.adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
+                    adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("*exponent")) {
-                    viewer.adapter.setExponent(Integer.parseInt(strLine.split(" ")[1]));
+                    adapter.setExponent(Integer.parseInt(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("BASELINE_POWER_RMS")) {
                     im = false;
                     vis = true;
@@ -507,9 +505,8 @@ public class View extends BaseView implements ModelListener {
                 } else if (strLine.trim().length() == 0) {
                     continue;
                 } else {
-                    JOptionPane.showMessageDialog(viewer,
-                            "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.", "Incorrect format",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
+                            "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     return null;
                 }
                 
@@ -596,7 +593,7 @@ public class View extends BaseView implements ModelListener {
         updateValuesFromModel();
         repaint();
         fD.setText(getD() + "");
-        fLambda.setText(viewer.adapter.getLambda() + "");
+        fLambda.setText(adapter.getLambda() + "");
         vGraph.update();
         // this.getIGraph().update();
     }
