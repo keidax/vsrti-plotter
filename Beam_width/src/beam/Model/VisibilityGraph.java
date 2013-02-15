@@ -10,11 +10,11 @@ import java.util.TreeSet;
 import common.Model.Point;
 import common.View.InputFile;
 
-
 public class VisibilityGraph extends Graph {
     
     private File saveFile;
     private double lambda = 2.5;
+    private double displayFactor = 1;
     private SortedSet<Point> rawPoints;
     private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
     private TreeMap<Double, InputFile> inputFiles = new TreeMap<Double, InputFile>();
@@ -137,6 +137,14 @@ public class VisibilityGraph extends Graph {
     public void setLambda(double lambda) {
         this.lambda = lambda;
         reinitializePoints();
+    }
+    
+    public double getDisplayFactor() {
+        return displayFactor;
+    }
+    
+    public void setDisplayFactor(double displayFactor) {
+        this.displayFactor = displayFactor;
     }
     
     public SortedSet<Point> getRawPoints() {

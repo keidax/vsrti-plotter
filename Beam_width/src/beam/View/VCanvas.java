@@ -10,7 +10,6 @@ import common.View.AbstractOrnament;
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
 
-
 /**
  * Specific implementation of Beam graph
  * 
@@ -24,7 +23,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     protected TreeMap<Double, Double> rmsPoints;
     protected AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
     protected Color[] colors = { Color.BLUE, Color.BLACK };
-    protected int sigma = 1;
+    protected double displayFactor = 1;
     
     public VCanvas(View v, TreeMap<Double, Double> g) {
         super(v, g);
@@ -48,7 +47,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         ornaments[1].draw(g, g2cx(x), g2cy(y));
         if (rmsPoints.containsKey(x)) {
             // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-            drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getSigma() / 2), g2cy(y + rmsPoints.get(x) * getSigma() / 2));
+            drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getDisplayFactor() / 2), g2cy(y + rmsPoints.get(x) * getDisplayFactor() / 2));
             // System.out.println("RMS ["+x+","+rmsPoints.get(x));
             // System.out.println("rms = "+rmsPoints.get(x));
         }
@@ -73,8 +72,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             System.out.println("** " + key);
             if (rmsPoints.containsKey(key)) {
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-                drawRms(g, g2cx(key), g2cy(points.get(key) - rmsPoints.get(key) * getSigma() / 2), g2cy(points.get(key)
-                        + rmsPoints.get(key) * getSigma() / 2));
+                drawRms(g, g2cx(key), g2cy(points.get(key) - rmsPoints.get(key) * getDisplayFactor() / 2), g2cy(points.get(key)
+                        + rmsPoints.get(key) * getDisplayFactor() / 2));
                 // new SquareOrnament().draw(g,
                 // g2cx(key),g2cy(this.points.get(key)));
                 // System.out.println("Drawing point at ["+key+","+this.points.get(key)+"]");
@@ -106,12 +105,12 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         paint(g);
     }
     
-    public int getSigma() {
-        return sigma;
+    public double getDisplayFactor() {
+        return displayFactor;
     }
     
-    public void setSigma(int i) {
-        sigma = i;
+    public void setDisplayFactor(double i) {
+        displayFactor = i;
     }
     
     @Override

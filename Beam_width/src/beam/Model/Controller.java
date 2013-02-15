@@ -8,7 +8,6 @@ import java.io.IOException;
 import beam.View.View;
 import beam.View.ViewListener;
 
-
 public class Controller implements ViewListener {
     
     private Model model;
@@ -22,12 +21,14 @@ public class Controller implements ViewListener {
     @Override
     public void fullReset() {
         model.emptyRawPoints();
+        model.resetValuesToDefaults();
         model.reinitialize();
         model.update();
     }
     
     @Override
     public void reset() {
+        model.resetValuesToDefaults();
         model.reinitialize();
         model.update();
     }

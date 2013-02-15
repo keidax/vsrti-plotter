@@ -32,19 +32,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import common.View.BaseView;
 import common.View.FileDrop;
 import common.View.InputFile;
 
 import fringe.Model.Adapter;
 import fringe.Model.ModelListener;
 
-public class View extends JFrame implements ModelListener {
+public class View extends BaseView implements ModelListener {
     
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
     public VCanvas vGraph;
     // public FFTCanvas iGraph;
-    public JButton exit;
     // public Model model;
     public TableModel tableModel;
     public FileTable jTable;
@@ -144,7 +144,9 @@ public class View extends JFrame implements ModelListener {
         labels = new JPanel();
         labels.setLayout(new GridLayout());
         jScroll = new JScrollPane(jTable);
-        jScroll.setMaximumSize(new Dimension(200, 80));
+        jScroll.setMaximumSize(new Dimension(200, 200));
+        jScroll.setPreferredSize(new Dimension(200, 200));
+        jScroll.setMinimumSize(new Dimension(150, 125));
         
         getContentPane().add(row1);
         getContentPane().add(row2);
@@ -161,9 +163,8 @@ public class View extends JFrame implements ModelListener {
         row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         // row1col1.add(iGraph);
         row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
-        row1col2.setMaximumSize(new Dimension(100, 450));
+        // row1col2.setMaximumSize(new Dimension(100, 450));
         row1col2.add(jScroll);// fileTable.createVectors());
-        jScroll.setMinimumSize(new Dimension(100, 125));
         row1col2.add(Box.createRigidArea(new Dimension(5, 20)));
         row1col2.add(row1col2col2);
         // row1col2col2.add(new JTable());
@@ -195,7 +196,7 @@ public class View extends JFrame implements ModelListener {
         row1col2col2.add(jButtons3);
         row1col2col2.add(jButtons2);
         
-        row1col2col2.add(jBlank);
+        // row1col2col2.add(jBlank);
         row1col2col2.add(jButtons4);
         row1col2col2.add(jButtons5);
         // labels.add(jButtons);
@@ -430,9 +431,8 @@ public class View extends JFrame implements ModelListener {
                 } catch (NumberFormatException e1) {
                 }
                 try {
-                    
-                    Integer.parseInt(fSigma.getText());
-                    getVGraph().setSigma(Integer.parseInt(fSigma.getText()));
+                    double tempSigma = Double.parseDouble(fSigma.getText());
+                    getVGraph().setSigma(tempSigma);
                     getVGraph().update();
                 } catch (NumberFormatException e1) {
                 }
@@ -441,7 +441,8 @@ public class View extends JFrame implements ModelListener {
             }
         });
         
-        this.setSize(800, 600);
+        // this.setSize(800, 600);
+        this.pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -590,16 +591,9 @@ public class View extends JFrame implements ModelListener {
         vGraph = graph;
     }
     
-    public JButton getExit() {
-        return exit;
-    }
-    
-    public void setExit(JButton exit) {
-        this.exit = exit;
-    }
-    
     @Override
     public void update() {
+        updateValuesFromModel();
         repaint();
         fD.setText(getD() + "");
         fLambda.setText(viewer.adapter.getLambda() + "");
@@ -625,5 +619,10 @@ public class View extends JFrame implements ModelListener {
         } else {
             this.d = d;
         }
+    }
+    
+    @Override
+    public void updateValuesFromModel() {
+        // TODO fill in
     }
 }

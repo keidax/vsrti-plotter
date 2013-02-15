@@ -18,7 +18,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     protected TreeMap<Double, Double> dataPoints;
     protected static AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
     protected static Color[] colors = { Color.BLUE, Color.BLACK };
-    protected int sigma = 1;
+    protected double sigma = 1;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
@@ -95,11 +95,11 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         paint(g);
     }
     
-    public int getSigma() {
+    public double getSigma() {
         return sigma;
     }
     
-    public void setSigma(int i) {
+    public void setSigma(double i) {
         sigma = i;
     }
     

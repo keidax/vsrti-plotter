@@ -13,16 +13,14 @@ import common.View.AbstractOrnament;
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
 
-
 @SuppressWarnings("serial")
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
-
+    
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = { new CircleOrnament(),
-            new SquareOrnament() };
+    protected static AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
     protected static Color[] colors = { Color.BLUE, Color.BLACK };
-    protected int sigma = 1;
+    protected double sigma = 1;
     protected float RMSStroke = 2;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
@@ -37,17 +35,14 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     @Override
     public void drawPoint(Graphics2D g, double x, double y) {
         // System.out.println("RMS = "+adapter.getRms().size());
-        if (adapter.getVisibilityGraphDataPoints().containsKey(x)
-                && adapter.getVisibilityGraphDataPoints().get(x) == y) {
+        if (adapter.getVisibilityGraphDataPoints().containsKey(x) && adapter.getVisibilityGraphDataPoints().get(x) == y) {
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
                 // System.out.println("** " +
                 // adapter.getRms().get(x)*getSigma()/2);
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x)
-                        * getSigma() / 2), g2cy(y + adapter.getRms().get(x)
-                        * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
                 // System.out.println("RMS ["+x+","+adapter.getRms().get(x));
                 // System.out.println("rms = "+adapter.getRms().get(x));
             }
@@ -79,11 +74,11 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         paint(g);
     }
     
-    public int getSigma() {
+    public double getSigma() {
         return sigma;
     }
     
-    public void setSigma(int i) {
+    public void setSigma(double i) {
         sigma = i;
     }
     

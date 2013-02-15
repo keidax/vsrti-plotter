@@ -9,8 +9,10 @@ import common.Model.ModelInterface;
 import common.Model.ModelListener;
 import common.View.InputFile;
 
-
 public class Model implements ModelInterface {
+    
+    private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1;
+    private final int defaultExponent = 5;
     
     private VisibilityGraph visibilityGraph;
     private Vector<ModelListener> listeners;
@@ -55,6 +57,10 @@ public class Model implements ModelInterface {
         visibilityGraph.setDeltaBaseline(d);
     }
     
+    public void setDisplayFactor(double d) {
+        visibilityGraph.setDisplayFactor(d);
+    }
+    
     @Override
     public void setExponent(int e) {
         visibilityGraph.setExponent(e);
@@ -78,6 +84,10 @@ public class Model implements ModelInterface {
     @Override
     public double getDeltaBaseline() {
         return visibilityGraph.getDeltaBaseline();
+    }
+    
+    public double getDisplayFactor() {
+        return visibilityGraph.getDisplayFactor();
     }
     
     @Override
@@ -139,5 +149,13 @@ public class Model implements ModelInterface {
     @Override
     public double getNoise() {
         return visibilityGraph.getNoise();
+    }
+    
+    public void resetValuesToDefaults() {
+        setExponent(defaultExponent);
+        setLambda(defaultLambda);
+        setDeltaBaseline(defaultDeltaBaseline);
+        setNoise(defaultNoise);
+        setDisplayFactor(defaultDisplayFactor);
     }
 }

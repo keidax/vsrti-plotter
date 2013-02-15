@@ -33,6 +33,7 @@ import javax.swing.JTextField;
 import beam.Model.Model;
 
 import common.Model.ModelListener;
+import common.View.BaseView;
 import common.View.FileDrop;
 import common.View.InputFile;
 
@@ -41,7 +42,8 @@ import common.View.InputFile;
  * 
  */
 
-public class View extends JFrame implements ModelListener {
+@SuppressWarnings("serial")
+public class View extends BaseView implements ModelListener {
     
     private ViewListener listener;
     private VCanvas vCanvas;
@@ -76,7 +78,7 @@ public class View extends JFrame implements ModelListener {
         bOpen = new JButton("Open file");
         bSave = new JButton("Save file");
         bExit = new JButton("Exit");
-        bReset = new JButton("Reset");
+        bReset = new JButton("Reset to defaults");
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
         bHide = new JButton("Show Beam Pattern");
@@ -98,7 +100,7 @@ public class View extends JFrame implements ModelListener {
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
                 + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
         // fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
-        fSigma = new JTextField(vCanvas.getSigma() + "");
+        fSigma = new JTextField(vCanvas.getDisplayFactor() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         // fSigma.setMinimumSize(new Dimension(50,20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3.  )"
@@ -350,9 +352,9 @@ public class View extends JFrame implements ModelListener {
                 }
                 
                 try {
-                    int tempSigma = Integer.parseInt(fSigma.getText());
+                    double tempSigma = Double.parseDouble(fSigma.getText());
                     
-                    vCanvas.setSigma(tempSigma);
+                    model.setDisplayFactor(tempSigma);
                 } catch (NumberFormatException e1) {
                 }
                 
@@ -361,8 +363,8 @@ public class View extends JFrame implements ModelListener {
             }
         });
         
-        this.setSize(1200, 800);
-        // this.pack();
+        // this.setSize(1200, 800);
+        this.pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -501,11 +503,12 @@ public class View extends JFrame implements ModelListener {
     
     @Override
     public void updateView(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {
+        updateValuesFromModel();
+        
         System.out.println("Updating view");
         repaint();
         fD.setText(getD() + "");
-        fLambda.setText(model.getLambda() + "");
-        lambda = model.getLambda();
+        fLambda.setText(lambda + "");
         // fThetaMax.setText(d / 2 + "");
         // fLambda.setText(viewer.adapter.getLambda()+"");
         vCanvas.update(points, rmsPoints);
@@ -566,5 +569,12 @@ public class View extends JFrame implements ModelListener {
     
     public void setListener(ViewListener listener) {
         this.listener = listener;
+    }
+    
+    @Override
+    public void updateValuesFromModel() {
+        lambda = model.getLambda();
+        noise = model.getNoise();
+        vCanvas.setDisplayFactor(model.getDisplayFactor());
     }
 }

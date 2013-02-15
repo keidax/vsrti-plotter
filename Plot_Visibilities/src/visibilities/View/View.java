@@ -38,16 +38,16 @@ import javax.swing.JTextField;
 import visibilities.Model.Adapter;
 import visibilities.Model.ModelListener;
 
+import common.View.BaseView;
 import common.View.FileDrop;
 import common.View.InputFile;
 
-public class View extends JFrame implements ModelListener {
+public class View extends BaseView implements ModelListener {
     
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
     public VCanvas vGraph;
     // public FFTCanvas iGraph;
-    public JButton exit;
     // public Model model;
     public TableModel tableModel;
     public FileTable jTable;
@@ -147,7 +147,6 @@ public class View extends JFrame implements ModelListener {
         });
         
         JScrollPane jScroll;
-        
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
@@ -410,7 +409,7 @@ public class View extends JFrame implements ModelListener {
                 }
                 
                 try {
-                    int tempSig = Integer.parseInt(fSigma.getText());
+                    double tempSig = Double.parseDouble(fSigma.getText());
                     
                     getVGraph().setSigma(tempSig);
                     System.out.println("set sigma to " + tempSig);
@@ -445,7 +444,7 @@ public class View extends JFrame implements ModelListener {
             }
         });
         
-        this.setSize(800, 600);
+        this.pack();
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
@@ -538,16 +537,9 @@ public class View extends JFrame implements ModelListener {
         vGraph = graph;
     }
     
-    public JButton getExit() {
-        return exit;
-    }
-    
-    public void setExit(JButton exit) {
-        this.exit = exit;
-    }
-    
     @Override
     public void update() {
+        updateValuesFromModel();
         // fLambda.setText(adapter.getLambda() + "");
         // fSigma.setText(getVGraph().getSigma() + "");
         
@@ -600,5 +592,11 @@ public class View extends JFrame implements ModelListener {
         }
         
         return false;
+    }
+    
+    @Override
+    public void updateValuesFromModel() {
+        // TODO fill in
+        
     }
 }
