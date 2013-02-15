@@ -21,6 +21,7 @@ import javax.swing.event.TableModelListener;
  * @author Adam Pere and Karel Durkota
  * 
  */
+@SuppressWarnings("serial")
 public class FileTable extends JTable implements TableModelListener {
     
     public FileTable me = this;
@@ -121,7 +122,7 @@ public class FileTable extends JTable implements TableModelListener {
             double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
             
             TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-            TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
+            // TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
             
             for (int i = 0; i < data.length; i++) {
                 if (data[i] != -1) {
@@ -150,7 +151,7 @@ public class FileTable extends JTable implements TableModelListener {
         ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
         
         double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
-        double start = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
+        // double start = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
         double step = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
         

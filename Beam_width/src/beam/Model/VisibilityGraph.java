@@ -58,7 +58,7 @@ public class VisibilityGraph extends Graph {
                 addPoint(p.getX(), p.getY());
             }
         }
-        Set<Double> keys = getPoints().keySet();
+        // Set<Double> keys = getPoints().keySet();
     }
     
     public void addPoint(double x, double y) {

@@ -5,17 +5,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import beam.View.View;
 import beam.View.ViewListener;
 
 public class Controller implements ViewListener {
     
     private Model model;
-    private View view;
     
-    public Controller(Model m, View v) {
+    // private View view;
+    
+    public Controller(Model m) {
         model = m;
-        view = v;
+        // view = v;
     }
     
     @Override

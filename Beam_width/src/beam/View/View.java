@@ -71,7 +71,7 @@ public class View extends BaseView implements ModelListener {
         
         vCanvas.setSize(300, 100);
         
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jBlank, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jRadioButtons, jThetaMax, jLabels, jFields;
+        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jRadioButtons, jThetaMax, jLabels, jFields;
         // JPanel jSigma;
         
         // BUTTONS
@@ -159,7 +159,6 @@ public class View extends BaseView implements ModelListener {
         jButtons4 = new JPanel();
         jButtons5 = new JPanel();
         jRadioButtons = new JPanel();
-        jBlank = new JPanel();
         jThetaMax = new JPanel();
         // jSigma = new JPanel();
         jLabels = new JPanel();
@@ -375,7 +374,6 @@ public class View extends BaseView implements ModelListener {
      * ""); fD.setText(getD() + ""); }
      */
     
-    @SuppressWarnings("unchecked")
     public TreeMap<Double, Double>[] parseFile(File f) {
         TreeMap<Double, Double> ret = new TreeMap<Double, Double>();
         TreeMap<Double, Double> rms = new TreeMap<Double, Double>();

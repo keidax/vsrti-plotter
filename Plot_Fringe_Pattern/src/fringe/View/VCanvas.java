@@ -12,6 +12,7 @@ import common.View.SquareOrnament;
 
 import fringe.Model.Adapter;
 
+@SuppressWarnings("serial")
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
     

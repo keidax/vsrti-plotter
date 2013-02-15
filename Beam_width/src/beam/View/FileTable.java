@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 
+@SuppressWarnings("serial")
 public class FileTable extends JTable implements TableModelListener {
     
     private static View v;

@@ -3,6 +3,7 @@ package srt.View;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
+@SuppressWarnings("serial")
 public class TableModel extends AbstractTableModel {
     
     public View viewer;

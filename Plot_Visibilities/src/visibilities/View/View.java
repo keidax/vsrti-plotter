@@ -42,9 +42,8 @@ import common.View.BaseView;
 import common.View.FileDrop;
 import common.View.InputFile;
 
+@SuppressWarnings("serial")
 public class View extends BaseView implements ModelListener {
-    
-    private static final long serialVersionUID = 1L;
     public Adapter adapter;
     public VCanvas vGraph;
     // public FFTCanvas iGraph;
@@ -506,11 +505,16 @@ public class View extends BaseView implements ModelListener {
                 }
                 
             }
+            
+            br.close();
+            
             in.close();
+            fstream.close(); // TODO handle these resources better, maybe something with AutoClosable
+            
         } catch (Exception e) {// Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
-        TreeMap<Double, Double>[] back = new TreeMap[3];
+        TreeMap<Double, Double>[] back = new TreeMap[3]; // TODO figure this one out too
         back[0] = ret;
         back[1] = rms;
         back[2] = retim;

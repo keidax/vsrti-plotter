@@ -70,7 +70,7 @@ public class View extends BaseView implements ModelListener {
         
         vGraph.setSize(300, 100);
         
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jBlank, jThetaMax, jSigma, jLabels, jFields;
+        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jThetaMax, jSigma, jLabels, jFields;
         
         // BUTTONS
         bOpen = new JButton("Open file");
@@ -177,7 +177,6 @@ public class View extends BaseView implements ModelListener {
         jButtons3 = new JPanel();
         jButtons4 = new JPanel();
         jButtons5 = new JPanel();
-        jBlank = new JPanel();
         jThetaMax = new JPanel();
         jSigma = new JPanel();
         jLabels = new JPanel();
@@ -526,7 +525,7 @@ public class View extends BaseView implements ModelListener {
         TreeMap<Double, Double> retData = new TreeMap<Double, Double>();
         TreeMap<Double, Double> retRms = new TreeMap<Double, Double>();
         Set<Double> dataKeys = data.keySet();
-        Set<Double> rmsKeys = rms.keySet();
+        // Set<Double> rmsKeys = rms.keySet();
         for (Double key : dataKeys) {
             // x has 1 value, rms 0
             if (data.get(key).size() == 1 && (rms.containsKey(key) ? rms.get(key).size() : 0) == 0) {

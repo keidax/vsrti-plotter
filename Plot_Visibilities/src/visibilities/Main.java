@@ -9,7 +9,6 @@ import visibilities.Model.Adapter;
 import visibilities.Model.Model;
 import visibilities.View.View;
 
-
 public class Main {
     public static double lambda = -1;
     
@@ -29,8 +28,8 @@ public class Main {
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;
-            boolean vis = false;
-            boolean im = false;
+            // boolean vis = false;
+            // boolean im = false;
             while ((strLine = br.readLine()) != null) {
                 System.out.println(strLine);
                 if (strLine.trim().startsWith("//")) {

@@ -75,7 +75,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         setMinimumSize(new Dimension(1300, 500));
         vGraph.setSize(300, 100);
         jfc = new JFileChooser();
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons6, jButtons7, jButtons8, jBlank, jThetaMax, jSigma, jLabels, jFields;
+        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons6, jButtons7, jButtons8, jBlank, jThetaMax, jLabels, jFields;
         
         // BUTTONS
         bOpen = new JButton("Open file");
@@ -141,7 +141,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jButtons8 = new JPanel();
         jBlank = new JPanel();
         jThetaMax = new JPanel();
-        jSigma = new JPanel();
         jLabels = new JPanel();
         jFields = new JPanel();
         labels.setSize(100, 200);

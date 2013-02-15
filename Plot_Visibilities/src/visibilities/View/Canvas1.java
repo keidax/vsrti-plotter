@@ -33,11 +33,11 @@ import visibilities.Model.Adapter;
 
 import common.View.SquareOrnament;
 
-
 /**
  * I don't think this class actually is used in the project
  * 
  */
+@SuppressWarnings("serial")
 public abstract class Canvas1 extends JPanel implements MouseListener, MouseMotionListener {
     
     public TreeMap<Double, Double> points;
@@ -182,7 +182,7 @@ public abstract class Canvas1 extends JPanel implements MouseListener, MouseMoti
     }
     
     public void drawXAxis(Graphics2D g) {
-        int count = 1;// this.getGraph().getDataSets().size();
+        // int count = 1;// this.getGraph().getDataSets().size();
         // g.drawLine(yLabelWidth+(yLabelWidth/2), (this.getHeight()-bPad)/2,
         // this.getWidth()-yLabelWidth-rPad, (this.getHeight()-bPad)/2);
         double steps = countHorizontalStep();
@@ -631,7 +631,7 @@ public abstract class Canvas1 extends JPanel implements MouseListener, MouseMoti
         
         // System.out.println("currentpoint="+currentPoint);
         if (getCurrentPoint() != null) {
-            double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
+            // double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));

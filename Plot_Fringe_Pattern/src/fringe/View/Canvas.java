@@ -707,7 +707,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         
         // System.out.println("currentpoint="+currentPoint);
         if (getCurrentPoint() != null) {
-            double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
+            // double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));

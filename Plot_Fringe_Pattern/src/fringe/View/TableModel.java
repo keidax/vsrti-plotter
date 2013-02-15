@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 import common.View.InputFile;
 
+@SuppressWarnings("serial")
 public class TableModel extends AbstractTableModel {
     
     public View viewer;

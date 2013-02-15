@@ -14,7 +14,6 @@ import srt.Model.Adapter;
 import srt.Model.Model;
 import srt.View.View;
 
-
 /**
  * 
  * @author Administrator
@@ -48,8 +47,8 @@ public class Main {
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String strLine;
-            boolean vis = false;
-            boolean im = false;
+            // boolean vis = false;
+            // boolean im = false;
             while ((strLine = br.readLine()) != null) {
                 if (strLine.trim().startsWith("//")) {
                     continue;

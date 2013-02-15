@@ -72,7 +72,7 @@ public class VisibilityGraph extends Graph {
         
         recalculateGridedRms();
         update();
-        Set<Double> keys = getPoints().keySet();
+        // Set<Double> keys = getPoints().keySet();
     }
     
     public void addPoint(double x, double y) {
