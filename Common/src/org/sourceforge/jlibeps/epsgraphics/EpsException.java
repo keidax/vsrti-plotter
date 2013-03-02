@@ -18,6 +18,7 @@ package org.sourceforge.jlibeps.epsgraphics;
  * 
  * @version 0.1
  */
+@SuppressWarnings("serial")
 public class EpsException extends RuntimeException {
     
     public EpsException(String message) {

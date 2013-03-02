@@ -43,7 +43,7 @@ public class TableModel extends AbstractTableModel {
                 if (arg1 == 0) {
                     return f.getBaseline();
                 } else {
-                    return f.file.getName();
+                    return f.getFile().getName();
                 }
             }
             i++;
@@ -53,7 +53,7 @@ public class TableModel extends AbstractTableModel {
     
     public void addInputFile(InputFile inputFile) {
         for (InputFile f : inputFiles) {
-            if (inputFile.file.getAbsolutePath().equals(f.file.getAbsolutePath())) {
+            if (inputFile.getFile().getAbsolutePath().equals(f.getFile().getAbsolutePath())) {
                 return;
             }
         }
@@ -78,7 +78,7 @@ public class TableModel extends AbstractTableModel {
     
     public void removeInputFile(String filename) {
         for (InputFile f : inputFiles) {
-            if (f.file.getAbsolutePath().equals(filename)) {
+            if (f.getFile().getAbsolutePath().equals(filename)) {
                 inputFiles.remove(f);
             }
         }

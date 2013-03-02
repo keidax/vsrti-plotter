@@ -65,12 +65,12 @@ import java.util.Map;
  * EpsGraphics2D is suitable for creating high quality EPS graphics for use in
  * documents and papers, and can be used just like a standard Graphics2D object.
  * <p>
- * Many Java programs use Graphics2D to draw stuff on the screen, and while it is easy to save the output as a png or
- * jpeg file, it is a little harder to export it as an EPS for including in a document or paper.
+ * Many Java programs use Graphics2D to draw stuff on the screen, and while it is easy to save the output as a png or jpeg file, it is a
+ * little harder to export it as an EPS for including in a document or paper.
  * <p>
- * This class makes the whole process extremely easy, because you can use it as if it's a Graphics2D object. The only
- * difference is that all of the implemented methods create EPS output, which means the diagrams you draw can be resized
- * without leading to any of the jagged edges you may see when resizing pixel-based images, such as jpeg and png files.
+ * This class makes the whole process extremely easy, because you can use it as if it's a Graphics2D object. The only difference is that all
+ * of the implemented methods create EPS output, which means the diagrams you draw can be resized without leading to any of the jagged edges
+ * you may see when resizing pixel-based images, such as jpeg and png files.
  * <p>
  * Example usage:
  * <p>
@@ -94,8 +94,8 @@ import java.util.Map;
  * </pre>
  * 
  * <p>
- * You do not need to worry about the size of the canvas when drawing on a EpsGraphics2D object. The bounding box of the
- * EPS document will automatically resize to accommodate new items that you draw.
+ * You do not need to worry about the size of the canvas when drawing on a EpsGraphics2D object. The bounding box of the EPS document will
+ * automatically resize to accommodate new items that you draw.
  * <p>
  * Not all methods are implemented yet. Those that are not are clearly labelled.
  * <p>
@@ -241,10 +241,9 @@ public class EpsGraphics2D extends java.awt.Graphics2D {
      * drawn with a Graphics2D context. With accurate text mode enabled, it is
      * not necessary for the EPS viewer to have the required font installed.
      * <p>
-     * Turning off accurate text mode will require the EPS viewer to have the necessary fonts installed. If you are
-     * using a lot of text, you will find that this significantly reduces the file size of your EPS documents.
-     * AffineTransforms can only affect the starting point of text using this simpler text mode - all text will be
-     * horizontal.
+     * Turning off accurate text mode will require the EPS viewer to have the necessary fonts installed. If you are using a lot of text, you
+     * will find that this significantly reduces the file size of your EPS documents. AffineTransforms can only affect the starting point of
+     * text using this simpler text mode - all text will be horizontal.
      * 
      * @since 0.1
      */

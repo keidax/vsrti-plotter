@@ -14,11 +14,11 @@ import common.Model.Point;
 
 public class InputFile implements Comparable<InputFile> {
     
-    public File file;
-    public double baseline = -1;
+    private File file;
+    private double baseline = -1;
     private double averageIntensity = -1;
     private double rms = 0;
-    public List<Double> intensities = new ArrayList<Double>();
+    private List<Double> intensities = new ArrayList<Double>();
     
     public InputFile() {
         intensities = new ArrayList<Double>();
@@ -54,6 +54,12 @@ public class InputFile implements Comparable<InputFile> {
             return false;
         }
         return true;
+    }
+    
+    @Override
+    public String toString() {
+        String s = "Baseline: " + baseline;
+        return s;
     }
     
     public double getAverageIntensity() {
@@ -138,9 +144,6 @@ public class InputFile implements Comparable<InputFile> {
     }
     
     public Double countRms() {
-        if (intensities == null || intensities.size() == 0) {
-            getIntensities();
-        }
         double sum = 0;
         for (Double i : intensities) {
             sum += Math.pow(i - getAverageIntensity(), 2);
