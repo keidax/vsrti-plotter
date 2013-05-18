@@ -19,9 +19,9 @@
 
   <target name="dist" depends="compile" description="generate the distribution">
     <!-- Create the distribution directory -->
-    <mkdir dir="${dist}"/>
+    <mkdir dir="dist"/>
     <!-- Build the jar file -->
-    <jar destfile="${dist}/${ant.project.name}.jar" basedir="${build}">
+    <jar destfile="dist/${ant.project.name}.jar" basedir="${build}">
       <manifest>
         <attribute name="Main-Class" value="tiftchooser.Form"/>
       </manifest>
@@ -31,7 +31,6 @@
   <target name="clean" description="clean up">
     <!-- Delete the ${build} and ${dist} directory trees -->
     <delete dir="${build}"/>
-    <delete dir="${dist}"/>
   </target>
 
 </project>
