@@ -51,6 +51,7 @@ public class VisibilityGraph extends Graph {
     
     public void reinitializePoints() {
         System.out.println("Reinitializing points...");
+        
         getPoints().clear();
         gridedRms.clear();
         if (!getRawPoints().isEmpty()) {
@@ -59,6 +60,7 @@ public class VisibilityGraph extends Graph {
             }
         }
         // Set<Double> keys = getPoints().keySet();
+        System.out.println(getPoints());
     }
     
     public void addPoint(double x, double y) {
@@ -212,12 +214,13 @@ public class VisibilityGraph extends Graph {
         return s;
     }
     
+    // TODO find out if this method is useful or important
     public TreeMap<Double, Double> getDataPoints() {
         TreeMap<Double, Double> al = new TreeMap<Double, Double>();
         for (Point p : rawPoints) {
             // System.out.println("gridX("+p.getX()+"/"+getLambda()+")="+getGridX(p.getX()/getLambda()));
             // al.put(getGridX(p.getX() / getLambda()), p.getY());
-            al.put(p.getX() / getLambda(), p.getY());
+            al.put(p.getX() / getLambda(), p.getY() - getNoise());
             
         }
         // System.out.println("DataPoints = "+al.size());
