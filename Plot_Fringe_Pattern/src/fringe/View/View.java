@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -56,11 +55,9 @@ public class View extends BaseView implements ModelListener {
     public double d = 1, t1 = 1, t2 = 1, b = 5;
     public boolean showSinc = false, isDegrees = true;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Fringe_Pattern.html";
-    private JFileChooser jfc;
     
     public View(Adapter a, String title) {
         super(title);
-        jfc = new JFileChooser();
         // model = m;
         setAdapter(a);
         tableModel = new TableModel(this);
@@ -240,8 +237,8 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showOpenDialog(View.this);
-                File f = jfc.getSelectedFile();
+                fileChooser.showOpenDialog(View.this);
+                File f = fileChooser.getSelectedFile();
                 if (f == null || !f.canRead()) {
                     return;
                 }
@@ -256,10 +253,12 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showSaveDialog(View.this);
-                File f = jfc.getSelectedFile();
+                fileChooser.showSaveDialog(View.this);
+                File f = fileChooser.getSelectedFile();
                 if (f == null) {
                     return;
+                } else if (!f.getName().endsWith(".dat")) {
+                    f = new File(f.getAbsolutePath() + ".dat");
                 }
                 writeIntoFile(f, View.this.adapter.exportVisibilityGraphPoints());
             }

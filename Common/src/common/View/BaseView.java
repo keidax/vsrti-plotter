@@ -1,12 +1,17 @@
 package common.View;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 @SuppressWarnings("serial")
 public abstract class BaseView extends JFrame {
+    protected JFileChooser fileChooser;
     
     public BaseView(String title) {
         super(title);
+        fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("DAT file", "dat"));
     }
     
     /**

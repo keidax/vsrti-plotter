@@ -27,7 +27,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -61,11 +60,9 @@ public class View extends BaseView implements ModelListener {
     public boolean showVis = false;
     public double T1 = 10, T2 = 10, theta = 0;
     private double d1 = 0, d2 = 0;
-    private JFileChooser jfc;
     
     public View(Adapter a, String title) {
         super(title);
-        jfc = new JFileChooser();
         // model = m;
         setAdapter(a);
         tableModel = new TableModel(this);
@@ -247,8 +244,8 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showOpenDialog(View.this);
-                File f = jfc.getSelectedFile();
+                fileChooser.showOpenDialog(View.this);
+                File f = fileChooser.getSelectedFile();
                 if (f == null || !f.canRead()) {
                     return;
                 }
@@ -263,10 +260,12 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showSaveDialog(View.this);
-                File f = jfc.getSelectedFile();
+                fileChooser.showSaveDialog(View.this);
+                File f = fileChooser.getSelectedFile();
                 if (f == null) {
                     return;
+                } else if (!f.getName().endsWith(".dat")) {
+                    f = new File(f.getAbsolutePath() + ".dat");
                 }
                 writeIntoFile(f, View.this.adapter.exportVisibilityGraphPoints());
             }

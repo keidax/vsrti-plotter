@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -53,11 +52,9 @@ public class View extends BaseView implements ModelListener {
     private JTextField fD, fLambda, fSigma, fNoise;
     private JLabel lDelta, lLambda, lSigma;
     private JButton updateButton;
-    
     private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private boolean showBeamPattern = false;
     private String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Beam.html";
-    private JFileChooser fileChooser;
     private Model model;
     private JTextField fPeakValue;
     private JLabel lblPeakValue;
@@ -65,7 +62,7 @@ public class View extends BaseView implements ModelListener {
     public View(Model m, String title) {
         super(title);
         model = m;
-        fileChooser = new JFileChooser();
+        
         tableModel = new TableModel();
         jTable = new FileTable(tableModel, this);
         
@@ -232,18 +229,17 @@ public class View extends BaseView implements ModelListener {
         });
         
         bSave.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 fileChooser.showSaveDialog(View.this);
                 File f = fileChooser.getSelectedFile();
                 if (f == null) {
                     return;
+                } else if (!f.getName().endsWith(".dat")) {
+                    f = new File(f.getAbsolutePath() + ".dat");
                 }
                 listener.writeSaveFile(f);
-                
             }
-            
         });
         
         bExit.addActionListener(new ActionListener() {
