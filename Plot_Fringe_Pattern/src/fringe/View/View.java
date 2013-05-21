@@ -621,4 +621,10 @@ public class View extends BaseView implements ModelListener {
     public void updateValuesFromModel() {
         // TODO fill in
     }
+    
+    @Override
+    public void updateModelFromValues() {
+        // TODO Auto-generated method stub
+        
+    }
 }

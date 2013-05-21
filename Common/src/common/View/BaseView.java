@@ -16,4 +16,6 @@ public abstract class BaseView extends JFrame {
      */
     public abstract void updateValuesFromModel();
     
+    public abstract void updateModelFromValues();
+    
 }

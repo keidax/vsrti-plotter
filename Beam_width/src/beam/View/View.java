@@ -29,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import beam.Model.Model;
 
@@ -54,13 +55,14 @@ public class View extends BaseView implements ModelListener {
     private JButton updateButton;
     
     private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
-    private double d = 5, noise = 0, lambda = 2.5;// TODO update so these draw from model correctly
     private boolean showBeamPattern = false;
-    private String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Beam.html";// TODO get the correct url here
+    private String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Beam.html";
     private JFileChooser fileChooser;
     private Model model;
+    private JTextField fMaxValue;
+    private JLabel lblMaxValue;
     
-    public View(/* Controller a, */Model m, String title) {
+    public View(Model m, String title) {
         super(title);
         model = m;
         fileChooser = new JFileChooser();
@@ -71,7 +73,7 @@ public class View extends BaseView implements ModelListener {
         
         vCanvas.setSize(300, 100);
         
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jRadioButtons, jThetaMax, jLabels, jFields;
+        JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jRadioButtons, jThetaMax, jLabels, jFields;
         // JPanel jSigma;
         
         // BUTTONS
@@ -95,8 +97,8 @@ public class View extends BaseView implements ModelListener {
         lLambda.setSize(100, 22);
         lSigma = new JLabel('\u03C3' + " displaying factor: ");
         lSigma.setSize(100, 22);
-        fD = new JTextField(getD() + "");
-        fLambda = new JTextField(lambda + "");
+        fD = new JTextField(model.getDiameter() + "");
+        fLambda = new JTextField(model.getLambda() + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
                 + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
         // fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
@@ -105,7 +107,7 @@ public class View extends BaseView implements ModelListener {
         // fSigma.setMinimumSize(new Dimension(50,20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3.  )"
                 + "Error bars are not displayed where there is no RMS to calculate.</P></HTML>");
-        fNoise = new JTextField(noise + "");
+        fNoise = new JTextField(model.getNoise() + "");
         fNoise.setMaximumSize(new Dimension(50, 20));
         fNoise.setToolTipText("<HTML><P WIDTH='300px'>signal due to noise in the system; set this to minimum y-value</P></HTML>");
         fD.setToolTipText("<HTML><P>D = diameter of detector</P></HTML>");
@@ -117,11 +119,11 @@ public class View extends BaseView implements ModelListener {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
-        row2 = new JPanel();
-        row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
         row1col1 = new JPanel();
+        row1col1.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col1.setLayout(new BoxLayout(row1col1, BoxLayout.Y_AXIS));
         row1col2 = new JPanel();
+        row1col2.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col2.setLayout(new BoxLayout(row1col2, BoxLayout.Y_AXIS));
         row1col2col2 = new JPanel();
         row1col2col2.setLayout(new BoxLayout(row1col2col2, BoxLayout.Y_AXIS));
@@ -131,18 +133,11 @@ public class View extends BaseView implements ModelListener {
         jScroll.setMaximumSize(new Dimension(200, 80));
         
         getContentPane().add(row1);
-        getContentPane().add(row2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1.add(row1col1);
-        row1.add(Box.createRigidArea(new Dimension(10, 10)));
         row1.add(row1col2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.add(vCanvas);
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col2.setMaximumSize(new Dimension(100, 450));
         row1col2.add(jScroll);
         row1col2.add(Box.createRigidArea(new Dimension(5, 20)));
@@ -182,8 +177,8 @@ public class View extends BaseView implements ModelListener {
         jThetaMax.setLayout(new BoxLayout(jThetaMax, BoxLayout.X_AXIS));
         jButtons.setLayout(new BoxLayout(jButtons, BoxLayout.X_AXIS));
         jButtons2.setLayout(new BoxLayout(jButtons2, BoxLayout.X_AXIS));
-        jLabels.setLayout(new GridLayout(6, 2, 1, 1));
-        jFields.setLayout(new GridLayout(6, 2, 1, 1));
+        jLabels.setLayout(new GridLayout(7, 2, 1, 1));
+        jFields.setLayout(new GridLayout(7, 2, 1, 1));
         
         jRadioButtons.setLayout(new BoxLayout(jRadioButtons, BoxLayout.Y_AXIS));
         
@@ -202,11 +197,18 @@ public class View extends BaseView implements ModelListener {
         jLabels.add(new JLabel('\u03BB' + ":"));
         jLabels.add(new JLabel("Noise:"));
         
+        lblMaxValue = new JLabel("Max Value:");
+        jLabels.add(lblMaxValue);
+        
         jFields.add(fSigma);
         jFields.add(Box.createRigidArea(new Dimension(5, 20)));
         jFields.add(fD);
         jFields.add(fLambda);
         jFields.add(fNoise);
+        
+        fMaxValue = new JTextField();
+        jFields.add(fMaxValue);
+        fMaxValue.setColumns(10);
         jFields.add(updateButton);
         
         // BUTTONS FUNCTIONS
@@ -329,36 +331,9 @@ public class View extends BaseView implements ModelListener {
         });
         
         updateButton.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    noise = Double.parseDouble(fNoise.getText());
-                    model.setNoise(noise);
-                } catch (NumberFormatException e1) {
-                }
-                
-                try {
-                    Double.parseDouble(fD.getText());
-                    setD(Double.parseDouble(fD.getText()));
-                } catch (NumberFormatException e1) {
-                }
-                
-                try {
-                    double tempLambda = Double.parseDouble(fLambda.getText());
-                    model.setLambda(tempLambda);
-                } catch (NumberFormatException e1) {
-                }
-                
-                try {
-                    double tempSigma = Double.parseDouble(fSigma.getText());
-                    
-                    model.setDisplayFactor(tempSigma);
-                } catch (NumberFormatException e1) {
-                }
-                
-                model.update();
-                
+                updateModelFromValues();
             }
         });
         
@@ -502,11 +477,8 @@ public class View extends BaseView implements ModelListener {
     @Override
     public void updateView(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {
         updateValuesFromModel();
-        
         System.out.println("Updating view");
         repaint();
-        fD.setText(getD() + "");
-        fLambda.setText(lambda + "");
         // fThetaMax.setText(d / 2 + "");
         // fLambda.setText(viewer.adapter.getLambda()+"");
         vCanvas.update(points, rmsPoints);
@@ -530,29 +502,8 @@ public class View extends BaseView implements ModelListener {
         model.update();
     }
     
-    public double getD() {
-        return d;
-    }
-    
-    public void setD(double d) {
-        if (d <= 0) {
-            this.d = 20;
-        } else {
-            this.d = d;
-        }
-    }
-    
-    public void setLambda(double l) {
-        lambda = l;
-        
-    }
-    
-    public double getLambda() {
-        return lambda;
-    }
-    
-    public void setDeltaBaseline(double d) {
-        this.d = d; // TODO I think this is what Viewer.d is...
+    public beam.Model.Model getModel() {
+        return model;
     }
     
     public void moveVisibilityPoint(double currentPoint, double toy) {
@@ -571,8 +522,46 @@ public class View extends BaseView implements ModelListener {
     
     @Override
     public void updateValuesFromModel() {
-        lambda = model.getLambda();
-        noise = model.getNoise();
+        fLambda.setText(model.getLambda() + "");
+        fMaxValue.setText(model.getMaxValue() + "");
+        fSigma.setText(model.getDisplayFactor() + "");
+        fNoise.setText(model.getNoise() + "");
+        fD.setText(model.getDiameter() + "");
         vCanvas.setDisplayFactor(model.getDisplayFactor());
+    }
+    
+    @Override
+    public void updateModelFromValues() {
+        try {
+            double tempNoise = Double.parseDouble(fNoise.getText());
+            model.setNoise(tempNoise);
+        } catch (NumberFormatException e) {
+        }
+        
+        try {
+            double tempDiameter = Double.parseDouble(fD.getText());
+            model.setDiameter(tempDiameter);
+        } catch (NumberFormatException e) {
+        }
+        
+        try {
+            double tempLambda = Double.parseDouble(fLambda.getText());
+            model.setLambda(tempLambda);
+        } catch (NumberFormatException e) {
+        }
+        
+        try {
+            double tempSigma = Double.parseDouble(fSigma.getText());
+            model.setDisplayFactor(tempSigma);
+        } catch (NumberFormatException e) {
+        }
+        
+        try {
+            double tempMaxValue = Double.parseDouble(fMaxValue.getText());
+            model.setMaxValue(tempMaxValue);
+        } catch (NumberFormatException e) {
+        }
+        
+        model.update();
     }
 }

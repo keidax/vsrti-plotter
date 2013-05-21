@@ -902,7 +902,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      */
     private double besselX(double theta) {
         // System.out.println("view d = " + view.getD() + "view lambda = " + view.getLambda());
-        return Math.PI * view.getD() * theta * Math.PI / 180 / view.getLambda();
+        return Math.PI * view.getModel().getDiameter() * theta * Math.PI / 180 / view.getModel().getLambda();
     }
     
     /**

@@ -11,7 +11,8 @@ import common.View.InputFile;
 
 public class Model implements ModelInterface {
     
-    private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1;
+    private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1, defaultDiameter = 5;
+    private double maxValue, diameter = defaultDiameter;
     private final int defaultExponent = 5;
     
     private VisibilityGraph visibilityGraph;
@@ -32,8 +33,6 @@ public class Model implements ModelInterface {
         System.out.println("Updating model");
         // visibilityGraph.reinitializePoints();
         for (ModelListener ml : listeners) {
-            // TODO find out which method to use, points or dataPoints
-            // ml.updateView(visibilityGraph.getDataPoints(), visibilityGraph.getGridedRms());
             ml.updateView(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
         }
         // TODO update other things?
@@ -102,6 +101,14 @@ public class Model implements ModelInterface {
         return visibilityGraph.getExponent();
     }
     
+    public void setMaxValue(double maxValue) {
+        this.maxValue = maxValue;
+    }
+    
+    public void setDiameter(double diameter) {
+        this.diameter = diameter;
+    }
+    
     @Override
     public void setRawPoints(List<InputFile> f) {
         visibilityGraph.emptyRawPoints();
@@ -159,5 +166,14 @@ public class Model implements ModelInterface {
         setDeltaBaseline(defaultDeltaBaseline);
         setNoise(defaultNoise);
         setDisplayFactor(defaultDisplayFactor);
+        setDiameter(defaultDiameter);
+    }
+    
+    public double getMaxValue() {
+        return maxValue;
+    }
+    
+    public double getDiameter() {
+        return diameter;
     }
 }
