@@ -11,8 +11,9 @@ import common.View.InputFile;
 
 public class Model implements ModelInterface {
     
-    private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1, defaultDiameter = 5;
-    private double maxValue, diameter = defaultDiameter;
+    private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1, defaultDiameter = 5,
+            defaultPeakValue = 20;
+    private double peakValue = defaultPeakValue, diameter = defaultDiameter;
     private final int defaultExponent = 5;
     
     private VisibilityGraph visibilityGraph;
@@ -30,8 +31,7 @@ public class Model implements ModelInterface {
     
     @Override
     public void update() {
-        System.out.println("Updating model");
-        // visibilityGraph.reinitializePoints();
+        System.out.println("called model.update()");
         for (ModelListener ml : listeners) {
             ml.updateView(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
         }
@@ -101,8 +101,8 @@ public class Model implements ModelInterface {
         return visibilityGraph.getExponent();
     }
     
-    public void setMaxValue(double maxValue) {
-        this.maxValue = maxValue;
+    public void setPeakValue(double peakValue) {
+        this.peakValue = peakValue;
     }
     
     public void setDiameter(double diameter) {
@@ -118,6 +118,15 @@ public class Model implements ModelInterface {
             visibilityGraph.addRawPoint(i.getBaseline(), i.getAverageIntensity());
             visibilityGraph.addRms(i.getBaseline(), i.getRms());
         }
+        findPeakValue();
+    }
+    
+    private void findPeakValue() {
+        if (getPoints().containsKey(0.0)) {
+            peakValue = getPoints().get(0.0);
+        } else {
+            peakValue = defaultPeakValue;
+        }
     }
     
     @Override
@@ -128,6 +137,7 @@ public class Model implements ModelInterface {
     @Override
     public void importPoints(TreeMap<Double, Double> parseFile) {
         visibilityGraph.importPoints(parseFile);
+        findPeakValue();
     }
     
     @Override
@@ -167,10 +177,11 @@ public class Model implements ModelInterface {
         setNoise(defaultNoise);
         setDisplayFactor(defaultDisplayFactor);
         setDiameter(defaultDiameter);
+        findPeakValue();
     }
     
-    public double getMaxValue() {
-        return maxValue;
+    public double getPeakValue() {
+        return peakValue;
     }
     
     public double getDiameter() {

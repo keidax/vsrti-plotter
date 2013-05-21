@@ -864,8 +864,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         g.setColor(Color.blue);
         previous = getMinX();
         for (double i = getMinX(); i <= getMaxX(); i += .5) {
-            g.drawLine(g2cx(i), g2cy(bessel(i) * (points.containsKey(0.0) ? points.get(0.0) : getMaxY())), g2cx(previous),
-                    g2cy(bessel(previous) * (points.containsKey(0.0) ? points.get(0.0) : getMaxY())));
+            g.drawLine(g2cx(i), g2cy(bessel(i) * view.getModel().getPeakValue()), g2cx(previous), g2cy(bessel(previous)
+                    * view.getModel().getPeakValue()));
             previous = i;
         }
         System.out.println("Min x: " + getMinX() + "\nMax x: " + getMaxX() + "\nmax y: " + getMaxY() + "\npoints(0): " + points.get(0.0));

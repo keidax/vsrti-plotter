@@ -59,8 +59,8 @@ public class View extends BaseView implements ModelListener {
     private String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Beam.html";
     private JFileChooser fileChooser;
     private Model model;
-    private JTextField fMaxValue;
-    private JLabel lblMaxValue;
+    private JTextField fPeakValue;
+    private JLabel lblPeakValue;
     
     public View(Model m, String title) {
         super(title);
@@ -197,8 +197,8 @@ public class View extends BaseView implements ModelListener {
         jLabels.add(new JLabel('\u03BB' + ":"));
         jLabels.add(new JLabel("Noise:"));
         
-        lblMaxValue = new JLabel("Max Value:");
-        jLabels.add(lblMaxValue);
+        lblPeakValue = new JLabel("Peak Value:");
+        jLabels.add(lblPeakValue);
         
         jFields.add(fSigma);
         jFields.add(Box.createRigidArea(new Dimension(5, 20)));
@@ -206,9 +206,9 @@ public class View extends BaseView implements ModelListener {
         jFields.add(fLambda);
         jFields.add(fNoise);
         
-        fMaxValue = new JTextField();
-        jFields.add(fMaxValue);
-        fMaxValue.setColumns(10);
+        fPeakValue = new JTextField(model.getPeakValue() + "");
+        jFields.add(fPeakValue);
+        fPeakValue.setColumns(10);
         jFields.add(updateButton);
         
         // BUTTONS FUNCTIONS
@@ -476,11 +476,9 @@ public class View extends BaseView implements ModelListener {
     
     @Override
     public void updateView(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {
+        System.out.println("called view.updateView(points, rmsPoints)");
         updateValuesFromModel();
-        System.out.println("Updating view");
         repaint();
-        // fThetaMax.setText(d / 2 + "");
-        // fLambda.setText(viewer.adapter.getLambda()+"");
         vCanvas.update(points, rmsPoints);
         // this.getIGraph().update();
         System.out.println("updating with " + points.size() + " points:");
@@ -502,7 +500,7 @@ public class View extends BaseView implements ModelListener {
         model.update();
     }
     
-    public beam.Model.Model getModel() {
+    public Model getModel() {
         return model;
     }
     
@@ -523,7 +521,7 @@ public class View extends BaseView implements ModelListener {
     @Override
     public void updateValuesFromModel() {
         fLambda.setText(model.getLambda() + "");
-        fMaxValue.setText(model.getMaxValue() + "");
+        fPeakValue.setText(model.getPeakValue() + "");
         fSigma.setText(model.getDisplayFactor() + "");
         fNoise.setText(model.getNoise() + "");
         fD.setText(model.getDiameter() + "");
@@ -557,8 +555,8 @@ public class View extends BaseView implements ModelListener {
         }
         
         try {
-            double tempMaxValue = Double.parseDouble(fMaxValue.getText());
-            model.setMaxValue(tempMaxValue);
+            double tempPeakValue = Double.parseDouble(fPeakValue.getText());
+            model.setPeakValue(tempPeakValue);
         } catch (NumberFormatException e) {
         }
         
