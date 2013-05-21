@@ -34,6 +34,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ToolTipManager;
+import javax.swing.border.EmptyBorder;
 
 import tift2.Model.Adapter;
 import tift2.Model.ModelListener;
@@ -68,7 +69,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         vGraph.setSize(300, 100);
         
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, jBlank, jblank, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButton5, jThetaMax, jSigma, jLabels, jFields;
+        JPanel row1, row1col1, row1col2, row1col2col2, jBlank, jblank, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButton5, jThetaMax, jSigma, jLabels, jFields;
         JLabel lDelta, lLambda, lExponent, lThetaMax, lSigma;
         equation = "";
         // BUTTONS
@@ -185,11 +186,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
-        row2 = new JPanel();
-        row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
         row1col1 = new JPanel();
+        row1col1.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col1.setLayout(new BoxLayout(row1col1, BoxLayout.Y_AXIS));
         row1col2 = new JPanel();
+        row1col2.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col2.setLayout(new BoxLayout(row1col2, BoxLayout.Y_AXIS));
         row1col2col2 = new JPanel();
         row1col2col2.setLayout(new BoxLayout(row1col2col2, BoxLayout.Y_AXIS));
@@ -197,22 +198,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
         labels.setLayout(new GridLayout());
         
         getContentPane().add(row1);
-        getContentPane().add(row2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1.add(row1col1);
-        // row1.add(Box.createRigidArea(new Dimension(5,5)));
-        row1.add(Box.createRigidArea(new Dimension(10, 10)));
         row1.add(row1col2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.add(lEquation);
         row1col1.add(vGraph);
         row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         
         row1col1.add(iGraph);
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col2.setMaximumSize(new Dimension(100, 375));
         
         row1col2.add(row1col2col2);
@@ -399,7 +393,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         + "sin(_), cos(_), tan(_), log(_), ln(_), delta(_) and u(_) (unit step) are also valid.<br>"
                         + "Angles are in radians.<br><br>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
-                jf.add(row1);
+                jf.getContentPane().add(row1);
                 row1.add(jl);
                 row1.add(eqn);
                 row1.add(enter);

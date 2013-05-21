@@ -31,6 +31,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import common.View.BaseView;
 import common.View.FileDrop;
@@ -70,7 +71,7 @@ public class View extends BaseView implements ModelListener {
         
         vGraph.setSize(300, 100);
         
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jThetaMax, jSigma, jLabels, jFields;
+        JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jThetaMax, jSigma, jLabels, jFields;
         
         // BUTTONS
         bOpen = new JButton("Open file");
@@ -131,11 +132,11 @@ public class View extends BaseView implements ModelListener {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
-        row2 = new JPanel();
-        row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
         row1col1 = new JPanel();
+        row1col1.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col1.setLayout(new BoxLayout(row1col1, BoxLayout.Y_AXIS));
         row1col2 = new JPanel();
+        row1col2.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col2.setLayout(new BoxLayout(row1col2, BoxLayout.Y_AXIS));
         row1col2col2 = new JPanel();
         row1col2col2.setLayout(new BoxLayout(row1col2col2, BoxLayout.Y_AXIS));
@@ -147,20 +148,11 @@ public class View extends BaseView implements ModelListener {
         jScroll.setMinimumSize(new Dimension(150, 125));
         
         getContentPane().add(row1);
-        getContentPane().add(row2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1.add(row1col1);
-        // row1.add(Box.createRigidArea(new Dimension(5,5)));
-        row1.add(Box.createRigidArea(new Dimension(10, 10)));
         row1.add(row1col2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.add(vGraph);
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
-        // row1col1.add(iGraph);
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         // row1col2.setMaximumSize(new Dimension(100, 450));
         row1col2.add(jScroll);// fileTable.createVectors());
         row1col2.add(Box.createRigidArea(new Dimension(5, 20)));

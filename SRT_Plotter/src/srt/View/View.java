@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import srt.Model.Adapter;
 import srt.Model.ModelListener;
@@ -75,7 +76,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         setMinimumSize(new Dimension(1300, 500));
         vGraph.setSize(300, 100);
         jfc = new JFileChooser();
-        JPanel row1, row1col1, row2, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons6, jButtons7, jButtons8, jBlank, jThetaMax, jLabels, jFields;
+        JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons6, jButtons7, jButtons8, jBlank, jThetaMax, jLabels, jFields;
         
         // BUTTONS
         bOpen = new JButton("Open file");
@@ -99,11 +100,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
         row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
-        row2 = new JPanel();
-        row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
         row1col1 = new JPanel();
+        row1col1.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col1.setLayout(new BoxLayout(row1col1, BoxLayout.Y_AXIS));
         row1col2 = new JPanel();
+        row1col2.setBorder(new EmptyBorder(5, 5, 5, 5));
         row1col2.setLayout(new BoxLayout(row1col2, BoxLayout.Y_AXIS));
         row1col2col2 = new JPanel();
         row1col2col2.setLayout(new BoxLayout(row1col2col2, BoxLayout.Y_AXIS));
@@ -113,19 +114,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jScroll.setMinimumSize(new Dimension(100, 80));
         jScroll.setVisible(true);
         getContentPane().add(row1);
-        getContentPane().add(row2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1.add(row1col1);
-        row1.add(Box.createRigidArea(new Dimension(10, 10)));
         row1.add(row1col2);
-        row1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.setPreferredSize(new Dimension(800, 500));
         row1col1.setMinimumSize(new Dimension(700, 300));
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col1.add(vGraph);
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
-        
-        row1col1.add(Box.createRigidArea(new Dimension(5, 5)));
         row1col2.setMaximumSize(new Dimension(500, 500));
         
         jDelta = new JPanel();
@@ -237,7 +230,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
                 final JLabel jl = new JLabel("Subtracting A - B. Please select data block A.");
                 jf.getContentPane().setLayout(new FlowLayout());
-                jf.add(row1);
+                jf.getContentPane().add(row1);
                 row1.add(jl);
                 row1.add(Box.createRigidArea(new Dimension(20, 5)));
                 row1.add(jSC);
@@ -364,7 +357,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
                 JLabel jl = new JLabel("Select datablocks to plot.");
                 jf.getContentPane().setLayout(new FlowLayout());
-                jf.add(row1);
+                jf.getContentPane().add(row1);
                 row1.add(jl);
                 row1.add(Box.createRigidArea(new Dimension(20, 5)));
                 row1.add(jSC);
@@ -494,7 +487,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
                 JLabel jl = new JLabel("Select datablocks to plot.");
                 jf.getContentPane().setLayout(new FlowLayout());
-                jf.add(row1);
+                jf.getContentPane().add(row1);
                 row1.add(jl);
                 row1.add(Box.createRigidArea(new Dimension(20, 5)));
                 row1.add(jSC);
@@ -689,7 +682,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
                 JLabel jl = new JLabel("Select datablocks to average together.");
                 jf.getContentPane().setLayout(new FlowLayout());
-                jf.add(row1);
+                jf.getContentPane().add(row1);
                 row1.add(jl);
                 row1.add(Box.createRigidArea(new Dimension(20, 5)));
                 row1.add(jSC);
@@ -887,7 +880,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
                     JLabel jl = new JLabel("Select which data blocks to remove end channels from.");
                     jf.getContentPane().setLayout(new FlowLayout());
-                    jf.add(row1);
+                    jf.getContentPane().add(row1);
                     row1.add(jl);
                     row1.add(Box.createRigidArea(new Dimension(20, 5)));
                     row1.add(jSC);
