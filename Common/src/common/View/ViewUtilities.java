@@ -12,7 +12,7 @@ public class ViewUtilities {
             // B Barr</td></tr>
             + "</table></p>"
             + "<p></p>"
-            + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+            + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Lecturer of Physics and Astronomy, marrj@union.edu</p><p></p>"
             + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
             + "<p>Software is written in Java and it is free open source</p>" + "</html>";
     public final static String VSRTI_ABOUT_TEXT = "<html>"
@@ -25,7 +25,7 @@ public class ViewUtilities {
             // + "<tr><td>Funded by:</td><td>B Valerie Barr</td></tr>
             + "</table></p>"
             + "<p></p>"
-            + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+            + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Lecturer of Physics and Astronomy, marrj@union.edu</p><p></p>"
             + "<p>This package was designed to be used with MIT Haystack Observatory VSRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
             + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
             + "<p>Software is written in Java and it is free open source</p>" + "</html>";
@@ -39,7 +39,7 @@ public class ViewUtilities {
             + "<tr><td></td><td>Gabriel Holodak</td></tr>"
             + "</table></p>"
             + "<p></p>"
-            + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Visiting Prof. of Astronomy, marrj@union.edu</p><p></p>"
+            + "<p>For more information, contact Valerie Barr, Prof. of Computer Science, barrv@union.edu or Jonathan Marr, Lecturer of Physics and Astronomy, marrj@union.edu</p><p></p>"
             + "<p>This package was designed to be used with MIT Haystack Observatory SRT interferometer, which was developed with funding from National Science Foundation.</p><p></p>"
             + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
             + "<p>Software is written in Java and it is free open source</p>" + "</html>";
