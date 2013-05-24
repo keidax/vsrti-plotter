@@ -21,9 +21,7 @@ public class Controller implements ViewListener {
     @Override
     public void fullReset() {
         model.emptyRawPoints();
-        model.resetValuesToDefaults();
-        model.reinitialize();
-        model.update();
+        reset();
     }
     
     @Override
