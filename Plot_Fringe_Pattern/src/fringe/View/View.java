@@ -49,11 +49,11 @@ public class View extends BaseView implements ModelListener {
     public Model model;
     public TableModel tableModel;
     public FileTable jTable;
-    public JTextField fD, fLambda, fThetaMax, fSigma, fT1, fT2, fBaseline;
-    public JLabel lDelta, lLambda, lThetaMax, lSigma;
+    public JTextField fD, fLambda, fSigma, fT1, fT2, fBaseline;
+    public JLabel lDelta, lLambda, lSigma;
     public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private JButton updateButton;
-    public double t1 = 1, t2 = 1;
+    
     public boolean showSinc = false, isDegrees = true;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Fringe_Pattern.html";
     
@@ -97,8 +97,6 @@ public class View extends BaseView implements ModelListener {
         lDelta.setMaximumSize(new Dimension(130, 200));
         lLambda = new JLabel('\u03BB' + ": ");
         lLambda.setSize(100, 20);
-        lThetaMax = new JLabel('\u0398' + " max: ");
-        lThetaMax.setSize(100, 20);
         lSigma = new JLabel('\u03C3' + " displaying factor: ");
         lSigma.setSize(100, 20);
         fD = new JTextField(model.getDiameter() + "");
@@ -106,7 +104,6 @@ public class View extends BaseView implements ModelListener {
         fLambda = new JTextField(model.getLambda() + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
                 + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
-        fThetaMax = new JTextField(model.getDeltaBaseline() / 2 + "");
         fSigma = new JTextField(model.getDisplayFactor() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3)"
@@ -125,7 +122,6 @@ public class View extends BaseView implements ModelListener {
         fBaseline.setMaximumSize(new Dimension(50, 20));
         fD.setMaximumSize(new Dimension(50, 20));
         fLambda.setMaximumSize(new Dimension(50, 225));
-        fThetaMax.setMaximumSize(new Dimension(50, 200));
         JScrollPane jScroll;
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
@@ -386,37 +382,32 @@ public class View extends BaseView implements ModelListener {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("lambda text is " + fLambda.getText());
                 try {
-                    Double.parseDouble(fD.getText());
-                    model.setDiameter(Double.parseDouble(fD.getText()));
-                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                    double tempDiameter = Double.parseDouble(fD.getText());
+                    model.setDiameter(tempDiameter);
                 } catch (NumberFormatException e1) {
                 }
                 try {
-                    Double.parseDouble(fT1.getText());
-                    t1 = Double.parseDouble(fT1.getText());
-                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                    double tempT1 = Double.parseDouble(fT1.getText());
+                    model.setT1(tempT1);
                 } catch (NumberFormatException e1) {
                 }
                 try {
-                    Double.parseDouble(fT2.getText());
-                    t2 = Double.parseDouble(fT2.getText());
-                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                    double tempT2 = Double.parseDouble(fT2.getText());
+                    model.setT2(tempT2);
                 } catch (NumberFormatException e1) {
                 }
                 try {
-                    Double.parseDouble(fBaseline.getText());
-                    model.setDeltaBaseline(Double.parseDouble(fBaseline.getText()));
-                    // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
+                    double tempBaseline = Double.parseDouble(fBaseline.getText());
+                    model.setDeltaBaseline(tempBaseline);
                 } catch (NumberFormatException e1) {
                 }
                 try {
-                    Double.parseDouble(fLambda.getText());
-                    model.setLambda(Double.parseDouble(fLambda.getText()));
-                } catch (NumberFormatException e1) {
-                }
-                try {
-                    Double.parseDouble(fThetaMax.getText());
+                    System.out.println("lambda text is " + fLambda.getText());
+                    double tempLambda = Double.parseDouble(fLambda.getText());
+                    System.out.println("tempLambda = " + tempLambda);
+                    model.setLambda(tempLambda);
                 } catch (NumberFormatException e1) {
                 }
                 try {
@@ -600,6 +591,8 @@ public class View extends BaseView implements ModelListener {
         fSigma.setText(model.getDisplayFactor() + "");
         fLambda.setText(model.getLambda() + "");
         fD.setText(model.getDiameter() + "");
+        fT1.setText(model.getT1() + "");
+        fT2.setText(model.getT2() + "");
     }
     
     @Override

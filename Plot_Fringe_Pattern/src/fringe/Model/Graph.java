@@ -20,7 +20,6 @@ public abstract class Graph {
     
     public void setDeltaBaseline(double b) {
         deltaBaseline = b;
-        model.getVisibilityGraph().reinicializePoints();
     }
     
     public int getExponent() {
@@ -29,7 +28,6 @@ public abstract class Graph {
     
     public void setExponent(int e) {
         exponent = e;
-        model.getVisibilityGraph().reinicializePoints();
     }
     
     public double getDeltaBaseline() {

@@ -8,9 +8,9 @@ public class Model {
     private VisibilityGraph visibilityGraph;
     // private ImageGraph imageGraph;
     private Vector<ModelListener> listeners;
-    private double defaultDisplayFactor = 1, defaultLambda = 1, defaultBaseline = 1, defaultDiameter = 1;
+    private double defaultDisplayFactor = 1, defaultLambda = 1, defaultBaseline = 1, defaultDiameter = 1, defaultT1 = 1, defaultT2 = 1;
     private int defaultExponent = 5;
-    private double displayFactor = defaultDisplayFactor, diameter = defaultDiameter;
+    private double displayFactor = defaultDisplayFactor, diameter = defaultDiameter, t1 = defaultT1, t2 = defaultT2;
     
     public Model() {
         listeners = new Vector<ModelListener>();
@@ -97,11 +97,29 @@ public class Model {
         displayFactor = i;
     }
     
+    public double getT1() {
+        return t1;
+    }
+    
+    public void setT1(double t) {
+        t1 = t;
+    }
+    
+    public double getT2() {
+        return t2;
+    }
+    
+    public void setT2(double t) {
+        t2 = t;
+    }
+    
     public void resetValuesToDefaults() {
         setDisplayFactor(defaultDisplayFactor);
         setExponent(defaultExponent);
         setDeltaBaseline(defaultBaseline);
         setLambda(defaultLambda);
         setDiameter(defaultDiameter);
+        setT1(defaultT1);
+        setT2(defaultT2);
     }
 }

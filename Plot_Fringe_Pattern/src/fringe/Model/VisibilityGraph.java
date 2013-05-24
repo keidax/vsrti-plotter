@@ -158,8 +158,9 @@ public class VisibilityGraph extends Graph {
     }
     
     public void setLambda(double lambda) {
+        System.out.println("new lambda = " + lambda);
         this.lambda = lambda;
-        reinicializePoints();
+        // reinicializePoints();
     }
     
     public SortedSet<Point> getRawPoints() {
