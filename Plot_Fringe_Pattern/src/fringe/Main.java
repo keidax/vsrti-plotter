@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Model m = new Model();
         Adapter a = new Adapter(m);
-        View v = new View(a, "VSRTI Plotter - Fringe Pattern");
+        View v = new View(a, m, "VSRTI Plotter - Fringe Pattern");
         if (lambda != -1.0) {
             m.getVisibilityGraph().setLambda(lambda);
         }

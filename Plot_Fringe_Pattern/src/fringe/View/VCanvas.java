@@ -39,7 +39,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * view.getModel().getDisplayFactor() / 2), g2cy(y + adapter.getRms().get(x)
+                        * view.getModel().getDisplayFactor() / 2));
             }
         } else {
             System.out.println("drawing changed");
@@ -94,14 +95,6 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void update(Graphics g) {
         dataPoints = adapter.getVisibilityGraphDataPoints();
         paint(g);
-    }
-    
-    public double getSigma() {
-        return sigma;
-    }
-    
-    public void setSigma(double i) {
-        sigma = i;
     }
     
     @Override

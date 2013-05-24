@@ -37,36 +37,37 @@ import common.View.FileDrop;
 import common.View.InputFile;
 
 import fringe.Model.Adapter;
+import fringe.Model.Model;
 import fringe.Model.ModelListener;
 
 public class View extends BaseView implements ModelListener {
     
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
-    public VCanvas vGraph;
+    public VCanvas vCanvas;
     // public FFTCanvas iGraph;
-    // public Model model;
+    public Model model;
     public TableModel tableModel;
     public FileTable jTable;
-    public JTextField fD, fLambda, fThetaMax, fSigma, fT1, fT2, fb;
+    public JTextField fD, fLambda, fThetaMax, fSigma, fT1, fT2, fBaseline;
     public JLabel lDelta, lLambda, lThetaMax, lSigma;
     public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private JButton updateButton;
-    public double d = 1, t1 = 1, t2 = 1, b = 5;
+    public double d = 1, t1 = 1, t2 = 1;
     public boolean showSinc = false, isDegrees = true;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Fringe_Pattern.html";
     
-    public View(Adapter a, String title) {
+    public View(Adapter a, Model m, String title) {
         super(title);
-        // model = m;
+        model = m;
         setAdapter(a);
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel, this);
-        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
+        vCanvas = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
         // iGraph = new
         // FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
         
-        vGraph.setSize(300, 100);
+        vCanvas.setSize(300, 100);
         
         JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jThetaMax, jSigma, jLabels, jFields;
         
@@ -102,11 +103,11 @@ public class View extends BaseView implements ModelListener {
         lSigma.setSize(100, 20);
         fD = new JTextField(getD() + "");
         fD.setToolTipText("<HTML><P>D = diameter of detector</P></HTML>");
-        fLambda = new JTextField(adapter.getLambda() + "");
+        fLambda = new JTextField(model.getLambda() + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
                 + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
-        fThetaMax = new JTextField(adapter.getDeltaBaseline() / 2 + "");
-        fSigma = new JTextField(getVGraph().getSigma() + "");
+        fThetaMax = new JTextField(model.getDeltaBaseline() / 2 + "");
+        fSigma = new JTextField(model.getDisplayFactor() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3)"
                 + "Error bars are not displayed where there is no RMS to calculate.</P></HTML>");
@@ -114,14 +115,14 @@ public class View extends BaseView implements ModelListener {
         fT1.setToolTipText("T1 is the measured power with only the stationary CFL.");
         fT2 = new JTextField(1 + "");
         fT2.setToolTipText("T2 is the measured power with only the moving CFL when at the central position (theta = 0)");
-        fb = new JTextField(10 + "");
-        fb.setToolTipText("<HTML><P WIDTH='300px'>\u0394 Baseline = baseline distance between successive points. (Numbers only, do not include "
+        fBaseline = new JTextField(model.getDeltaBaseline() + "");
+        fBaseline.setToolTipText("<HTML><P WIDTH='300px'>\u0394 Baseline = baseline distance between successive points. (Numbers only, do not include "
                 + "units)<BR/>Step in "
                 + " x = \u0394 / \u03BB<BR/>baseline = distance between antennas "
                 + "<P WIDTH='200px'>Example: if measured data are apart from each other 2 units, set \u0394Baseline = 2</P></HTML>");
         fT1.setMaximumSize(new Dimension(50, 20));
         fT2.setMaximumSize(new Dimension(50, 20));
-        fb.setMaximumSize(new Dimension(50, 20));
+        fBaseline.setMaximumSize(new Dimension(50, 20));
         fD.setMaximumSize(new Dimension(50, 20));
         fLambda.setMaximumSize(new Dimension(50, 225));
         fThetaMax.setMaximumSize(new Dimension(50, 200));
@@ -149,7 +150,7 @@ public class View extends BaseView implements ModelListener {
         row1.add(row1col2);
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
-        row1col1.add(vGraph);
+        row1col1.add(vCanvas);
         // row1col2.setMaximumSize(new Dimension(100, 450));
         row1col2.add(jScroll);// fileTable.createVectors());
         row1col2.add(Box.createRigidArea(new Dimension(5, 20)));
@@ -226,7 +227,7 @@ public class View extends BaseView implements ModelListener {
         jFields.add(Box.createRigidArea(new Dimension(5, 10)));
         jFields.add(fT1);
         jFields.add(fT2);
-        jFields.add(fb);
+        jFields.add(fBaseline);
         jFields.add(fD);
         jFields.add(fLambda);
         jFields.add(updateButton);
@@ -326,10 +327,10 @@ public class View extends BaseView implements ModelListener {
             public void actionPerformed(ActionEvent e) {
                 if (isDegrees) {
                     bDeg.setText("In Degrees");
-                    vGraph.xAxisTitle = "angle [rad]";
+                    vCanvas.xAxisTitle = "angle [rad]";
                 } else {
                     bDeg.setText("In Radians");
-                    vGraph.xAxisTitle = "angle [\u00b0]";
+                    vCanvas.xAxisTitle = "angle [\u00b0]";
                 }
                 isDegrees = !isDegrees;
                 // TODO make this actually do something
@@ -404,14 +405,14 @@ public class View extends BaseView implements ModelListener {
                 } catch (NumberFormatException e1) {
                 }
                 try {
-                    Double.parseDouble(fb.getText());
-                    b = Double.parseDouble(fb.getText());
+                    Double.parseDouble(fBaseline.getText());
+                    model.setDeltaBaseline(Double.parseDouble(fBaseline.getText()));
                     // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
                 } catch (NumberFormatException e1) {
                 }
                 try {
                     Double.parseDouble(fLambda.getText());
-                    adapter.setLambda(Double.parseDouble(fLambda.getText()));
+                    model.setLambda(Double.parseDouble(fLambda.getText()));
                 } catch (NumberFormatException e1) {
                 }
                 try {
@@ -420,8 +421,7 @@ public class View extends BaseView implements ModelListener {
                 }
                 try {
                     double tempSigma = Double.parseDouble(fSigma.getText());
-                    getVGraph().setSigma(tempSigma);
-                    getVGraph().update();
+                    model.setDisplayFactor(tempSigma);
                 } catch (NumberFormatException e1) {
                 }
                 
@@ -437,7 +437,7 @@ public class View extends BaseView implements ModelListener {
     }
     
     public void paintComponent() {
-        fLambda.setText(adapter.getLambda() + "");
+        fLambda.setText(model.getLambda() + "");
         fD.setText(getD() + "");
     }
     
@@ -458,12 +458,12 @@ public class View extends BaseView implements ModelListener {
                     continue;
                 }
                 if (strLine.trim().startsWith("*lambda")) {
-                    adapter.setLambda(Double.parseDouble(strLine.split(" ")[1]));
+                    model.setLambda(Double.parseDouble(strLine.split(" ")[1]));
                     fLambda.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
+                    model.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("*exponent")) {
-                    adapter.setExponent(Integer.parseInt(strLine.split(" ")[1]));
+                    model.setExponent(Integer.parseInt(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("BASELINE_POWER_RMS")) {
                     im = false;
                     vis = true;
@@ -571,11 +571,15 @@ public class View extends BaseView implements ModelListener {
     }
     
     public VCanvas getVGraph() {
-        return vGraph;
+        return vCanvas;
     }
     
     public void setVGraph(VCanvas graph) {
-        vGraph = graph;
+        vCanvas = graph;
+    }
+    
+    public Model getModel() {
+        return model;
     }
     
     @Override
@@ -583,8 +587,8 @@ public class View extends BaseView implements ModelListener {
         updateValuesFromModel();
         repaint();
         fD.setText(getD() + "");
-        fLambda.setText(adapter.getLambda() + "");
-        vGraph.update();
+        fLambda.setText(model.getLambda() + "");
+        vCanvas.update();
         // this.getIGraph().update();
     }
     

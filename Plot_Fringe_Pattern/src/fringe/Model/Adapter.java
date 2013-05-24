@@ -1,11 +1,9 @@
 package fringe.Model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
 import common.View.InputFile;
-
 
 public class Adapter {
     
@@ -17,38 +15,6 @@ public class Adapter {
     
     public TreeMap<Double, Double> getVisiblityGraphPoints() {
         return getModel().getVisibilityGraph().getPoints();
-    }
-    
-    public String getSaveFilename() {
-        return getModel().getVisibilityGraph().getSaveFile().getAbsolutePath();
-    }
-    
-    public double getLambda() {
-        return getModel().getVisibilityGraph().getLambda();
-    }
-    
-    public double getDeltaBaseline() {
-        return model.getVisibilityGraph().getDeltaBaseline();
-    }
-    
-    public void setDeltaBaseline(double d) {
-        getModel().getVisibilityGraph().setDeltaBaseline(d);
-    }
-    
-    public void setSaveFile(File f) {
-        getModel().getVisibilityGraph().setSaveFile(f);
-    }
-    
-    public void setLambda(double l) {
-        getModel().getVisibilityGraph().setLambda(l);
-    }
-    
-    public int getExponent() {
-        return getModel().getVisibilityGraph().getExponent();
-    }
-    
-    public void setExponent(int a) {
-        getModel().getVisibilityGraph().setExponent(a);
     }
     
     public TreeMap<Double, Double> getVisibilityGraphDataPoints() {
@@ -124,10 +90,12 @@ public class Adapter {
     
     public void fullReset() {
         getModel().getVisibilityGraph().emptyRawPoints();
-        getModel().updateListeners();
+        reset();
     }
     
     public void reset() {
+        System.out.println("resetting");
+        getModel().resetValuesToDefaults();
         getModel().getVisibilityGraph().reinicializePoints();
         getModel().updateListeners();
     }

@@ -820,7 +820,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     protected double sinc(double phi) {
         phi = phi * Math.PI / 180;
         return Math.sqrt(view.t1 * view.t1 + view.t2 * P(phi) * view.t2 * P(phi) + 2 * view.t1 * view.t2 * P(phi)
-                * Math.cos(2 * Math.PI * view.b * Math.sin(phi) / adapter.getLambda()));
+                * Math.cos(2 * Math.PI * view.getModel().getDeltaBaseline() * Math.sin(phi) / view.getModel().getLambda()));
         //
     }
     
@@ -828,8 +828,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         if (phi == 0.0) {
             return 1;
         }
-        return Math.pow(Math.sin(Math.PI * view.getD() * Math.sin(phi) / adapter.getLambda()), 2)
-                / Math.pow(Math.PI * view.getD() * Math.sin(phi) / adapter.getLambda(), 2);
+        return Math.pow(Math.sin(Math.PI * view.getD() * Math.sin(phi) / view.getModel().getLambda()), 2)
+                / Math.pow(Math.PI * view.getD() * Math.sin(phi) / view.getModel().getLambda(), 2);
     }
     
     protected void createBackBuffer() {
