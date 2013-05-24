@@ -828,8 +828,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         if (phi == 0.0) {
             return 1;
         }
-        return Math.pow(Math.sin(Math.PI * view.getD() * Math.sin(phi) / view.getModel().getLambda()), 2)
-                / Math.pow(Math.PI * view.getD() * Math.sin(phi) / view.getModel().getLambda(), 2);
+        return Math.pow(Math.sin(Math.PI * view.getModel().getDiameter() * Math.sin(phi) / view.getModel().getLambda()), 2)
+                / Math.pow(Math.PI * view.getModel().getDiameter() * Math.sin(phi) / view.getModel().getLambda(), 2);
     }
     
     protected void createBackBuffer() {

@@ -53,7 +53,7 @@ public class View extends BaseView implements ModelListener {
     public JLabel lDelta, lLambda, lThetaMax, lSigma;
     public JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private JButton updateButton;
-    public double d = 1, t1 = 1, t2 = 1;
+    public double t1 = 1, t2 = 1;
     public boolean showSinc = false, isDegrees = true;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Fringe_Pattern.html";
     
@@ -101,7 +101,7 @@ public class View extends BaseView implements ModelListener {
         lThetaMax.setSize(100, 20);
         lSigma = new JLabel('\u03C3' + " displaying factor: ");
         lSigma.setSize(100, 20);
-        fD = new JTextField(getD() + "");
+        fD = new JTextField(model.getDiameter() + "");
         fD.setToolTipText("<HTML><P>D = diameter of detector</P></HTML>");
         fLambda = new JTextField(model.getLambda() + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
@@ -388,7 +388,7 @@ public class View extends BaseView implements ModelListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Double.parseDouble(fD.getText());
-                    setD(Double.parseDouble(fD.getText()));
+                    model.setDiameter(Double.parseDouble(fD.getText()));
                     // System.out.println("fD became "+fD.getText()+" and is "+getD()+" d was parsed to "+Double.parseDouble(fD.getText()));
                 } catch (NumberFormatException e1) {
                 }
@@ -434,11 +434,6 @@ public class View extends BaseView implements ModelListener {
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-    }
-    
-    public void paintComponent() {
-        fLambda.setText(model.getLambda() + "");
-        fD.setText(getD() + "");
     }
     
     public TreeMap<Double, Double>[] parseFile(File f) {
@@ -586,8 +581,7 @@ public class View extends BaseView implements ModelListener {
     public void update() {
         updateValuesFromModel();
         repaint();
-        fD.setText(getD() + "");
-        fLambda.setText(model.getLambda() + "");
+        
         vCanvas.update();
         // this.getIGraph().update();
     }
@@ -600,21 +594,12 @@ public class View extends BaseView implements ModelListener {
         adapter.setRawPoints(((TableModel) jTable.getModel()).inputFiles);
     }
     
-    public double getD() {
-        return d;
-    }
-    
-    public void setD(double d) {
-        if (d <= 0) {
-            this.d = 20;
-        } else {
-            this.d = d;
-        }
-    }
-    
     @Override
     public void updateValuesFromModel() {
-        // TODO fill in
+        fBaseline.setText(model.getDeltaBaseline() + "");
+        fSigma.setText(model.getDisplayFactor() + "");
+        fLambda.setText(model.getLambda() + "");
+        fD.setText(model.getDiameter() + "");
     }
     
     @Override

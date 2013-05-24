@@ -8,9 +8,9 @@ public class Model {
     private VisibilityGraph visibilityGraph;
     // private ImageGraph imageGraph;
     private Vector<ModelListener> listeners;
-    private double defaultDisplayFactor = 1, defaultLambda = 1, defaultBaseline = 1;
+    private double defaultDisplayFactor = 1, defaultLambda = 1, defaultBaseline = 1, defaultDiameter = 1;
     private int defaultExponent = 5;
-    private double displayFactor = defaultDisplayFactor;
+    private double displayFactor = defaultDisplayFactor, diameter = defaultDiameter;
     
     public Model() {
         listeners = new Vector<ModelListener>();
@@ -81,6 +81,14 @@ public class Model {
         getVisibilityGraph().setLambda(l);
     }
     
+    public double getDiameter() {
+        return diameter;
+    }
+    
+    public void setDiameter(double diameter) {
+        this.diameter = diameter;
+    }
+    
     public double getDisplayFactor() {
         return displayFactor;
     }
@@ -94,5 +102,6 @@ public class Model {
         setExponent(defaultExponent);
         setDeltaBaseline(defaultBaseline);
         setLambda(defaultLambda);
+        setDiameter(defaultDiameter);
     }
 }
