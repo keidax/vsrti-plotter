@@ -75,7 +75,7 @@ public class View extends BaseView implements ModelListener {
         bOpen = new JButton("Open file");
         bSave = new JButton("Save file");
         bExit = new JButton("Exit");
-        bReset = new JButton("Reset");
+        bReset = new JButton("Reset to defaults");
         bDelete = new JButton("Delete Data");
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
@@ -108,9 +108,9 @@ public class View extends BaseView implements ModelListener {
         fSigma.setMaximumSize(new Dimension(50, 20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3)"
                 + "Error bars are not displayed where there is no RMS to calculate.</P></HTML>");
-        fT1 = new JTextField(1 + "");
+        fT1 = new JTextField(model.getT1() + "");
         fT1.setToolTipText("T1 is the measured power with only the stationary CFL.");
-        fT2 = new JTextField(1 + "");
+        fT2 = new JTextField(model.getT2() + "");
         fT2.setToolTipText("T2 is the measured power with only the moving CFL when at the central position (theta = 0)");
         fBaseline = new JTextField(model.getDeltaBaseline() + "");
         fBaseline.setToolTipText("<HTML><P WIDTH='300px'>\u0394 Baseline = baseline distance between successive points. (Numbers only, do not include "
@@ -404,9 +404,7 @@ public class View extends BaseView implements ModelListener {
                 } catch (NumberFormatException e1) {
                 }
                 try {
-                    System.out.println("lambda text is " + fLambda.getText());
                     double tempLambda = Double.parseDouble(fLambda.getText());
-                    System.out.println("tempLambda = " + tempLambda);
                     model.setLambda(tempLambda);
                 } catch (NumberFormatException e1) {
                 }

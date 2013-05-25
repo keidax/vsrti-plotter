@@ -6,7 +6,7 @@ public abstract class Graph {
     
     public TreeMap<Double, Double> points;
     public int exponent = 5;
-    public double deltaBaseline = 1;
+    public double deltaBaseline = 10;
     public Model model;
     
     public Graph(Model m) {

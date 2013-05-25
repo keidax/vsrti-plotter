@@ -8,7 +8,8 @@ public class Model {
     private VisibilityGraph visibilityGraph;
     // private ImageGraph imageGraph;
     private Vector<ModelListener> listeners;
-    private double defaultDisplayFactor = 1, defaultLambda = 1, defaultBaseline = 1, defaultDiameter = 1, defaultT1 = 1, defaultT2 = 1;
+    private double defaultDisplayFactor = 1, defaultLambda = 2.5, defaultBaseline = 10, defaultDiameter = 5, defaultT1 = 10,
+            defaultT2 = 10;
     private int defaultExponent = 5;
     private double displayFactor = defaultDisplayFactor, diameter = defaultDiameter, t1 = defaultT1, t2 = defaultT2;
     

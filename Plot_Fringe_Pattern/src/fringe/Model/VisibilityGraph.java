@@ -15,7 +15,7 @@ public class VisibilityGraph extends Graph {
     
     public Complex[] compl;
     public File saveFile;
-    public double lambda = 1;
+    public double lambda = 2.5;
     public SortedSet<Point> rawPoints;
     public double halfBZero = 0;
     private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
@@ -158,7 +158,6 @@ public class VisibilityGraph extends Graph {
     }
     
     public void setLambda(double lambda) {
-        System.out.println("new lambda = " + lambda);
         this.lambda = lambda;
         // reinicializePoints();
     }
