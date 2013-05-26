@@ -96,8 +96,7 @@ public class View extends BaseView implements ModelListener {
         lSigma.setSize(100, 22);
         fD = new JTextField(model.getDiameter() + "");
         fLambda = new JTextField(model.getLambda() + "");
-        fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
-                + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
+        fLambda.setToolTipText("\u03BB = wavelength of the radiation detected");
         // fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
         fSigma = new JTextField(vCanvas.getDisplayFactor() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));

@@ -102,8 +102,7 @@ public class View extends BaseView implements ModelListener {
         fD = new JTextField(model.getDiameter() + "");
         fD.setToolTipText("<HTML><P>D = diameter of detector</P></HTML>");
         fLambda = new JTextField(model.getLambda() + "");
-        fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. "
-                + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
+        fLambda.setToolTipText("\u03BB = wavelength of the radiation detected");
         fSigma = new JTextField(model.getDisplayFactor() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3)"

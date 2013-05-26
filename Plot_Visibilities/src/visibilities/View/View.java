@@ -104,8 +104,7 @@ public class View extends BaseView implements ModelListener {
         fPhi2.setToolTipText("<HTML><P>\u03A6</P></HTML>");
         fPhi2.setMaximumSize(new Dimension(50, 20));
         fLambda = new JTextField(adapter.getLambda() + "");
-        fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelenght of radiation. "
-                + "At the end, horizontal distances of points are calculated by formula \u0394Baseline / \u03BB.</P>" + "</P></HTML>");
+        fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. The x-axis values equal baseline divided by wavelength.</HTML>");
         fSigma = new JTextField(getVGraph().getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3). "
