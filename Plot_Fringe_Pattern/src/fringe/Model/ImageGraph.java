@@ -25,7 +25,7 @@ public class ImageGraph extends Graph { // TODO probably unnecessary
         double[] res = dct.iDCT(data);
         model.getVisibilityGraph().getPoints().clear();
         for (int i = 0; i < res.length; i++) {
-            model.getVisibilityGraph().getPoints().put(i * getDeltaBaseline() / model.getVisibilityGraph().getLambda(), res[i]);
+            model.getVisibilityGraph().getPoints().put(i * getBaseline() / model.getVisibilityGraph().getLambda(), res[i]);
         }
     }
     

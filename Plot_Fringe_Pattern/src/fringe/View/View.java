@@ -112,11 +112,8 @@ public class View extends BaseView implements ModelListener {
         fT1.setToolTipText("T1 is the measured power with only the stationary CFL.");
         fT2 = new JTextField(model.getT2() + "");
         fT2.setToolTipText("T2 is the measured power with only the moving CFL when at the central position (theta = 0)");
-        fBaseline = new JTextField(model.getDeltaBaseline() + "");
-        fBaseline.setToolTipText("<HTML><P WIDTH='300px'>\u0394 Baseline = baseline distance between successive points. (Numbers only, do not include "
-                + "units)<BR/>Step in "
-                + " x = \u0394 / \u03BB<BR/>baseline = distance between antennas "
-                + "<P WIDTH='200px'>Example: if measured data are apart from each other 2 units, set \u0394Baseline = 2</P></HTML>");
+        fBaseline = new JTextField(model.getBaseline() + "");
+        fBaseline.setToolTipText("Baseline = distance between the feeds.");
         fT1.setMaximumSize(new Dimension(50, 20));
         fT2.setMaximumSize(new Dimension(50, 20));
         fBaseline.setMaximumSize(new Dimension(50, 20));
@@ -400,7 +397,7 @@ public class View extends BaseView implements ModelListener {
                 }
                 try {
                     double tempBaseline = Double.parseDouble(fBaseline.getText());
-                    model.setDeltaBaseline(tempBaseline);
+                    model.setBaseline(tempBaseline);
                 } catch (NumberFormatException e1) {
                 }
                 try {
@@ -445,7 +442,7 @@ public class View extends BaseView implements ModelListener {
                     model.setLambda(Double.parseDouble(strLine.split(" ")[1]));
                     fLambda.setText(strLine.split(" ")[1]);
                 } else if (strLine.trim().startsWith("*deltaBaseline")) {
-                    model.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
+                    model.setBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("*exponent")) {
                     model.setExponent(Integer.parseInt(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("BASELINE_POWER_RMS")) {
@@ -585,7 +582,7 @@ public class View extends BaseView implements ModelListener {
     
     @Override
     public void updateValuesFromModel() {
-        fBaseline.setText(model.getDeltaBaseline() + "");
+        fBaseline.setText(model.getBaseline() + "");
         fSigma.setText(model.getDisplayFactor() + "");
         fLambda.setText(model.getLambda() + "");
         fD.setText(model.getDiameter() + "");

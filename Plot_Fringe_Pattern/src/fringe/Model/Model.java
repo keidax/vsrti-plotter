@@ -66,12 +66,12 @@ public class Model {
         return getVisibilityGraph().getLambda();
     }
     
-    public double getDeltaBaseline() {
-        return getVisibilityGraph().getDeltaBaseline();
+    public double getBaseline() {
+        return getVisibilityGraph().getBaseline();
     }
     
-    public void setDeltaBaseline(double d) {
-        getVisibilityGraph().setDeltaBaseline(d);
+    public void setBaseline(double baseline) {
+        getVisibilityGraph().setBaseline(baseline);
     }
     
     public void setSaveFile(File f) {
@@ -117,7 +117,7 @@ public class Model {
     public void resetValuesToDefaults() {
         setDisplayFactor(defaultDisplayFactor);
         setExponent(defaultExponent);
-        setDeltaBaseline(defaultBaseline);
+        setBaseline(defaultBaseline);
         setLambda(defaultLambda);
         setDiameter(defaultDiameter);
         setT1(defaultT1);

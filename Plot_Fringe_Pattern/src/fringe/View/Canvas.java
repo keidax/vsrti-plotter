@@ -821,7 +821,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         phi = phi * Math.PI / 180;
         return Math.sqrt(view.getModel().getT1() * view.getModel().getT1() + view.getModel().getT2() * P(phi) * view.getModel().getT2()
                 * P(phi) + 2 * view.getModel().getT1() * view.getModel().getT2() * P(phi)
-                * Math.cos(2 * Math.PI * view.getModel().getDeltaBaseline() * Math.sin(phi) / view.getModel().getLambda()));
+                * Math.cos(2 * Math.PI * view.getModel().getBaseline() * Math.sin(phi) / view.getModel().getLambda()));
     }
     
     protected double P(double phi) {

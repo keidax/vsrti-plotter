@@ -18,8 +18,8 @@ public abstract class Graph {
         points = new TreeMap<Double, Double>();
     }
     
-    public void setDeltaBaseline(double b) {
-        deltaBaseline = b;
+    public void setBaseline(double baseline) {
+        deltaBaseline = baseline;
     }
     
     public int getExponent() {
@@ -30,7 +30,7 @@ public abstract class Graph {
         exponent = e;
     }
     
-    public double getDeltaBaseline() {
+    public double getBaseline() {
         return deltaBaseline;
     }
     

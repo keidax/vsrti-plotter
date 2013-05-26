@@ -117,7 +117,7 @@ public class VisibilityGraph extends Graph {
     
     @Override
     public void setExponent(int e) {
-        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getDeltaBaseline()) / Math.log(2))) {
+        if (e >= (int) Math.ceil(Math.log(getMaxRawX() / getBaseline()) / Math.log(2))) {
             exponent = e;
             reinicializePoints();
         }
@@ -221,7 +221,7 @@ public class VisibilityGraph extends Graph {
     public String toString() {
         String s = "";
         s += "*lambda " + getLambda() + "\n";
-        s += "*deltaBaseline " + getDeltaBaseline() + "\n";
+        s += "*deltaBaseline " + getBaseline() + "\n";
         s += "*exponent " + getExponent() + "\n";
         s += "BASELINE_POWER_RMS\n";
         Set<Double> keys = getPoints().keySet();
