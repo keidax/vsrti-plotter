@@ -35,6 +35,7 @@ import javax.swing.JPopupMenu;
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import common.View.SquareOrnament;
+import common.View.ViewUtilities;
 
 /**
  * Base class for graphs
@@ -891,7 +892,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         }
         double x = besselX(theta);
         // System.out.println("bessel x = " + x);
-        return Math.pow(2 * besselJ(x) / x, 2);
+        return Math.pow(2 * ViewUtilities.besselJ(x) / x, 2);
     }
     
     /**
@@ -903,24 +904,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     private double besselX(double theta) {
         // System.out.println("view d = " + view.getD() + "view lambda = " + view.getLambda());
         return Math.PI * view.getModel().getDiameter() * theta * Math.PI / 180 / view.getModel().getLambda();
-    }
-    
-    /**
-     * 
-     * @param x
-     * @return the sum of the first twenty elements of the first-order Bessel
-     *         function
-     */
-    private double besselJ(double x) {
-        double fLast = x / 2.0;
-        double fSum = fLast;
-        for (int k = 1; k <= 20; k++) {
-            double fK = -fLast * (Math.pow(x / 2, 2) / (k * (k + 1)));
-            fSum += fK;
-            fLast = fK;
-        }
-        
-        return fSum;
     }
     
     protected void createBackBuffer() {

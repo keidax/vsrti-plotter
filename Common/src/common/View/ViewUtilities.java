@@ -44,4 +44,22 @@ public class ViewUtilities {
             + "<p>This research has been supported in part by a grant from the National Science Foundation, IIS CPATH Award #0722203</p><p></p>"
             + "<p>Software is written in Java and it is free open source</p>" + "</html>";
     
+    /**
+     * 
+     * @param x
+     * @return the sum of the first twenty elements of the first-order Bessel
+     *         function
+     */
+    public static double besselJ(double x) {
+        double fLast = x / 2.0;
+        double fSum = fLast;
+        for (int k = 1; k <= 20; k++) {
+            double fK = -fLast * (Math.pow(x / 2, 2) / (k * (k + 1)));
+            fSum += fK;
+            fLast = fK;
+        }
+        
+        return fSum;
+    }
+    
 }

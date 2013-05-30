@@ -37,7 +37,7 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 import visibilities.Model.Adapter;
 
 import common.View.SquareOrnament;
-
+import common.View.ViewUtilities;
 
 /**
  * Base class for graphs
@@ -935,7 +935,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             tA *= Math.sqrt(2 / Math.pow(X1, 2) * (1 - Math.cos(X1)));
         } else {
             X1 = Math.PI * blam * view.getD1();
-            tA *= 2 * besselJ(X1) / X1;
+            tA *= 2 * ViewUtilities.besselJ(X1) / X1;
         }
         
         double tB = view.T2;
@@ -947,20 +947,9 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             tB *= Math.sqrt(2 / Math.pow(X2, 2) * (1 - Math.cos(X2)));
         } else {
             X2 = Math.PI * blam * view.getD2();
-            tB *= 2 * besselJ(X2) / X2;
+            tB *= 2 * ViewUtilities.besselJ(X2) / X2;
         }
         return Math.sqrt(Math.pow(tA, 2) + Math.pow(tB, 2) + 2 * tA * tB * Math.cos(2 * Math.PI * blam * Math.sin(view.theta)));
-    }
-    
-    private double besselJ(double x) {
-        double fLast = x / 2.0;
-        double fSum = fLast;
-        for (int k = 1; k <= 20; k++) {
-            double fK = -fLast * (Math.pow(x / 2, 2) / (k * (k + 1)));
-            fSum += fK;
-            fLast = fK;
-        }
-        return fSum;
     }
     
     protected double sinc(double phi) {
