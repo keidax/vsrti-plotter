@@ -38,7 +38,7 @@ import common.View.FileDrop;
 import common.View.InputFile;
 
 /**
- * main GUI class
+ * Main GUI class for Plot_Beam.
  * 
  */
 
@@ -50,7 +50,6 @@ public class View extends BaseView implements ModelListener {
     private TableModel tableModel;
     private FileTable jTable;
     private JTextField fD, fLambda, fSigma, fNoise;
-    private JLabel lDelta, lLambda, lSigma;
     private JButton updateButton;
     private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private boolean showBeamPattern = false;
@@ -71,7 +70,6 @@ public class View extends BaseView implements ModelListener {
         vCanvas.setSize(300, 100);
         
         JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jRadioButtons, jThetaMax, jLabels, jFields;
-        // JPanel jSigma;
         
         // BUTTONS
         bOpen = new JButton("Open file");
@@ -85,15 +83,7 @@ public class View extends BaseView implements ModelListener {
         
         updateButton = new JButton("Update");
         
-        lDelta = new JLabel("<HTML><P></P>" + "display factor of " + '\u03C3' + ": </P>  </P><P><B>Model Parameters:</B><P>D: </P><P>"
-                + '\u03BB' + ":" + "</P><P>Noise: </P></HTML>");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Drag and Drop data files into this box. File names should contain angle distance in single quotes. <B>Example:</B> file with angle 23.9 can have these names: \"file_a'23.9'.rad\", \"jun3.12angle'23.9'.rad\", etc.</P></HTML>");
-        // lDelta.setMaximumSize(100, 22);
-        lDelta.setMaximumSize(new Dimension(130, 175));
-        lLambda = new JLabel('\u03BB' + ": ");
-        lLambda.setSize(100, 22);
-        lSigma = new JLabel('\u03C3' + " displaying factor: ");
-        lSigma.setSize(100, 22);
         fD = new JTextField(model.getDiameter() + "");
         fLambda = new JTextField(model.getLambda() + "");
         fLambda.setToolTipText("\u03BB = wavelength of the radiation detected");
@@ -187,8 +177,8 @@ public class View extends BaseView implements ModelListener {
         jButtons5.add(bAbout);
         jButtons5.add(bExit);
         
-        jLabels.add(new JLabel("display factor of " + '\u03C3' + ":"));
-        jLabels.add(new JLabel("<HTML><B>Model Paremeters:</B></HTML>"));
+        jLabels.add(new JLabel("display factor of σ:"));
+        jLabels.add(new JLabel("Model Paremeters:"));
         jLabels.add(new JLabel("D (ant. dia.):"));
         jLabels.add(new JLabel('\u03BB' + ":"));
         jLabels.add(new JLabel("Noise:"));
@@ -387,8 +377,7 @@ public class View extends BaseView implements ModelListener {
                             System.out.println("********* " + s[2]);
                             rms.put(Double.parseDouble(s[0]), Double.parseDouble(s[2]));
                         }
-                    } catch (NumberFormatException e) {
-                    }
+                    } catch (NumberFormatException e) {}
                 } else if (im) {
                     if (strLine.trim().equals("")) {
                         continue;
@@ -396,12 +385,12 @@ public class View extends BaseView implements ModelListener {
                     try {
                         String[] s = strLine.split(" ");
                         retim.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
-                    } catch (NumberFormatException e) {
-                    }
+                    } catch (NumberFormatException e) {}
                 } else if (strLine.trim().length() == 0) {
                     continue;
                 } else {
-                    JOptionPane.showMessageDialog(this, "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
+                    JOptionPane.showMessageDialog(this,
+                            "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
                             "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     in.close();
                     return null;
@@ -419,7 +408,8 @@ public class View extends BaseView implements ModelListener {
     }
     
     @SuppressWarnings("unchecked")
-    public TreeMap<Double, Double>[] flatten(TreeMap<Double, ArrayList<Double>> data, TreeMap<Double, ArrayList<Double>> rms) {
+    public TreeMap<Double, Double>[] flatten(TreeMap<Double, ArrayList<Double>> data,
+            TreeMap<Double, ArrayList<Double>> rms) {
         TreeMap<Double, Double> retData = new TreeMap<Double, Double>();
         TreeMap<Double, Double> retRms = new TreeMap<Double, Double>();
         Set<Double> dataKeys = data.keySet();
@@ -528,32 +518,27 @@ public class View extends BaseView implements ModelListener {
         try {
             double tempNoise = Double.parseDouble(fNoise.getText());
             model.setNoise(tempNoise);
-        } catch (NumberFormatException e) {
-        }
+        } catch (NumberFormatException e) {}
         
         try {
             double tempDiameter = Double.parseDouble(fD.getText());
             model.setDiameter(tempDiameter);
-        } catch (NumberFormatException e) {
-        }
+        } catch (NumberFormatException e) {}
         
         try {
             double tempLambda = Double.parseDouble(fLambda.getText());
             model.setLambda(tempLambda);
-        } catch (NumberFormatException e) {
-        }
+        } catch (NumberFormatException e) {}
         
         try {
             double tempSigma = Double.parseDouble(fSigma.getText());
             model.setDisplayFactor(tempSigma);
-        } catch (NumberFormatException e) {
-        }
+        } catch (NumberFormatException e) {}
         
         try {
             double tempPeakValue = Double.parseDouble(fPeakValue.getText());
             model.setPeakValue(tempPeakValue);
-        } catch (NumberFormatException e) {
-        }
+        } catch (NumberFormatException e) {}
         
         model.update();
     }
