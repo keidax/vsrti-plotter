@@ -8,35 +8,52 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+/**
+ * Displays a window with buttons to launch the TIFT subprograms.
+ * 
+ * @author Gabriel Holodak
+ * 
+ */
 @SuppressWarnings("serial")
 public class Form extends JFrame implements Runnable {
     
-    private JButton fullButton, cosButton;
-    
-    public static void main(String[] args) {
+    /**
+     * Main method for the Form class. Creates a new Form and displays it.
+     * 
+     * @param args
+     *            no effect
+     */
+    public static void main(final String[] args) {
         SwingUtilities.invokeLater(new Form("TIFT - Tool for Interactive Fourier Transform"));
     }
     
-    public Form(String str) {
+    /**
+     * Creates a new Form class, which appears as a window with buttons to open
+     * the TIFT subprograms.
+     * 
+     * @param str
+     *            the title for the Form window
+     */
+    public Form(final String str) {
         super(str);
         getContentPane().setLayout(new FlowLayout());
         
-        fullButton = new JButton("Full Complex TIFT");
-        cosButton = new JButton("Cosine TIFT");
+        JButton fullButton = new JButton("Full Complex TIFT");
+        JButton cosButton = new JButton("Cosine TIFT");
         
         getContentPane().add(fullButton);
         getContentPane().add(cosButton);
         
         fullButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 tift.Main.main(null);
             }
         });
         
         cosButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 tift2.Main.main(null);
             }
         });
@@ -44,7 +61,7 @@ public class Form extends JFrame implements Runnable {
     }
     
     @Override
-    public void run() {
+    public final void run() {
         this.pack();
         this.setVisible(true);
     }
