@@ -35,6 +35,7 @@ import javax.swing.JPopupMenu;
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import common.View.SquareOrnament;
+import common.View.ViewUtilities;
 
 import fringe.Model.Adapter;
 
@@ -60,7 +61,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     protected double defaultXRight = 20;
     protected int mCanx, mCany;
     protected Double currentPoint;
-    protected Color[] colors = { Color.BLACK };
+    protected Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
     protected String xAxisTitle = "x-axis";
     protected String yAxisTitle = "y-axis";
@@ -139,8 +140,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                         paint(image.createGraphics());
                         ImageIO.write(image, "jpeg", f);
                         out.close();
-                    } catch (IOException ex) {
-                    }
+                    } catch (IOException ex) {}
                 } else {
                     JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -204,8 +204,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                         // paint(image.createGraphics());
                         // ImageIO.write(image, "eps", f);
                         // out.close();
-                    } catch (IOException ex) {
-                    }
+                    } catch (IOException ex) {}
                 } else {
                     JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -244,8 +243,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         
     }
     
-    public void drawPoint(Graphics2D g, double x, double y) {
-    }
+    public void drawPoint(Graphics2D g, double x, double y) {}
     
     public int g2cx(double x) {
         double ratio = getRatioX();
@@ -301,8 +299,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             String lString = df.format(c2gx(getLeftShift() + i * steps));
             
             FontMetrics fm = g.getFontMetrics();
-            g.drawString(lString, (int) (getLeftShift() + i * steps - fm.stringWidth(lString) / 2), getHeight() - bPad + fm.getAscent()
-                    + fm.getLeading() + 5);
+            g.drawString(lString, (int) (getLeftShift() + i * steps - fm.stringWidth(lString) / 2), getHeight() - bPad
+                    + fm.getAscent() + fm.getLeading() + 5);
         }
         // draw axis title
         g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2 - 50, getHeight() - 10);
@@ -346,7 +344,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             String tempString = df.format(c2gy(getHeight() - bPad - i * squareWidth));
             // System.out.println(c2gy(this.getHeight() - bPad - (i) * squareWidth));
             // System.out.println(this.getHeight() - bPad - (i) * squareWidth);
-            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5, getHeight() - bPad - i * squareWidth + fm.getAscent() / 2);
+            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5, getHeight() - bPad - i * squareWidth
+                    + fm.getAscent() / 2);
         }
     }
     
@@ -683,8 +682,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         mCanx = evt.getX();
         mCany = evt.getY();
         // System.out.println("released");
-        if (currentPoint == null && mCanx >= getLeftShift() && mCanx <= getLeftShift() + getPlotWidth() && mCany >= tPad
-                && mCany < getWidth() - bPad) {
+        if (currentPoint == null && mCanx >= getLeftShift() && mCanx <= getLeftShift() + getPlotWidth()
+                && mCany >= tPad && mCany < getWidth() - bPad) {
             // getCurrentDataSet().addPoint(c2gx(mCanx),c2gy(mCany,getCurrentDataSet()));
             // update();
         }
@@ -791,8 +790,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         // g2.drawLine(this.getLeftShift(), g2cy(0.0), this.getLeftShift() +
         // this.getPlotWidth(), g2cy(0.0));//horizontal// draw horizontal axis
         g.setFont(new Font(g.getFont().getFontName(), 0, titleSize));
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2,
-                (tPad + g2.getFontMetrics().getHeight() / 2) / 2);
+        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tPad + g2
+                .getFontMetrics().getHeight() / 2) / 2);
         i = 0;
         g2.setColor(colors[0]);
         drawDataSet(i, g2);
@@ -817,19 +816,34 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         }
     }
     
-    protected double sinc(double phi) {
-        phi = phi * Math.PI / 180;
-        return Math.sqrt(view.getModel().getT1() * view.getModel().getT1() + view.getModel().getT2() * P(phi) * view.getModel().getT2()
-                * P(phi) + 2 * view.getModel().getT1() * view.getModel().getT2() * P(phi)
-                * Math.cos(2 * Math.PI * view.getModel().getBaseline() * Math.sin(phi) / view.getModel().getLambda()));
+    protected double sinc(double theta) {
+        theta = theta * Math.PI / 180;
+        // return Math.sqrt(view.getModel().getT1() * view.getModel().getT1() + view.getModel().getT2() * P(phi) *
+        // view.getModel().getT2() * P(phi) + 2 * view.getModel().getT1() * view.getModel().getT2() * P(phi)* Math.cos(2
+        // * Math.PI * view.getModel().getBaseline() * Math.sin(phi) / view.getModel().getLambda()));
+        return Math.sqrt(view.getModel().getT1() * view.getModel().getT1() + view.getModel().getT2() * besselTest(theta)
+                * view.getModel().getT2() * besselTest(theta) + 2 * view.getModel().getT1() * view.getModel().getT2()
+                * besselTest(theta)
+                * Math.cos(2 * Math.PI * view.getModel().getBaseline() * Math.sin(theta) / view.getModel().getLambda()));
+        
     }
     
-    protected double P(double phi) {
-        if (phi == 0.0) {
+    protected double P(double theta) {
+        if (theta == 0.0) {
             return 1;
         }
-        return Math.pow(Math.sin(Math.PI * view.getModel().getDiameter() * Math.sin(phi) / view.getModel().getLambda()), 2)
-                / Math.pow(Math.PI * view.getModel().getDiameter() * Math.sin(phi) / view.getModel().getLambda(), 2);
+        return Math.pow(
+                Math.sin(Math.PI * view.getModel().getDiameter() * Math.sin(theta) / view.getModel().getLambda()), 2)
+                / Math.pow(Math.PI * view.getModel().getDiameter() * Math.sin(theta) / view.getModel().getLambda(), 2);
+    }
+    
+    // TODO move this code to a common place
+    private double besselTest(double theta) {
+        if (theta == 0) {
+            return 1;
+        }
+        double x = Math.PI * view.getModel().getDiameter() * theta / view.getModel().getLambda();
+        return Math.pow(2 * ViewUtilities.besselJ(x) / x, 2);
     }
     
     protected void createBackBuffer() {
