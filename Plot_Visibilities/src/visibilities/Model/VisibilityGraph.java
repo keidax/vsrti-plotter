@@ -12,7 +12,6 @@ import common.Model.Graph;
 import common.Model.Point;
 import common.View.InputFile;
 
-
 public class VisibilityGraph extends Graph {
     
     public Complex[] compl;
@@ -64,14 +63,9 @@ public class VisibilityGraph extends Graph {
             for (Point p : rawPoints) {
                 getPoints().put(p.x / getLambda(), p.y);
             }
-        } else {
-            for (double i = 0; i < 32; i++) {
-                getPoints().put(i * getDeltaBaseline() / getLambda(), 0.0);
-                
-            }
         }
         
-        System.out.println(getPoints());
+        // System.out.println(getPoints());
         if (!getRawPoints().isEmpty()) {
             
             // double maxkey = getPoints().lastKey();
@@ -91,8 +85,8 @@ public class VisibilityGraph extends Graph {
                         addPoint(subp.get(0).getX(), subp.get(0).getY());
                         
                     } else {
-                        addPoint(subp.get(0).getX(), InputFile.getCollectiveIntensityAverage(InputFile.getInputFilesByX(getInputFiles(),
-                                subp)));
+                        addPoint(subp.get(0).getX(), InputFile.getCollectiveIntensityAverage(InputFile
+                                .getInputFilesByX(getInputFiles(), subp)));
                         
                     }
                     subp.clear();
@@ -228,9 +222,11 @@ public class VisibilityGraph extends Graph {
         p.setY(y);
     }
     
-    /*public void update() {
-        model.updateListeners();
-    }*/
+    /*
+     * public void update() {
+     * model.updateListeners();
+     * }
+     */
     
     public void movePoint(double currentPoint, double toy) {
         getPoints().put(currentPoint, toy);
@@ -259,7 +255,9 @@ public class VisibilityGraph extends Graph {
         s += "X_Y_RMS" + "\n";
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) { // X Y RMS
-            s += key * lambda + " " + getPoints().get(key) + " " + (getGridedRms().containsKey(key) ? getGridedRms().get(key) : 0.0) + "\n";
+            s +=
+                    key * lambda + " " + getPoints().get(key) + " "
+                            + (getGridedRms().containsKey(key) ? getGridedRms().get(key) : 0.0) + "\n";
         }
         // System.out.println(s);
         return s;
@@ -271,7 +269,7 @@ public class VisibilityGraph extends Graph {
             // System.out.println("gridX("+p.getX()+"/"+getLambda()+")="+getGridX(p.getX()/getLambda()));
             al.put(p.getX() / getLambda(), p.getY());
         }
-        // System.out.println("DataPoints = "+al.size());
+        // System.out.println("returning " + al.size() + " datapoints from visGraph");
         return al;
     }
     

@@ -57,8 +57,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     protected int yLabelWidth = 10;
     protected int xLabelWidth = 30;
     protected double defaultY = 9;
-    protected double defaultXLeft = -20;
-    protected double defaultXRight = 20;
+    protected double defaultXLeft = -45;
+    protected double defaultXRight = 45;
     protected int mCanx, mCany;
     protected Double currentPoint;
     protected Color[] colors = {Color.BLACK};
@@ -808,8 +808,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      */
     protected void paintVis(Graphics2D g) {
         g.setColor(Color.red);
-        double last = -maxX;
-        for (double i = -maxX + getPlotWidth() / 80; i < maxX; i += .2) {
+        double last = getMinX();
+        for (double i = getMinX(); i < getMaxX(); i += .1) {
             System.out.println("Drawing sinc at " + i + "," + sinc(i) + "]");
             g.drawLine(g2cx(i), g2cy(sinc(i)), g2cx(last), g2cy(sinc(last)));
             last = i;
@@ -821,10 +821,19 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         // return Math.sqrt(view.getModel().getT1() * view.getModel().getT1() + view.getModel().getT2() * P(phi) *
         // view.getModel().getT2() * P(phi) + 2 * view.getModel().getT1() * view.getModel().getT2() * P(phi)* Math.cos(2
         // * Math.PI * view.getModel().getBaseline() * Math.sin(phi) / view.getModel().getLambda()));
-        return Math.sqrt(view.getModel().getT1() * view.getModel().getT1() + view.getModel().getT2() * besselTest(theta)
-                * view.getModel().getT2() * besselTest(theta) + 2 * view.getModel().getT1() * view.getModel().getT2()
-                * besselTest(theta)
-                * Math.cos(2 * Math.PI * view.getModel().getBaseline() * Math.sin(theta) / view.getModel().getLambda()));
+        return Math
+                .sqrt(view.getModel().getT1()
+                        * view.getModel().getT1()
+                        + view.getModel().getT2()
+                        * besselTest(theta)
+                        * view.getModel().getT2()
+                        * besselTest(theta)
+                        + 2
+                        * view.getModel().getT1()
+                        * view.getModel().getT2()
+                        * besselTest(theta)
+                        * Math.cos(2 * Math.PI * view.getModel().getBaseline() * Math.sin(theta)
+                                / view.getModel().getLambda()));
         
     }
     
@@ -832,8 +841,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         if (theta == 0.0) {
             return 1;
         }
-        return Math.pow(
-                Math.sin(Math.PI * view.getModel().getDiameter() * Math.sin(theta) / view.getModel().getLambda()), 2)
+        return Math.pow(Math.sin(Math.PI * view.getModel().getDiameter() * Math.sin(theta)
+                / view.getModel().getLambda()), 2)
                 / Math.pow(Math.PI * view.getModel().getDiameter() * Math.sin(theta) / view.getModel().getLambda(), 2);
     }
     

@@ -18,15 +18,14 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
     
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
-    protected static Color[] colors = { Color.BLUE, Color.BLACK };
+    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
+    protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected double sigma = 1;
     protected float RMSStroke = 2;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
         dataPoints = adapter.getVisibilityGraphDataPoints();
-        System.out.println(dataPoints.size());
         xAxisTitle = "Baseline/λ";
         yAxisTitle = "Visibility";
         graphTitle = "Visibility";
@@ -42,7 +41,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                 // System.out.println("** " +
                 // adapter.getRms().get(x)*getSigma()/2);
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y
+                        + adapter.getRms().get(x) * getSigma() / 2));
                 // System.out.println("RMS ["+x+","+adapter.getRms().get(x));
                 // System.out.println("rms = "+adapter.getRms().get(x));
             }
@@ -86,8 +86,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void setCurrentPoint(Double currentPoint) {
         try {
             adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {
-        }
+        } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
     }
 }

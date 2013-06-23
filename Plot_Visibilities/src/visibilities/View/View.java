@@ -45,7 +45,7 @@ import common.View.InputFile;
 @SuppressWarnings("serial")
 public class View extends BaseView implements ModelListener {
     public Adapter adapter;
-    public VCanvas vGraph;
+    public VCanvas vCanvas;
     // public FFTCanvas iGraph;
     // public Model model;
     public TableModel tableModel;
@@ -59,7 +59,7 @@ public class View extends BaseView implements ModelListener {
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Visibilities.html";
     public boolean showVis = false;
     public double T1 = 10, T2 = 10, theta = 0;
-    private double d1 = 0, d2 = 0;
+    private double phi1 = 0, phi2 = 0;
     
     public View(Adapter a, String title) {
         super(title);
@@ -67,11 +67,11 @@ public class View extends BaseView implements ModelListener {
         setAdapter(a);
         tableModel = new TableModel(this);
         jTable = new FileTable(tableModel, this);
-        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
+        vCanvas = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
         // iGraph = new
         // FFTCanvas(this,this.getAdapter(),getAdapter().getImageGraphPoints());
         
-        vGraph.setSize(300, 100);
+        vCanvas.setSize(300, 100);
         
         JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jThetaMax, jLabels, jFields;
         JLabel lDelta, lLambda, lSigma;
@@ -87,9 +87,10 @@ public class View extends BaseView implements ModelListener {
         
         updateButton = new JButton("Update");
         
-        lDelta = new JLabel("<HTML><P>" + '\u03BB' + ": </P>" + "<P>" + "display factor of " + '\u03C3' + ": </P>" + ""
-                + "<P></P><P><b>Model Parameters:</b></P><P></P><P>\u03A6:</P>" + "<P>" + "T1" + ": </P>" + "<P>" + "T2" + ": </P>" + "<P>"
-                + "Position of Lamp 2, θ" + ": </P>" + "</HTML>");
+        lDelta =
+                new JLabel("<HTML><P>" + '\u03BB' + ": </P>" + "<P>" + "display factor of " + '\u03C3' + ": </P>" + ""
+                        + "<P></P><P><b>Model Parameters:</b></P><P></P><P>\u03A6:</P>" + "<P>" + "T1" + ": </P>"
+                        + "<P>" + "T2" + ": </P>" + "<P>" + "Position of Lamp 2, θ" + ": </P>" + "</HTML>");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Drag and Drop data files into this box. File names should contain baseline distance in single quotes. <B>Example:</B> file with baseline 23.9 can have these names: \"file_b'23.9'.rad\", \"jun3.12baseline'23.9'.rad\", etc.</P></HTML>");
         
         lDelta.setMaximumSize(new Dimension(140, 220));
@@ -97,15 +98,15 @@ public class View extends BaseView implements ModelListener {
         lLambda.setSize(100, 22);
         lSigma = new JLabel('\u03C3' + " displaying factor: ");
         lSigma.setSize(100, 20);
-        fPhi1 = new JTextField(d1 + "");
+        fPhi1 = new JTextField(phi1 + "");
         fPhi1.setToolTipText("<HTML><P>\u03A6</P></HTML>");
         fPhi1.setMaximumSize(new Dimension(50, 20));
-        fPhi2 = new JTextField(d2 + "");
+        fPhi2 = new JTextField(phi2 + "");
         fPhi2.setToolTipText("<HTML><P>\u03A6</P></HTML>");
         fPhi2.setMaximumSize(new Dimension(50, 20));
         fLambda = new JTextField(adapter.getLambda() + "");
         fLambda.setToolTipText("<HTML><P WIDTH='300px'>\u03BB is wavelength of radiation. The x-axis values equal baseline divided by wavelength.</HTML>");
-        fSigma = new JTextField(getVGraph().getSigma() + "");
+        fSigma = new JTextField(getVCanvas().getSigma() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3). "
                 + "Error bars are not displayed where there is no RMS to calculate.</P></HTML>");
@@ -123,8 +124,8 @@ public class View extends BaseView implements ModelListener {
         
         fLambda.setMaximumSize(new Dimension(50, 20));
         
-        fShape1 = new JComboBox(new String[] { "rectangular", "uniform disk" });
-        fShape2 = new JComboBox(new String[] { "rectangular", "uniform disk" });
+        fShape1 = new JComboBox(new String[] {"rectangular", "uniform disk"});
+        fShape2 = new JComboBox(new String[] {"rectangular", "uniform disk"});
         
         fShape1.addItemListener(new ItemListener() {
             @Override
@@ -162,7 +163,7 @@ public class View extends BaseView implements ModelListener {
         row1.add(row1col2);
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
-        row1col1.add(vGraph);
+        row1col1.add(vCanvas);
         // row1col2.setMaximumSize(new Dimension(500, 500));
         row1col2.add(jScroll);// fileTable.createVectors());
         jScroll.setMinimumSize(new Dimension(100, 150));
@@ -380,52 +381,44 @@ public class View extends BaseView implements ModelListener {
                 try {
                     Double.parseDouble(fLambda.getText());
                     adapter.setLambda(Double.parseDouble(fLambda.getText()));
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 
                 try {
-                    setD1(Double.parseDouble(fPhi1.getText()));
+                    setPhi1(Double.parseDouble(fPhi1.getText()));
                     update();
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 
                 try {
-                    setD2(Double.parseDouble(fPhi2.getText()));
+                    setPhi2(Double.parseDouble(fPhi2.getText()));
                     
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 
                 try {
                     double tempSig = Double.parseDouble(fSigma.getText());
                     
-                    getVGraph().setSigma(tempSig);
-                    System.out.println("set sigma to " + tempSig);
-                } catch (NumberFormatException e1) {
-                }
+                    getVCanvas().setSigma(tempSig);
+                } catch (NumberFormatException e1) {}
                 
                 try {
                     
                     Double.parseDouble(fT1.getText());
                     T1 = Double.parseDouble(fT1.getText());
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 
                 try {
                     
                     Double.parseDouble(fT2.getText());
                     T2 = Double.parseDouble(fT2.getText());
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 
                 try {
                     
                     Double.parseDouble(fTheta.getText());
                     theta = Double.parseDouble(fTheta.getText());
                     
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 
-                getVGraph().update();
+                getVCanvas().update();
                 update();
                 
             }
@@ -475,8 +468,7 @@ public class View extends BaseView implements ModelListener {
                         if (s.length > 2 && !s[2].trim().equals("null")) {
                             rms.put(Double.parseDouble(s[0]), Double.parseDouble(s[2]));
                         }
-                    } catch (NumberFormatException e) {
-                    }
+                    } catch (NumberFormatException e) {}
                 } else if (im) {
                     if (strLine.trim().equals("")) {
                         continue;
@@ -484,12 +476,12 @@ public class View extends BaseView implements ModelListener {
                     try {
                         String[] s = strLine.split(" ");
                         retim.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
-                    } catch (NumberFormatException e) {
-                    }
+                    } catch (NumberFormatException e) {}
                 } else if (strLine.trim().length() == 0) {
                     continue;
                 } else {
-                    JOptionPane.showMessageDialog(this, "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
+                    JOptionPane.showMessageDialog(this,
+                            "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
                             "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     return null;
                 }
@@ -520,12 +512,12 @@ public class View extends BaseView implements ModelListener {
         this.adapter = adapter;
     }
     
-    public VCanvas getVGraph() {
-        return vGraph;
+    public VCanvas getVCanvas() {
+        return vCanvas;
     }
     
-    public void setVGraph(VCanvas graph) {
-        vGraph = graph;
+    public void setVCanvas(VCanvas canvas) {
+        vCanvas = canvas;
     }
     
     @Override
@@ -545,28 +537,28 @@ public class View extends BaseView implements ModelListener {
         adapter.setRawPoints(((TableModel) jTable.getModel()).inputFiles);
     }
     
-    public double getD1() {
-        setD1(Double.parseDouble(fPhi1.getText()));
-        return d1;
+    public double getPhi1() {
+        setPhi1(Double.parseDouble(fPhi1.getText()));
+        return phi1;
     }
     
-    public void setD1(double d) {
+    public void setPhi1(double phi) {
         /*
          * if(d<=0) this.d1 = 20; else
          */
-        d1 = d;
+        phi1 = phi;
     }
     
-    public double getD2() {
-        setD2(Double.parseDouble(fPhi2.getText()));
-        return d2;
+    public double getPhi2() {
+        setPhi2(Double.parseDouble(fPhi2.getText()));
+        return phi2;
     }
     
-    public void setD2(double d) {
+    public void setPhi2(double phi) {
         /*
          * if(d<=0) this.d2 = 20; else
          */
-        d2 = d;
+        phi2 = phi;
     }
     
     public boolean isShape1Rect() {

@@ -31,7 +31,7 @@ public class Main {
             // boolean vis = false;
             // boolean im = false;
             while ((strLine = br.readLine()) != null) {
-                System.out.println(strLine);
+                // System.out.println(strLine);
                 if (strLine.trim().startsWith("//")) {
                     continue;
                 }
