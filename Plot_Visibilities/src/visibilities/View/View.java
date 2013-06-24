@@ -168,7 +168,7 @@ public class View extends BaseView implements ModelListener {
         row1col2.add(jScroll);// fileTable.createVectors());
         jScroll.setMinimumSize(new Dimension(100, 150));
         row1col2.add(Box.createRigidArea(new Dimension(5, 10)));
-        row1col2.setMaximumSize(new Dimension(300, 600));
+        row1col2.setMaximumSize(new Dimension(300, 800));
         row1col2.add(row1col2col2);
         // row1col2col2.add(new JTable());
         row1col2col2.add(labels);

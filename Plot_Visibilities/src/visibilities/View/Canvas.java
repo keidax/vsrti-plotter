@@ -319,9 +319,11 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         DecimalFormat df = new DecimalFormat("#.#");
         
         for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
-            // draw vertical lines
-            g.setColor(Color.LIGHT_GRAY);
-            g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() - bPad);
+            // draw vertical lines -- removed for now
+            // g.setColor(Color.LIGHT_GRAY);
+            // g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() -
+            // bPad);
+            
             // draw numbers at each vertical line
             g.setColor(Color.BLACK);
             String lString = df.format(c2gx(getLeftShift() + i * steps));
