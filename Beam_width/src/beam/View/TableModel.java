@@ -11,7 +11,7 @@ import common.View.InputFile;
 public class TableModel extends AbstractTableModel {
     
     private ArrayList<InputFile> inputFiles;
-    private String[] columnNames = { "Baseline", "File path" };
+    private String[] columnNames = {"Baseline", "Data Files"};
     
     public TableModel() {
         super();
@@ -67,8 +67,7 @@ public class TableModel extends AbstractTableModel {
         System.out.println("delete the " + i + "th row");
         try {
             inputFiles.remove(i);
-        } catch (IndexOutOfBoundsException e) {
-        }
+        } catch (IndexOutOfBoundsException e) {}
         System.out.println("Size" + inputFiles.size());
     }
     

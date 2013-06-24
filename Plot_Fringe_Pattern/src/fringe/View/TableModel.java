@@ -12,7 +12,7 @@ public class TableModel extends AbstractTableModel {
     
     public View viewer;
     public ArrayList<InputFile> inputFiles;
-    public static String[] columnNames = { "Angle", "Data file names" };
+    public static String[] columnNames = {"Angle", "Data Files"};
     
     public TableModel(View v) {
         super();
@@ -65,8 +65,7 @@ public class TableModel extends AbstractTableModel {
         System.out.println("delete the " + i + "th row");
         try {
             inputFiles.remove(i);
-        } catch (IndexOutOfBoundsException e) {
-        }
+        } catch (IndexOutOfBoundsException e) {}
         System.out.println("Size" + inputFiles.size());
         viewer.sendAdapterFiles();
     }
