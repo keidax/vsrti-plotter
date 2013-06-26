@@ -65,7 +65,7 @@ public class VisibilityGraph extends Graph {
                 halfBZero = 1;
             }
             for (Point p : getRawPoints()) {
-                System.out.println("Adding point " + p.getX() + "," + p.getY());
+                // System.out.println("Adding point " + p.getX() + "," + p.getY());
                 addPoint(p.getX(), p.getY());
             }
         }
@@ -178,7 +178,8 @@ public class VisibilityGraph extends Graph {
         gridedRms.clear();
         Set<Double> keys = getRms().keySet();
         for (Double d : keys) {
-            gridedRms.put(d / getLambda(), getRms().get(d));
+            // gridedRms.put(d / getLambda(), getRms().get(d));
+            gridedRms.put(d, getRms().get(d));
         }
     }
     
@@ -211,7 +212,7 @@ public class VisibilityGraph extends Graph {
         Set<Double> keys = parseFile.keySet();
         for (Double key : keys) {
             getRawPoints().add(new Point(key, parseFile.get(key)));
-            System.out.println("****** " + key + " : " + parseFile.get(key));
+            // System.out.println("****** " + key + " : " + parseFile.get(key));
         }
         reinicializePoints();
         update();

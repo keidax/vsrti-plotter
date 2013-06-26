@@ -816,7 +816,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         g.setColor(Color.red);
         double last = getMinX();
         for (double i = getMinX(); i < getMaxX(); i += .1) {
-            System.out.println("Drawing sinc at " + i + "," + sinc(i) + "]");
+            // System.out.println("Drawing sinc at " + i + "," + sinc(i) + "]");
             g.drawLine(g2cx(i), g2cy(sinc(i)), g2cx(last), g2cy(sinc(last)));
             last = i;
         }

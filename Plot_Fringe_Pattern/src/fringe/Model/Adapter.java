@@ -34,7 +34,8 @@ public class Adapter {
      * break;
      * }
      * }
-     * reduced.putAll(getModel().getImageGraph().getPoints().headMap(getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
+     * reduced.putAll(getModel().getImageGraph().getPoints().headMap(getModel().getImageGraph().getPoints().lastKey() /
+     * 2 + 1));
      * // System.out.println("Size of reduced "+reduced.size());
      * // return reduced;
      * return getModel().getImageGraph().getPoints();
@@ -56,7 +57,9 @@ public class Adapter {
         for (InputFile i : f) {
             getModel().getVisibilityGraph().addRawPoint(i.getBaseline(), i.getAverageIntensity());
             getModel().getVisibilityGraph().addRms(i.getBaseline(), i.getRms());
+            System.out.println("added file -- intensity = " + i.getAverageIntensity() + ", rms = " + i.getRms());
         }
+        getModel().getVisibilityGraph().recalculateGridedRms();
         getModel().updateListeners();
     }
     
@@ -68,9 +71,11 @@ public class Adapter {
         getModel().getVisibilityGraph().movePoint(currentPoint, toy);
     }
     
-    /*public void moveImagePoint(Double currentPoint, double toy) {
-        getModel().getImageGraph().movePoint(currentPoint, toy);
-    }*/
+    /*
+     * public void moveImagePoint(Double currentPoint, double toy) {
+     * getModel().getImageGraph().movePoint(currentPoint, toy);
+     * }
+     */
     
     public void importVisibilityGraphPoints(TreeMap<Double, Double> parseFile) {
         getModel().getVisibilityGraph().importPoints(parseFile);

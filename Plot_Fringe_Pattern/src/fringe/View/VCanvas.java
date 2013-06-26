@@ -35,12 +35,15 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void drawPoint(Graphics2D g, double x, double y) {
         
         if (adapter.getVisibilityGraphDataPoints().containsKey(x) && adapter.getVisibilityGraphDataPoints().get(x) == y) {
-            System.out.println("drawing original");
+            // System.out.println("drawing original");
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
+                System.out.println("found rms for " + x);
                 drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * view.getModel().getDisplayFactor() / 2), g2cy(y
                         + adapter.getRms().get(x) * view.getModel().getDisplayFactor() / 2));
+            } else {
+                System.out.println("no rms found for " + x);
             }
         } else {
             System.out.println("drawing changed");
@@ -56,6 +59,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         }
         Set<Double> keys = dataPoints.keySet();
         Double previousKey = dataPoints.firstKey();
+        System.out.println("RMS keys: " + adapter.getRms().keySet());
         for (Double key : keys) {
             /*
              * if (Math.abs(key) > 40) {
@@ -77,8 +81,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
              * }
              */
         }
-        System.out.println(dataPoints);
-        System.out.println(adapter.getVisibilityGraphDataPoints());
+        // System.out.println(dataPoints);
+        // System.out.println(adapter.getVisibilityGraphDataPoints());
     }
     
     public void drawRms(Graphics2D g, int x, int y1, int y2) {

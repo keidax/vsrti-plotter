@@ -83,15 +83,18 @@ public class View extends BaseView implements ModelListener {
         
         updateButton = new JButton("Update");
         
-        lDelta = new JLabel("<HTML><BODY><table border=\"0px\" style=\"position:relativ;top:-10px;\">"
-        
-        + "<tr height='10px'><td>" + "display factor of " + '\u03C3' + ": </td></tr>" + "<tr height = '10px'><b>Model Parameters</b></tr>"
-        
-        + "<TR HEIGHT='10px'><td>T1: </td></tr>" + "<TR HEIGHT='10px'><td>T2: </td></tr>"
-        
-        + "<tr height='10px'><td>Baseline:</td></tr>"
-        
-        + "<tr height='10px'><td>D: </td></tr>" + "<tr height='10px'><td>" + '\u03BB' + ": </td></tr>" + "</table></BODY></HTML>");
+        lDelta =
+                new JLabel("<HTML><BODY><table border=\"0px\" style=\"position:relativ;top:-10px;\">"
+                
+                + "<tr height='10px'><td>" + "display factor of " + '\u03C3' + ": </td></tr>"
+                        + "<tr height = '10px'><b>Model Parameters</b></tr>"
+                        
+                        + "<TR HEIGHT='10px'><td>T1: </td></tr>" + "<TR HEIGHT='10px'><td>T2: </td></tr>"
+                        
+                        + "<tr height='10px'><td>Baseline:</td></tr>"
+                        
+                        + "<tr height='10px'><td>D: </td></tr>" + "<tr height='10px'><td>" + '\u03BB' + ": </td></tr>"
+                        + "</table></BODY></HTML>");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Drag and Drop data files into this box. File names should contain angle distance in single quotes. <B>Example:</B> file with angle 23.9 can have this names: \"file_a'23.9'.rad\", \"jun3.12angle'23.9'.rad\", etc.</P></HTML>");
         // lDelta.setMaximumSize(100, 22);
         lDelta.setMaximumSize(new Dimension(130, 200));
@@ -313,22 +316,21 @@ public class View extends BaseView implements ModelListener {
         });
         
         /*
-        bDeg.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isDegrees) {
-                    bDeg.setText("In Degrees");
-                    vCanvas.xAxisTitle = "angle [rad]";
-                } else {
-                    bDeg.setText("In Radians");
-                    vCanvas.xAxisTitle = "angle [\u00b0]";
-                }
-                isDegrees = !isDegrees;
-                // TODO make this actually do something
-            }
-            
-        });*/
+         * bDeg.addActionListener(new ActionListener() {
+         * @Override
+         * public void actionPerformed(ActionEvent e) {
+         * if (isDegrees) {
+         * bDeg.setText("In Degrees");
+         * vCanvas.xAxisTitle = "angle [rad]";
+         * } else {
+         * bDeg.setText("In Radians");
+         * vCanvas.xAxisTitle = "angle [\u00b0]";
+         * }
+         * isDegrees = !isDegrees;
+         * // TODO make this actually do something
+         * }
+         * });
+         */
         
         bAbout.addActionListener(new ActionListener() {
             
@@ -365,7 +367,8 @@ public class View extends BaseView implements ModelListener {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
                     } else {
-                        JOptionPane.showMessageDialog(View.this, "Incorrect data file format. Try to open file instead of drag-and-drop.",
+                        JOptionPane.showMessageDialog(View.this,
+                                "Incorrect data file format. Try to open file instead of drag-and-drop.",
                                 "Incorrett format", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -382,33 +385,27 @@ public class View extends BaseView implements ModelListener {
                 try {
                     double tempDiameter = Double.parseDouble(fD.getText());
                     model.setDiameter(tempDiameter);
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 try {
                     double tempT1 = Double.parseDouble(fT1.getText());
                     model.setT1(tempT1);
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 try {
                     double tempT2 = Double.parseDouble(fT2.getText());
                     model.setT2(tempT2);
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 try {
                     double tempBaseline = Double.parseDouble(fBaseline.getText());
                     model.setBaseline(tempBaseline);
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 try {
                     double tempLambda = Double.parseDouble(fLambda.getText());
                     model.setLambda(tempLambda);
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 try {
                     double tempSigma = Double.parseDouble(fSigma.getText());
                     model.setDisplayFactor(tempSigma);
-                } catch (NumberFormatException e1) {
-                }
+                } catch (NumberFormatException e1) {}
                 
                 update();
             }
@@ -456,13 +453,13 @@ public class View extends BaseView implements ModelListener {
                     }
                     try {
                         String[] s = strLine.split(" ");
-                        System.out.println(s.length + "*****");
+                        // System.out.println(s.length + "*****");
                         ret.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
                         if (s.length > 2 && !s[2].trim().equals("null")) {
                             rms.put(Double.parseDouble(s[0]), Double.parseDouble(s[2]));
+                            // System.out.println("Adding rms for: " + Double.parseDouble(s[0]));
                         }
-                    } catch (NumberFormatException e) {
-                    }
+                    } catch (NumberFormatException e) {}
                 } else if (im) {
                     if (strLine.trim().equals("")) {
                         continue;
@@ -470,12 +467,12 @@ public class View extends BaseView implements ModelListener {
                     try {
                         String[] s = strLine.split(" ");
                         retim.put(Double.parseDouble(s[0]), Double.parseDouble(s[1]));
-                    } catch (NumberFormatException e) {
-                    }
+                    } catch (NumberFormatException e) {}
                 } else if (strLine.trim().length() == 0) {
                     continue;
                 } else {
-                    JOptionPane.showMessageDialog(this, "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
+                    JOptionPane.showMessageDialog(this,
+                            "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
                             "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     return null;
                 }
@@ -492,7 +489,8 @@ public class View extends BaseView implements ModelListener {
         return back;
     }
     
-    public TreeMap<Double, Double>[] flatten(TreeMap<Double, ArrayList<Double>> data, TreeMap<Double, ArrayList<Double>> rms) {
+    public TreeMap<Double, Double>[] flatten(TreeMap<Double, ArrayList<Double>> data,
+            TreeMap<Double, ArrayList<Double>> rms) {
         TreeMap<Double, Double> retData = new TreeMap<Double, Double>();
         TreeMap<Double, Double> retRms = new TreeMap<Double, Double>();
         Set<Double> dataKeys = data.keySet();
