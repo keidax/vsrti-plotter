@@ -131,8 +131,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                             f = new File(f.getAbsolutePath() + ".jpeg");
                         }
                         out = new ObjectOutputStream(new FileOutputStream(f));
-                        BufferedImage image =
-                                new BufferedImage(getWidth() * 2, getHeight() * 2, BufferedImage.TYPE_INT_RGB);
+                        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
                         paintForSave(image.createGraphics());
                         ImageIO.write(image, "jpeg", f);
                         out.close();
@@ -188,7 +187,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                         }
                         // out = new ObjectOutputStream(new
                         // FileOutputStream(f));
-                        EpsGraphics2D g = new EpsGraphics2D("Title", f, 0, 0, getWidth() * 2, getHeight() * 2);
+                        EpsGraphics2D g = new EpsGraphics2D("Title", f, 0, 0, getWidth(), getHeight());
                         canvas.paintForSave(g);
                         g.flush();
                         // System.out.println(g.toString());
@@ -754,9 +753,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     
     public void paintForSave(Graphics g) {
         // create the hardware accelerated image.
-        int h = getHeight();
-        int w = getWidth();
-        this.setSize(new Dimension(w * 2, h * 2));
         createBackBuffer();
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // Main rendering loop. Volatile images may lose their contents.
@@ -788,7 +784,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             g.drawImage(volatileImg, 0, 0, this);
             // Test if content is lost
         } while (volatileImg.contentsLost());
-        this.setSize(new Dimension(w, h));
     }
     
     @Override

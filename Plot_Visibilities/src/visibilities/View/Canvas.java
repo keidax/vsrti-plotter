@@ -67,7 +67,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     private JFileChooser fileChooser;
     // TODO find the right stroke thickness and font size
     private float stroke = 5;
-    private double scale = 2;
     /**
      * determines the size of the axis labels and numbers
      */
@@ -129,13 +128,11 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                     try {
                         
                         File f = fileChooser.getSelectedFile();
-                        scale = 2;
                         if (!(f.getName().trim().endsWith(".jpg") || f.getName().trim().endsWith(".jpeg"))) {
                             f = new File(f.getAbsolutePath() + ".jpeg");
                         }
                         out = new ObjectOutputStream(new FileOutputStream(f));
-                        BufferedImage image =
-                                new BufferedImage(getWidth() * 2, getHeight() * 2, BufferedImage.TYPE_INT_RGB);
+                        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
                         paintForSave(image.createGraphics());
                         ImageIO.write(image, "jpeg", f);
                         out.close();
@@ -192,19 +189,12 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                         // out = new ObjectOutputStream(new
                         // FileOutputStream(f));
                         
-                        EpsGraphics2D g =
-                                new EpsGraphics2D("Title", f, 0, 0, (int) (getWidth() * scale / 2), (int) (getHeight()
-                                        * scale / 2));
-                        scale = 4;
-                        rPad = rPad * 3;
-                        g.scale(0.24, 0.24);
+                        EpsGraphics2D g = new EpsGraphics2D("Title", f, 0, 0, getWidth(), getHeight());
                         g.setAccurateTextMode(false);
                         
                         canvas.paintForSave(g);
                         g.flush();
                         g.close();
-                        
-                        rPad = rPad / 3;
                         
                         // BufferedImage image = new BufferedImage(getWidth(),
                         // getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -786,9 +776,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     
     public void paintForSave(Graphics g) {
         // create the hardware accelerated image.
-        int h = getHeight();
-        int w = getWidth();
-        this.setSize(new Dimension((int) (w * scale), (int) (h * scale)));
         createBackBuffer();
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // Main rendering loop. Volatile images may lose their contents.
@@ -820,7 +807,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             g.drawImage(volatileImg, 0, 0, this);
             // Test if content is lost
         } while (volatileImg.contentsLost());
-        this.setSize(new Dimension(w, h));
     }
     
     @Override
