@@ -20,7 +20,9 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     protected TreeMap<Double, Double> dataPoints;
     protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
     protected static Color[] colors = {Color.BLUE, Color.BLACK};
-    protected double sigma = 1;
+    protected final double defaultSigma = 1;
+    protected double sigma = defaultSigma;
+    
     protected float RMSStroke = 2;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
@@ -88,5 +90,9 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             adapter.removeRmsPoint(currentPoint);
         } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
+    }
+    
+    public void resetToDefaults() {
+        sigma = defaultSigma;
     }
 }

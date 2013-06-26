@@ -22,9 +22,11 @@ public class Model {
         this.visibilityGraph = visibilityGraph;
     }
     
-    /* public ImageGraph getImageGraph() {
-         return imageGraph;
-     }*/
+    /*
+     * public ImageGraph getImageGraph() {
+     * return imageGraph;
+     * }
+     */
     
     public void updateListeners() {
         // System.out.println("Model is updating all listeners");
@@ -39,5 +41,9 @@ public class Model {
     
     public void setListeners(Vector<ModelListener> listeners) {
         this.listeners = listeners;
+    }
+    
+    public void resetValuesToDefaults() {
+        visibilityGraph.lambda = visibilityGraph.defaultLambda;
     }
 }

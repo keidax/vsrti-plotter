@@ -16,7 +16,9 @@ public class VisibilityGraph extends Graph {
     
     public Complex[] compl;
     public File saveFile;
-    public double lambda = 2.5;
+    
+    public static final double defaultLambda = 2.5;
+    public double lambda = defaultLambda;
     public SortedSet<Point> rawPoints;
     public double halfBZero = 0;
     private TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();

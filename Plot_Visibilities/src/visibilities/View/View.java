@@ -7,8 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -58,8 +56,10 @@ public class View extends BaseView implements ModelListener {
     
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Visibilities.html";
     public boolean showVis = false;
-    public double T1 = 10, T2 = 10, theta = 0;
-    private double phi1 = 0, phi2 = 0;
+    
+    private final double defaultT1 = 10, defaultT2 = 10, defaultTheta = 0, defaultPhi1 = 0, defaultPhi2 = 0;
+    public double T1 = defaultT1, T2 = defaultT2, theta = defaultTheta;
+    private double phi1 = defaultPhi1, phi2 = defaultPhi2;
     
     public View(Adapter a, String title) {
         super(title);
@@ -124,22 +124,23 @@ public class View extends BaseView implements ModelListener {
         
         fLambda.setMaximumSize(new Dimension(50, 20));
         
-        fShape1 = new JComboBox(new String[] {"rectangular", "uniform disk"});
-        fShape2 = new JComboBox(new String[] {"rectangular", "uniform disk"});
+        fShape1 = new JComboBox<String>(new String[] {"rectangular", "uniform disk"});
+        fShape2 = new JComboBox<String>(new String[] {"rectangular", "uniform disk"});
         
-        fShape1.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent arg0) {
-                update();
-            }
-        });
-        
-        fShape2.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent arg0) {
-                update();
-            }
-        });
+        /*
+         * fShape1.addItemListener(new ItemListener() {
+         * @Override
+         * public void itemStateChanged(ItemEvent arg0) {
+         * update();
+         * }
+         * });
+         * fShape2.addItemListener(new ItemListener() {
+         * @Override
+         * public void itemStateChanged(ItemEvent arg0) {
+         * update();
+         * }
+         * });
+         */
         
         JScrollPane jScroll;
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -313,9 +314,17 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                // if(!tableModel.inputFiles.isEmpty())
-                // View.this.adapter.resetF();
-                // else
+                // reset local values
+                // TODO these really should be in the model
+                phi1 = defaultPhi1;
+                phi2 = defaultPhi2;
+                T1 = defaultT1;
+                T2 = defaultT2;
+                theta = defaultTheta;
+                fShape1.setSelectedIndex(0);
+                fShape2.setSelectedIndex(0);
+                // reset model values
+                getVCanvas().resetToDefaults();
                 View.this.adapter.reset();
             }
         });
@@ -375,52 +384,9 @@ public class View extends BaseView implements ModelListener {
         });
         
         updateButton.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Double.parseDouble(fLambda.getText());
-                    adapter.setLambda(Double.parseDouble(fLambda.getText()));
-                } catch (NumberFormatException e1) {}
-                
-                try {
-                    setPhi1(Double.parseDouble(fPhi1.getText()));
-                    update();
-                } catch (NumberFormatException e1) {}
-                
-                try {
-                    setPhi2(Double.parseDouble(fPhi2.getText()));
-                    
-                } catch (NumberFormatException e1) {}
-                
-                try {
-                    double tempSig = Double.parseDouble(fSigma.getText());
-                    
-                    getVCanvas().setSigma(tempSig);
-                } catch (NumberFormatException e1) {}
-                
-                try {
-                    
-                    Double.parseDouble(fT1.getText());
-                    T1 = Double.parseDouble(fT1.getText());
-                } catch (NumberFormatException e1) {}
-                
-                try {
-                    
-                    Double.parseDouble(fT2.getText());
-                    T2 = Double.parseDouble(fT2.getText());
-                } catch (NumberFormatException e1) {}
-                
-                try {
-                    
-                    Double.parseDouble(fTheta.getText());
-                    theta = Double.parseDouble(fTheta.getText());
-                    
-                } catch (NumberFormatException e1) {}
-                
-                getVCanvas().update();
-                update();
-                
+                updateModelFromValues();
             }
         });
         
@@ -523,8 +489,12 @@ public class View extends BaseView implements ModelListener {
     @Override
     public void update() {
         updateValuesFromModel();
-        // fLambda.setText(adapter.getLambda() + "");
-        // fSigma.setText(getVGraph().getSigma() + "");
+        
+        fPhi1.setText(phi1 + "");
+        fPhi2.setText(phi2 + "");
+        fT1.setText(T1 + "");
+        fT2.setText(T2 + "");
+        fTheta.setText(theta + "");
         
         repaint();
     }
@@ -579,13 +549,49 @@ public class View extends BaseView implements ModelListener {
     
     @Override
     public void updateValuesFromModel() {
-        // TODO fill in
-        
+        fLambda.setText(adapter.getLambda() + "");
+        fSigma.setText(getVCanvas().getSigma() + "");
     }
     
     @Override
     public void updateModelFromValues() {
-        // TODO Auto-generated method stub
+        try {
+            double tempLambda = Double.parseDouble(fLambda.getText());
+            adapter.setLambda(tempLambda);
+        } catch (NumberFormatException e1) {}
+        
+        try {
+            double tempSig = Double.parseDouble(fSigma.getText());
+            getVCanvas().setSigma(tempSig);
+        } catch (NumberFormatException e1) {}
+        
+        try {
+            double tempPhi1 = Double.parseDouble(fPhi1.getText());
+            setPhi1(tempPhi1);
+        } catch (NumberFormatException e1) {}
+        
+        try {
+            double tempPhi2 = Double.parseDouble(fPhi2.getText());
+            setPhi2(tempPhi2);
+        } catch (NumberFormatException e1) {}
+        
+        try {
+            double tempT1 = Double.parseDouble(fT1.getText());
+            T1 = tempT1;
+        } catch (NumberFormatException e1) {}
+        
+        try {
+            double tempT2 = Double.parseDouble(fT2.getText());
+            T2 = tempT2;
+        } catch (NumberFormatException e1) {}
+        
+        try {
+            double tempTheta = Double.parseDouble(fTheta.getText());
+            theta = tempTheta;
+        } catch (NumberFormatException e1) {}
+        
+        getVCanvas().update();
+        update();
         
     }
 }
