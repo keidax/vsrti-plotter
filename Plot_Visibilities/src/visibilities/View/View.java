@@ -49,7 +49,7 @@ public class View extends BaseView implements ModelListener {
     public TableModel tableModel;
     public FileTable jTable;
     private JTextField fLambda, fSigma, fT1, fT2, fTheta, fPhi1, fPhi2;
-    private JComboBox fShape1, fShape2;
+    private JComboBox<String> fShape1, fShape2;
     public JButton bSave, bOpen, bExit, bReset, bDelete, bInstruction, bAbout, bModel;
     
     private JButton updateButton;
