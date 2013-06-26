@@ -21,8 +21,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     
     // protected TreeMap<Double, Double> dataPoints;
     protected TreeMap<Double, Double> rmsPoints;
-    protected AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
-    protected Color[] colors = { Color.BLUE, Color.BLACK };
+    protected AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
+    protected Color[] colors = {Color.BLUE, Color.BLACK};
     protected double displayFactor = 1;
     
     public VCanvas(View v, TreeMap<Double, Double> g) {
@@ -31,7 +31,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         rmsPoints = new TreeMap<Double, Double>();
         // dataPoints = new TreeMap<Double, Double>();
         // System.out.println(dataPoints.size());
-        xAxisTitle = "Angle";
+        xAxisTitle = "Angle (degrees)";
         yAxisTitle = "Power";
         graphTitle = "Beam";
     }
@@ -47,7 +47,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         ornaments[1].draw(g, g2cx(x), g2cy(y));
         if (rmsPoints.containsKey(x)) {
             // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-            drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getDisplayFactor() / 2), g2cy(y + rmsPoints.get(x) * getDisplayFactor() / 2));
+            drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getDisplayFactor() / 2), g2cy(y + rmsPoints.get(x)
+                    * getDisplayFactor() / 2));
             // System.out.println("RMS ["+x+","+rmsPoints.get(x));
             // System.out.println("rms = "+rmsPoints.get(x));
         }
@@ -72,7 +73,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             System.out.println("** " + key);
             if (rmsPoints.containsKey(key)) {
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-                drawRms(g, g2cx(key), g2cy(points.get(key) - rmsPoints.get(key) * getDisplayFactor() / 2), g2cy(points.get(key)
+                drawRms(g, g2cx(key), g2cy(points.get(key) - rmsPoints.get(key) * getDisplayFactor() / 2), g2cy(points
+                        .get(key)
                         + rmsPoints.get(key) * getDisplayFactor() / 2));
                 // new SquareOrnament().draw(g,
                 // g2cx(key),g2cy(this.points.get(key)));
@@ -117,8 +119,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void setCurrentPoint(Double currentPoint) {
         try {
             view.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {
-        }
+        } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
     }
 }

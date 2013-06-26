@@ -17,8 +17,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
     
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
-    protected static Color[] colors = { Color.BLUE, Color.BLACK };
+    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
+    protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected double sigma = 1;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
@@ -26,8 +26,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         dataPoints = adapter.getVisibilityGraphDataPoints();
         System.out.println(dataPoints.size());
         // xAxisTitle = "angle [\u00b0]";
-        xAxisTitle = "angle";
-        yAxisTitle = "power";
+        xAxisTitle = "Angle (degrees)";
+        yAxisTitle = "Power";
         graphTitle = "Fringe Function";
     }
     
@@ -39,8 +39,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * view.getModel().getDisplayFactor() / 2), g2cy(y + adapter.getRms().get(x)
-                        * view.getModel().getDisplayFactor() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * view.getModel().getDisplayFactor() / 2), g2cy(y
+                        + adapter.getRms().get(x) * view.getModel().getDisplayFactor() / 2));
             }
         } else {
             System.out.println("drawing changed");
@@ -58,11 +58,11 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         Double previousKey = dataPoints.firstKey();
         for (Double key : keys) {
             /*
-            if (Math.abs(key) > 40) {
-                System.out.println("OVER 40");
-                continue;
-            }
-            */
+             * if (Math.abs(key) > 40) {
+             * System.out.println("OVER 40");
+             * continue;
+             * }
+             */
             g.setColor(Color.BLACK);
             g.drawLine(g2cx(previousKey), g2cy(dataPoints.get(previousKey)), g2cx(key), g2cy(dataPoints.get(key)));
             previousKey = key;
@@ -70,7 +70,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             /*
              * if (adapter.getRms().containsKey(key)) {
              * System.out.println("drawing rms");
-             * drawRms(g, g2cx(key), g2cy(points.get(key) - adapter.getRms().get(key) * getSigma() / 2), g2cy(points.get(key)
+             * drawRms(g, g2cx(key), g2cy(points.get(key) - adapter.getRms().get(key) * getSigma() / 2),
+             * g2cy(points.get(key)
              * + adapter.getRms().get(key) * getSigma() / 2));
              * // System.out.println("RMS [" + key + "," + adapter.getRms().get(key));
              * }
@@ -101,8 +102,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void setCurrentPoint(Double currentPoint) {
         try {
             adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {
-        }
+        } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
     }
 }
