@@ -59,19 +59,11 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
     protected Double currentPoint;
     protected Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
-    protected String xAxisTitle = "x-axis";
-    protected String yAxisTitle = "y-axis";
-    protected String graphTitle = "Untitled";
     final JPopupMenu menu = new JPopupMenu();
     protected int mouseButton = 0;
     protected double maxX = 40;
     private JFileChooser fileChooser;
     
-    private float stroke = 5;
-    /**
-     * determines the size of the axis labels and numbers
-     */
-    private int fontSize = 20;
     /**
      * determines the size of the title
      */
@@ -245,43 +237,6 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
     }
     
     public void drawPoint(Graphics2D g, double x, double y) {}
-    
-    public void drawXAxis(Graphics2D g) {
-        // double steps = squareWidth;
-        g.setStroke(new BasicStroke(stroke));
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
-        DecimalFormat df = new DecimalFormat("#.#");
-        FontMetrics fm = g.getFontMetrics();
-        
-        int xSpacing = 5;
-        
-        // draw axis title
-        g.drawString(" " + xAxisTitle + " ", getLPad() + getPlotWidth() / 2 - 50, getHeight() - 10);
-        // draw horizontal axis
-        g.drawLine(getLPad(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
-        
-        // draw vertical line at theta=0
-        g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(g2cx(0), tPad, g2cx(0), getHeight() - bPad);
-        
-        // for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
-        
-        for (int i = (int) (getMinX() / xSpacing) * xSpacing; i <= getMaxX(); i += xSpacing) {
-            int xPosition = g2cx(i);
-            int yPosition = getHeight() - bPad;
-            
-            // draw vertical marks
-            g.setColor(Color.LIGHT_GRAY);
-            g.drawLine(xPosition, yPosition + 2, xPosition, yPosition - 2);
-            
-            // draw labels for each mark
-            g.setColor(Color.BLACK);
-            String lString = df.format(i);
-            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + fm.getLeading()
-                    + 5);
-        }
-        
-    }
     
     public void drawYAxis(Graphics2D g) {
         drawVerticalLine(getLPad(), g);
@@ -746,6 +701,7 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
             paintPattern(g2);
         }
         i++;
+        
     }
     
     protected void paintPattern(Graphics2D g) {

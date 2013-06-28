@@ -60,17 +60,9 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
     protected Double currentPoint;
     protected Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
-    protected String xAxisTitle = "x-axis";
-    protected String yAxisTitle = "y-axis";
-    protected String graphTitle = "Untitled";
     final JPopupMenu menu = new JPopupMenu();
     private JFileChooser fileChooser;
-    // TODO find the right stroke thickness and font size
-    private float stroke = 5;
-    /**
-     * determines the size of the axis labels and numbers
-     */
-    private int fontSize = 20;
+    
     /**
      * determines the size of the title
      */
@@ -268,31 +260,6 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
     }
     
     public void drawPoint(Graphics2D g, double x, double y) {}
-    
-    public void drawXAxis(Graphics2D g) {
-        double steps = squareWidth;
-        g.setStroke(new BasicStroke(stroke));
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
-        DecimalFormat df = new DecimalFormat("#.#");
-        
-        for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
-            // draw vertical lines -- removed for now
-            // g.setColor(Color.LIGHT_GRAY);
-            // g.drawLine((int) (getLPad() + i * steps), tPad, (int) (getLPad() + i * steps), getHeight() -
-            // bPad);
-            
-            // draw numbers at each vertical line
-            g.setColor(Color.BLACK);
-            String lString = df.format(c2gx(getLPad() + i * steps));
-            FontMetrics fm = g.getFontMetrics();
-            g.drawString(lString, (int) (getLPad() + i * steps - fm.stringWidth(lString) / 2), getHeight() - bPad
-                    + fm.getAscent() + fm.getLeading() + 5);
-        }
-        // draw axis title
-        g.drawString(" " + xAxisTitle + " ", getLPad() + getPlotWidth() / 2 - 50, getHeight() - 10);
-        // draw horizontal axis
-        g.drawLine(getLPad(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
-    }
     
     public void drawYAxis(Graphics2D g) {
         drawVerticalLine(getLPad(), g);
