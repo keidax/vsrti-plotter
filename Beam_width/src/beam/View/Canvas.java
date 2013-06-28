@@ -29,11 +29,11 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
+import common.View.CommonCanvas;
 import common.View.SquareOrnament;
 import common.View.ViewUtilities;
 
@@ -42,11 +42,11 @@ import common.View.ViewUtilities;
  */
 
 @SuppressWarnings("serial")
-public abstract class Canvas extends JPanel implements MouseListener, MouseMotionListener {
+public abstract class Canvas extends CommonCanvas implements MouseListener, MouseMotionListener {
     
     public TreeMap<Double, Double> points;
     public View view;
-    protected int lPad = 90, rPad = 30, tPad = 50, bPad = 60;
+    
     /**
      * controls the spacing between marks on the x axis
      */
@@ -66,7 +66,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     protected int mouseButton = 0;
     protected double maxX = 40;
     private JFileChooser fileChooser;
-    // TODO find the right stroke thickness and font size
+    
     private float stroke = 5;
     /**
      * determines the size of the axis labels and numbers
@@ -79,13 +79,16 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     
     private Canvas canvas;
     
-    private int numHorizontalMarks = 10;
-    private int numVerticalMarks = 10;
-    
     public Canvas(View v, TreeMap<Double, Double> g) {
         canvas = this;
         points = g;
         setView(v);
+        
+        lPad = 90;
+        rPad = 30;
+        tPad = 50;
+        bPad = 60;
+        
         addMouseListener(this);
         addMouseMotionListener(this);
         setSize(new Dimension(200, 50));
@@ -243,45 +246,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     
     public void drawPoint(Graphics2D g, double x, double y) {}
     
-    public int g2cx(double x) {
-        double ratio = getRatioX();
-        return (int) (getLeftShift() + (x - getMinX()) * ratio)
-        // + getPlotWidth()/2;
-        ;
-    }
-    
-    /**
-     * @param y
-     *            the y coordinate of the graph, in units
-     * @return the y coordinate of the canvas, in pixels
-     */
-    public int g2cy(double y) {
-        double ratio = getRatioY();
-        // height-(height-t-b)/2-bpad-y*ratio
-        // (2*height-heihgt+t+b)/2 - b - y*ratio
-        return (int) (getPlotHeight() + tPad - y * ratio);
-        // return (int) (this.getPlotHeight() / 2 + tPad - y * ratio);
-        // return (int)((this.getHeight()+tPad+bPad)/2-y*ratio-bPad);
-    }
-    
-    public double c2gx(double x) {
-        double ratio = getRatioX();
-        
-        return (x - getLeftShift()) / ratio + getMinX();
-    }
-    
-    /**
-     * @param toy
-     *            the y coordinate of the canvas, in pixels
-     * @return the y coordinate of the graph, in units
-     */
-    public double c2gy(double toy) {
-        double ratio = getRatioY();
-        // return (toy+bPad-getHeight())/-ratio;
-        return (toy - getPlotHeight() - tPad) / -ratio;
-        // return (getPlotHeight()-toy)/ratio;
-    }
-    
     public void drawXAxis(Graphics2D g) {
         // double steps = squareWidth;
         g.setStroke(new BasicStroke(stroke));
@@ -292,18 +256,18 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         int xSpacing = 5;
         
         // draw axis title
-        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2 - 50, getHeight() - 10);
+        g.drawString(" " + xAxisTitle + " ", getLPad() + getPlotWidth() / 2 - 50, getHeight() - 10);
         // draw horizontal axis
-        g.drawLine(getLeftShift(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
+        g.drawLine(getLPad(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
         
         // draw vertical line at theta=0
         g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(g2cx(0), tPad, (int) (g2cx(0)), getHeight() - bPad);
+        g.drawLine(g2cx(0), tPad, g2cx(0), getHeight() - bPad);
         
         // for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
         
-        for (int i = ((int) (getMinX() / xSpacing)) * xSpacing; i <= getMaxX(); i += xSpacing) {
-            int xPosition = (int) (g2cx(i));
+        for (int i = (int) (getMinX() / xSpacing) * xSpacing; i <= getMaxX(); i += xSpacing) {
+            int xPosition = g2cx(i);
             int yPosition = getHeight() - bPad;
             
             // draw vertical marks
@@ -320,7 +284,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     }
     
     public void drawYAxis(Graphics2D g) {
-        drawVerticalLine(getLeftShift(), g);
+        drawVerticalLine(getLPad(), g);
         drawVerticalMetric(g);
         drawVerticalLabel(g);
     }
@@ -370,8 +334,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             // String tempString="" + Math.round(c2gy(this.getHeight() - bPad -
             // (i) * plotStep) * 10) / 10.0;
             String tempString = df.format(c2gy(getHeight() - bPad - i * squareWidth));
-            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5,
-                    (int) (getHeight() - bPad - i * squareWidth) + fm.getAscent() / 2);
+            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5, getHeight() - bPad - i * squareWidth
+                    + fm.getAscent() / 2);
         }
     }
     
@@ -442,37 +406,12 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         return (int) Math.pow(2, (int) Math.ceil(Math.log(max) / Math.log(2)));
     }
     
-    public double getRatioX() {
-        /*
-         * if (points == null) { return (double) getPlotWidth() / (double)
-         * countMax(defaultY); }
-         */
-        return getPlotWidth() / (getMaxX() - getMinX());
-    }
-    
-    public double getRatioY() {
-        return getPlotHeight() / getMaxY();
-    }
-    
-    /**
-     * @return The width of the plot section of the canvas, in pixels
-     */
-    protected int getPlotWidth() {
-        return getWidth() - lPad - rPad;
-    }
-    
-    /**
-     * @return The height of the plot section of the canvas, in pixels
-     */
-    protected int getPlotHeight() {
-        return getHeight() - tPad - bPad;
-    }
-    
     /**
      * @return The greatest y value in the data set. If no data set is currently
      *         displayed, returns 1.1 (if the beam pattern is showing) or the
      *         default y value.
      */
+    @Override
     public double getMaxY() {
         if (points == null || points.size() == 0) {
             if (view.isBeamPatternVisible()) {
@@ -495,6 +434,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         return max + max * .1;
     }
     
+    @Override
     public double getMaxX() {
         if (points == null || points.size() == 0) {
             return defaultXRight;
@@ -502,15 +442,12 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         return points.lastKey();
     }
     
+    @Override
     public double getMinX() {
         if (points == null || points.size() == 0) {
             return defaultXLeft;
         }
         return points.firstKey();
-    }
-    
-    public int getLeftShift() {
-        return lPad;
     }
     
     // GETTERS AND SETTERS
@@ -521,38 +458,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     
     public void setView(View view) {
         this.view = view;
-    }
-    
-    public int getLPad() {
-        return lPad;
-    }
-    
-    public void setLPad(int pad) {
-        lPad = pad;
-    }
-    
-    public int getRPad() {
-        return rPad;
-    }
-    
-    public void setRPad(int pad) {
-        rPad = pad;
-    }
-    
-    public int getTPad() {
-        return tPad;
-    }
-    
-    public void setTPad(int pad) {
-        tPad = pad;
-    }
-    
-    public int getBPad() {
-        return bPad;
-    }
-    
-    public void setBPad(int pad) {
-        bPad = pad;
     }
     
     public int getSquareWidth() {
@@ -577,22 +482,6 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     
     public void setDefaultY(double defaultY) {
         this.defaultY = defaultY;
-    }
-    
-    public int getMCanx() {
-        return mCanx;
-    }
-    
-    public void setMCanx(int canx) {
-        mCanx = canx;
-    }
-    
-    public int getMCany() {
-        return mCany;
-    }
-    
-    public void setMCany(int cany) {
-        mCany = cany;
     }
     
     public Double getCurrentPoint() {
@@ -704,8 +593,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         mCanx = evt.getX();
         mCany = evt.getY();
         // System.out.println("released");
-        if (currentPoint == null && mCanx >= getLeftShift() && mCanx <= getLeftShift() + getPlotWidth()
-                && mCany >= tPad && mCany < getWidth() - bPad) {
+        if (currentPoint == null && mCanx >= getLPad() && mCanx <= getLPad() + getPlotWidth() && mCany >= tPad
+                && mCany < getWidth() - bPad) {
             // getCurrentDataSet().addPoint(c2gx(mCanx),c2gy(mCany,getCurrentDataSet()));
             // update();
         }
@@ -728,7 +617,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         
         // System.out.println("currentpoint="+currentPoint);
         if (getCurrentPoint() != null) {
-            // double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
+            // double tox = Math.min(Math.max(getLPad(), mCanx), getLPad() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             // System.out.println("moving to ["+tox+","+toy+"]");
             view.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
