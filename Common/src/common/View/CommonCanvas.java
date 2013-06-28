@@ -17,6 +17,7 @@ public abstract class CommonCanvas extends JPanel {
     protected String graphTitle = "Untitled";
     
     protected int lPad, rPad, tPad, bPad;
+    protected int yLabelWidth = 10;
     
     protected float stroke = 5;
     /**
@@ -69,6 +70,63 @@ public abstract class CommonCanvas extends JPanel {
                     + 5);
         }
         
+    }
+    
+    public void drawYAxis(Graphics2D g) {
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(stroke));
+        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+        g.drawLine(getLPad(), tPad, getLPad(), getHeight() - bPad);
+        
+        FontMetrics fm = g.getFontMetrics();
+        DecimalFormat df = new DecimalFormat("#.#");
+        
+        // determine spacing for marks on y-axis
+        int ySpacing = 1;
+        double pixelsPerNumber = this.getPlotHeight() * 1.0 / getMaxY();
+        if (pixelsPerNumber > 35) {
+            ySpacing = 1;
+        } else if (pixelsPerNumber <= 35 && pixelsPerNumber > 25) {
+            ySpacing = 2;
+        } else if (pixelsPerNumber <= 25 && pixelsPerNumber > 8) {
+            ySpacing = 5;
+        } else if (pixelsPerNumber <= 8 && pixelsPerNumber > 3.5) {
+            ySpacing = 10;
+        } else if (pixelsPerNumber <= 3.5) {
+            ySpacing = 15;
+        }
+        
+        for (int i = 0; i <= getMaxY(); i += ySpacing) {
+            int xPosition = lPad;
+            int yPosition = g2cy(i);
+            // draw horixontal marks
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(xPosition - 2, yPosition, xPosition + 2, yPosition);
+            // draw label for each mark
+            g.setColor(Color.BLACK);
+            String tempString = df.format(i);
+            g.drawString(tempString, xPosition - fm.stringWidth(tempString) - 5, yPosition + fm.getAscent() / 2);
+        }
+        
+        drawVerticalLabel(g);
+    }
+    
+    /**
+     * Draws the label for the y axis
+     */
+    public void drawVerticalLabel(Graphics2D g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+        
+        int translateDown = (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
+        
+        g.translate(yLabelWidth, translateDown);
+        g.rotate(-Math.PI / 2.0);
+        
+        g.drawString(yAxisTitle, 0, 10);
+        
+        g.rotate(Math.PI / 2.0);
+        g.translate(-yLabelWidth, -translateDown);
     }
     
     /**

@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -51,7 +50,6 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
     public Adapter adapter;
     
     protected int squareWidth = 60;
-    protected int yLabelWidth = 10;
     protected int xLabelWidth = 30;
     protected double defaultY = 9;
     protected double defaultXLeft = 0;
@@ -260,65 +258,6 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
     }
     
     public void drawPoint(Graphics2D g, double x, double y) {}
-    
-    public void drawYAxis(Graphics2D g) {
-        drawVerticalLine(getLPad(), g);
-        drawVerticalMetric(g);
-        drawVerticalLabel(g);
-    }
-    
-    /**
-     * Draws the vertical line for the y axis
-     * 
-     * @param x
-     *            the x value where the line will be drawn
-     * @param g
-     *            the current Graphics2D object
-     */
-    public void drawVerticalLine(int x, Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.setStroke(new BasicStroke(stroke));
-        g.drawLine(x, tPad, x, getHeight() - bPad);// vertical
-        g.setColor(Color.LIGHT_GRAY);
-        for (int i = 0; i <= getPlotHeight() / squareWidth; i++) {// horizontal
-            int markHeight = getHeight() - bPad - i * squareWidth;
-            g.drawLine(x - 2, markHeight, x + 2, markHeight);
-        }
-    }
-    
-    public void drawVerticalMetric(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
-        
-        FontMetrics fm = g.getFontMetrics();
-        DecimalFormat df = new DecimalFormat("0.00");
-        for (int i = 0; i <= getPlotHeight() / squareWidth; i++) {// horizontal
-            // String tempString="" + Math.round(c2gy(this.getHeight() - bPad - (i) * plotStep) * 10) / 10.0;
-            String tempString = df.format(c2gy(getHeight() - bPad - i * squareWidth));
-            // System.out.println(c2gy(this.getHeight() - bPad - (i) * squareWidth));
-            // System.out.println(this.getHeight() - bPad - (i) * squareWidth);
-            g.drawString(tempString, lPad - fm.stringWidth(tempString) - 5, getHeight() - bPad - i * squareWidth
-                    + fm.getAscent() / 2);
-        }
-    }
-    
-    /**
-     * Draws the label for the y axis
-     */
-    public void drawVerticalLabel(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
-        
-        int translateDown = (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
-        
-        g.translate(yLabelWidth, translateDown);
-        g.rotate(-Math.PI / 2.0);
-        
-        g.drawString(yAxisTitle, 0, 10);
-        
-        g.rotate(Math.PI / 2.0);
-        g.translate(-yLabelWidth, -translateDown);
-    }
     
     public double countVerticalStep() {// NOT FINISHED
         int count = getPlotHeight() / squareWidth + 1;
