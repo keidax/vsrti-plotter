@@ -52,9 +52,9 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
      */
     protected int squareWidth = 60;
     protected int yLabelWidth = 10;
-    protected double defaultY = 9;
-    protected double defaultXLeft = -20;
-    protected double defaultXRight = 20;
+    protected double defaultY = 25;
+    protected double defaultXLeft = -45;
+    protected double defaultXRight = 45;
     protected int mCanx, mCany;
     protected Double currentPoint;
     protected Color[] colors = {Color.BLACK};
@@ -78,6 +78,9 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     private int titleSize = 30;
     
     private Canvas canvas;
+    
+    private int numHorizontalMarks = 10;
+    private int numVerticalMarks = 10;
     
     public Canvas(View v, TreeMap<Double, Double> g) {
         canvas = this;
@@ -280,33 +283,40 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     }
     
     public void drawXAxis(Graphics2D g) {
-        double steps = squareWidth;
+        // double steps = squareWidth;
         g.setStroke(new BasicStroke(stroke));
         g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
         DecimalFormat df = new DecimalFormat("#.#");
+        FontMetrics fm = g.getFontMetrics();
+        
+        int xSpacing = 5;
+        
+        // draw axis title
+        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2 - 50, getHeight() - 10);
+        // draw horizontal axis
+        g.drawLine(getLeftShift(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
         
         // draw vertical line at theta=0
         g.setColor(Color.LIGHT_GRAY);
         g.drawLine(g2cx(0), tPad, (int) (g2cx(0)), getHeight() - bPad);
         
-        for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
-            // draw vertical lines -- removed for now
-            // g.setColor(Color.LIGHT_GRAY);
-            // g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() -
-            // bPad);
+        // for (int i = 0; i < Math.round(getPlotWidth() / squareWidth + 0.5); i++) {// horizontal
+        
+        for (int i = ((int) (getMinX() / xSpacing)) * xSpacing; i <= getMaxX(); i += xSpacing) {
+            int xPosition = (int) (g2cx(i));
+            int yPosition = getHeight() - bPad;
             
-            // draw numbers at each vertical line
+            // draw vertical marks
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(xPosition, yPosition + 2, xPosition, yPosition - 2);
+            
+            // draw labels for each mark
             g.setColor(Color.BLACK);
-            String lString = df.format(c2gx(getLeftShift() + i * steps));
-            
-            FontMetrics fm = g.getFontMetrics();
-            g.drawString(lString, (int) (getLeftShift() + i * steps - fm.stringWidth(lString) / 2), getHeight() - bPad
-                    + fm.getAscent() + fm.getLeading() + 5);
+            String lString = df.format(i);
+            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + fm.getLeading()
+                    + 5);
         }
-        // draw axis title
-        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2 - 50, getHeight() - 10);
-        // draw horizontal axis
-        g.drawLine(getLeftShift(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
+        
     }
     
     public void drawYAxis(Graphics2D g) {
@@ -466,7 +476,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     public double getMaxY() {
         if (points == null || points.size() == 0) {
             if (view.isBeamPatternVisible()) {
-                return bessel(0.0) * 1.1;
+                return bessel(0.0) * view.getModel().getPeakValue() * 1.2;
             } else {
                 return defaultY;
             }
