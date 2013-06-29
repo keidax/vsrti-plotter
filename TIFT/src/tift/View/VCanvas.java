@@ -1,5 +1,6 @@
 package tift.View;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,7 +13,6 @@ import common.View.AbstractOrnament;
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
 
-
 /**
  * 
  * @author Karel Durktoa and Adam Pere
@@ -21,14 +21,12 @@ import common.View.SquareOrnament;
 public class VCanvas extends Canvas {
     
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = { new CircleOrnament(),
-            new SquareOrnament() };
-    protected static Color[] colors = { Color.BLUE, Color.BLACK };
+    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
+    protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
     final boolean amp;
     
-    public VCanvas(View v, Adapter a, TreeMap<Double, Double> g, String yaxis,
-            String title, boolean amplitude) {
+    public VCanvas(View v, Adapter a, TreeMap<Double, Double> g, String yaxis, String title, boolean amplitude) {
         super(v, a, g, amplitude);
         dataPoints = g;
         System.out.println(dataPoints.size());
@@ -53,9 +51,8 @@ public class VCanvas extends Canvas {
             g.setColor(colors[1]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x)
-                        * getSigma() / 2), g2cy(y + adapter.getRms().get(x)
-                        * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y
+                        + adapter.getRms().get(x) * getSigma() / 2));
             }
         } else {
             g.setColor(colors[1]);
@@ -64,7 +61,8 @@ public class VCanvas extends Canvas {
     }
     
     @Override
-    public void drawDataSet(int count, Graphics2D g) {
+    public void drawDataSet(Graphics2D g) {
+        g.setStroke(new BasicStroke(strokeSize / 2));
         if (dataPoints.size() == 0) {
             return;
         }
@@ -72,11 +70,8 @@ public class VCanvas extends Canvas {
         Double previousKey = dataPoints.firstKey();
         for (Double key : keys) {
             if (key > getMinX()) {
-                new SquareOrnament().draw(g, g2cx(key),
-                        g2cy(dataPoints.get(key)));
-                g.drawLine(g2cx(previousKey),
-                        g2cy(dataPoints.get(previousKey)), g2cx(key),
-                        g2cy(dataPoints.get(key)));
+                new SquareOrnament().draw(g, g2cx(key), g2cy(dataPoints.get(key)));
+                g.drawLine(g2cx(previousKey), g2cy(dataPoints.get(previousKey)), g2cx(key), g2cy(dataPoints.get(key)));
                 previousKey = key;
             }
             
@@ -178,8 +173,7 @@ public class VCanvas extends Canvas {
     public void setCurrentPoint(Double currentPoint) {
         try {
             adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {
-        }
+        } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
     }
 }

@@ -47,7 +47,8 @@ public abstract class CommonCanvas extends JPanel {
         }
         
         // draw axis title
-        g.drawString(" " + xAxisTitle + " ", getLPad() + getPlotWidth() / 2 - 50, getHeight() - 10);
+        g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
+                getHeight() - 10);
         // draw horizontal axis
         g.drawLine(getLPad(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
         
@@ -66,8 +67,7 @@ public abstract class CommonCanvas extends JPanel {
             // draw labels for each mark
             g.setColor(Color.BLACK);
             String lString = df.format(i);
-            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + fm.getLeading()
-                    + 5);
+            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + 5);
         }
         
     }
@@ -118,7 +118,7 @@ public abstract class CommonCanvas extends JPanel {
         g.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
         
-        int translateDown = (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
+        int translateDown = tPad + (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
         
         g.translate(yLabelWidth, translateDown);
         g.rotate(-Math.PI / 2.0);

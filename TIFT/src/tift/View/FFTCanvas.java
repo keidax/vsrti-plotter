@@ -1,5 +1,6 @@
 package tift.View;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -9,7 +10,6 @@ import java.util.TreeMap;
 import tift.Model.Adapter;
 
 import common.View.SquareOrnament;
-
 
 /**
  * 
@@ -21,8 +21,7 @@ public class FFTCanvas extends Canvas {
     protected boolean amp;
     protected TreeMap<Double, Double> dataPoints;
     
-    public FFTCanvas(View v, Adapter a, TreeMap<Double, Double> g,
-            String yaxis, String title, boolean amplitude) {
+    public FFTCanvas(View v, Adapter a, TreeMap<Double, Double> g, String yaxis, String title, boolean amplitude) {
         super(v, a, g, amplitude);
         xAxis = "frequency (Hz)";
         yAxis = yaxis;
@@ -40,7 +39,8 @@ public class FFTCanvas extends Canvas {
     }
     
     @Override
-    public void drawDataSet(int count, Graphics2D g) {
+    public void drawDataSet(Graphics2D g) {
+        g.setStroke(new BasicStroke(strokeSize / 2));
         if (dataPoints.size() == 0) {
             return;
         }
@@ -48,15 +48,12 @@ public class FFTCanvas extends Canvas {
         Double previousKey = dataPoints.firstKey();
         for (Double key : keys) {
             if (key >= Double.parseDouble(View.viewer.fThetaMin.getText())) {
-                new SquareOrnament().draw(g, g2cx(key - getMinX()),
+                new SquareOrnament().draw(g, g2cx(key - getMinX()), g2cy(dataPoints.get(key)));
+                g.drawLine(g2cx(previousKey - getMinX()), g2cy(dataPoints.get(previousKey)), g2cx(key - getMinX()),
                         g2cy(dataPoints.get(key)));
-                g.drawLine(g2cx(previousKey - getMinX()),
-                        g2cy(dataPoints.get(previousKey)),
-                        g2cx(key - getMinX()), g2cy(dataPoints.get(key)));
                 previousKey = key;
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta
-                                .getText()))) {
+                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
                     break;
                 }
             }
@@ -76,8 +73,7 @@ public class FFTCanvas extends Canvas {
                     max = dataPoints.get(key);
                 }
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta
-                                .getText()))) {
+                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
                     break;
                 }
             }
@@ -102,8 +98,7 @@ public class FFTCanvas extends Canvas {
                     min = dataPoints.get(key);
                 }
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta
-                                .getText()))) {
+                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
                     break;
                 }
             }
@@ -122,8 +117,7 @@ public class FFTCanvas extends Canvas {
         for (Double key : keys) {
             if (key > Double.parseDouble(View.viewer.fThetaMin.getText())) {
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta
-                                .getText()))) {
+                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
                     return key;
                 }
             }
@@ -171,14 +165,6 @@ public class FFTCanvas extends Canvas {
             } else {
                 adapter.moveImagePoint2(getCurrentPoint(), c2gy(toy));
             }
-        }
-    }
-    
-    public void update() {
-        if (amp) {
-            dataPoints = adapter.getVisibilityGraphDataPoints();
-        } else {
-            dataPoints = adapter.getVisibilityGraphDataPoints2();
         }
     }
     
