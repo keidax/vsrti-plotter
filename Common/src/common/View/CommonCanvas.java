@@ -82,21 +82,26 @@ public abstract class CommonCanvas extends JPanel {
         DecimalFormat df = new DecimalFormat("#.#");
         
         // determine spacing for marks on y-axis
-        int ySpacing = 1;
+        double ySpacing = 1;
         double pixelsPerNumber = this.getPlotHeight() * 1.0 / getMaxY();
-        if (pixelsPerNumber > 35) {
+        System.out.println("pixels / number " + pixelsPerNumber);
+        if (pixelsPerNumber > 200) {
+            ySpacing = 0.2;
+        } else if (pixelsPerNumber > 100) {
+            ySpacing = 0.5;
+        } else if (pixelsPerNumber > 35) {
             ySpacing = 1;
-        } else if (pixelsPerNumber <= 35 && pixelsPerNumber > 25) {
+        } else if (pixelsPerNumber > 25) {
             ySpacing = 2;
-        } else if (pixelsPerNumber <= 25 && pixelsPerNumber > 8) {
+        } else if (pixelsPerNumber > 8) {
             ySpacing = 5;
-        } else if (pixelsPerNumber <= 8 && pixelsPerNumber > 3.5) {
+        } else if (pixelsPerNumber > 3.5) {
             ySpacing = 10;
-        } else if (pixelsPerNumber <= 3.5) {
+        } else {
             ySpacing = 15;
         }
         
-        for (int i = 0; i <= getMaxY(); i += ySpacing) {
+        for (double i = 0; i <= getMaxY(); i += ySpacing) {
             int xPosition = lPad;
             int yPosition = g2cy(i);
             // draw horixontal marks
