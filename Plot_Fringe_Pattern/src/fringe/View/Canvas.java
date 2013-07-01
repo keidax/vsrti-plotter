@@ -2,7 +2,6 @@ package fringe.View;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -11,16 +10,12 @@ import java.awt.GraphicsConfiguration;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -33,7 +28,6 @@ import javax.swing.JPopupMenu;
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import common.View.CommonCanvas;
-import common.View.SquareOrnament;
 import common.View.ViewUtilities;
 
 import fringe.Model.Adapter;
@@ -43,7 +37,7 @@ import fringe.Model.Adapter;
  */
 
 @SuppressWarnings("serial")
-public abstract class Canvas extends CommonCanvas implements MouseListener, MouseMotionListener {
+public abstract class Canvas extends CommonCanvas {
     
     private TreeMap<Double, Double> points;
     public View view;
@@ -84,8 +78,6 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
         tPad = 50;
         bPad = 60;
         
-        addMouseListener(this);
-        addMouseMotionListener(this);
         setSize(new Dimension(200, 50));
         setVisible(true);
         fileChooser = new JFileChooser();
@@ -395,155 +387,6 @@ public abstract class Canvas extends CommonCanvas implements MouseListener, Mous
     
     public void setColors(Color[] colors) {
         this.colors = colors;
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            menu.show(this, e.getX(), e.getY());
-        }
-    }
-    
-    @Override
-    public void mouseEntered(MouseEvent arg0) {
-        // Do nothing
-    }
-    
-    @Override
-    public void mouseExited(MouseEvent arg0) {
-        // Do nothing
-    }
-    
-    /**
-     * Returns the object MyPoint which is in closer then MyCanvas.r to
-     * coordinates [x,y]
-     * 
-     * @param x
-     *            int
-     * @param y
-     *            int
-     * @return MyPoint
-     */
-    protected Double getPointOnGraph(int x, int y) {
-        
-        Set<Double> keys = points.keySet();
-        for (Double key : keys) {
-            if (new SquareOrnament().isInside(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
-                return key;
-            }
-        }
-        return null;
-    }
-    
-    protected Double getVerticallyPointOnGraph(int x, int y) {
-        
-        Set<Double> keys = points.keySet();
-        for (Double key : keys) {
-            if (new SquareOrnament().isInsideVertically(mCanx, mCany, g2cx(key), g2cy(points.get(key)))) {
-                return key;
-            }
-        }
-        return null;
-    }
-    
-    /**
-     * records where mouse was pressed and whether there is any point in less
-     * distance then MyCanvas.r
-     */
-    @Override
-    public void mousePressed(MouseEvent evt) {
-        // this.getVision().getCare().set(this.getVision().getSoul().newMemento());
-        mouseButton = evt.getButton();
-        if (evt.getButton() != MouseEvent.BUTTON1) {
-            return;
-        }
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (evt.getButton() == MouseEvent.BUTTON2) {
-            if (getPointOnGraph(mCanx, mCany) != null) {
-                setCurrentPoint(getPointOnGraph(mCanx, mCany));
-            } else {
-                setCurrentPoint(null);
-            }
-        } else {
-            if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-                setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
-            } else {
-                setCurrentPoint(null);
-            }
-        }
-        if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
-            // System.out.println("moving to ["+tox+","+toy+"]");
-            adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
-            // getCurrentPoint().movePoint(getCurrentPoint(),
-            // c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
-        }
-        // System.out.println("Current point is "+currentPoint);
-    }
-    
-    /**
-     * Records coordinates mouse was released and if there was no currentPoint,
-     * then creates new point with particular coordinates
-     */
-    @Override
-    public void mouseReleased(MouseEvent evt) {
-        mouseButton = 0;
-        // NOT FINISHED (just redo getCurrentDataSet to
-        // getViewer().getCurrentDataSet
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        // System.out.println("released");
-        if (currentPoint == null && mCanx >= getLPad() && mCanx <= getLPad() + getPlotWidth() && mCany >= tPad
-                && mCany < getWidth() - bPad) {
-            // getCurrentDataSet().addPoint(c2gx(mCanx),c2gy(mCany,getCurrentDataSet()));
-            // update();
-        }
-    }
-    
-    @Override
-    public void mouseDragged(MouseEvent evt) {
-        if (mouseButton != MouseEvent.BUTTON1) {
-            return;
-        }
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (evt.getButton() != MouseEvent.BUTTON2) {
-            if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-                setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
-            } else {
-                setCurrentPoint(null);
-            }
-        }
-        
-        // System.out.println("currentpoint="+currentPoint);
-        if (getCurrentPoint() != null) {
-            // double tox = Math.min(Math.max(getLPad(), mCanx), getLPad() + getPlotWidth());
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
-            // System.out.println("moving to ["+tox+","+toy+"]");
-            adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
-            // getCurrentPoint().movePoint(getCurrentPoint(),
-            // c2gx(tox),c2gy(toy,getCurrentPoint().getDataSet()));
-        }
-    }
-    
-    @Override
-    public void mouseMoved(MouseEvent evt) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (getPointOnGraph(mCanx, mCany) != null) {
-            double p = getVerticallyPointOnGraph(mCanx, mCany);
-            setToolTipText("[" + df.format(p) + "; " + df.format(points.get(p)) + "]");
-        }
-        if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-            
-        } else {
-            setCursor(Cursor.getDefaultCursor());
-            setToolTipText("");
-        }
-        // this.drawCoor((Graphics2D)getGraphics());
     }
     
     @Override
