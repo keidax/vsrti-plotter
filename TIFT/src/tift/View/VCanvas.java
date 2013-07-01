@@ -31,14 +31,14 @@ public class VCanvas extends Canvas {
         super(v, a, g, amplitude);
         dataPoints = g;
         System.out.println(dataPoints.size());
-        xAxis = "time (s)";
-        yAxis = yaxis;
+        xAxisTitle = "time (s)";
+        yAxisTitle = yaxis;
         graphTitle = title;
         amp = amplitude;
     }
     
     public void setYAxis(String axis) {
-        yAxis = axis;
+        yAxisTitle = axis;
     }
     
     public void setTitle(String t) {

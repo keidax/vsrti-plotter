@@ -29,7 +29,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
@@ -37,7 +36,7 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 import common.Model.CommonTIFTAdapter;
 
 @SuppressWarnings("serial")
-public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, MouseMotionListener {
+public abstract class CommonTIFTCanvas extends CommonRootCanvas implements MouseListener, MouseMotionListener {
     
     protected int lPad, rPad, tPad, bPad; // Margins
     protected int[] steps = {1, 2, 5};
@@ -47,8 +46,8 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
     protected int defaultY;
     
     public TreeMap<Double, Double> points;
-    protected String xAxis = "x-axis";
-    protected String yAxis = "y-axis";
+    protected String xAxisTitle = "x-axis";
+    protected String yAxisTitle = "y-axis";
     protected String graphTitle = "Untitled";
     
     protected int mCanx, mCany;
@@ -209,7 +208,7 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
     
     public double c2gx(int x) {
         double ratio = getRatioX();
-        return (x - getLeftShift()) / ratio;
+        return (x - getLPad()) / ratio;
     }
     
     public double c2gy(double toy) {
@@ -253,7 +252,7 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
     
     public int g2cx(double x) {
         double ratio = getRatioX();
-        return (int) (x * ratio) + getLeftShift();
+        return (int) (x * ratio) + getLPad();
     }
     
     public int g2cy(double y) {
@@ -435,10 +434,6 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
         }
         i -= 2;
         return steps[i % steps.length] * (int) Math.pow(10, i / steps.length);
-    }
-    
-    public int getLeftShift() {
-        return lPad;
     }
     
     public int getLPad() {
@@ -640,8 +635,8 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
         mCanx = evt.getX();
         mCany = evt.getY();
         
-        if (currentPoint == null && mCanx >= getLeftShift() && mCanx <= getLeftShift() + getPlotWidth()
-                && mCany >= tPad && mCany < getWidth() - bPad) {}
+        if (currentPoint == null && mCanx >= getLPad() && mCanx <= getLPad() + getPlotWidth() && mCany >= tPad
+                && mCany < getWidth() - bPad) {}
     }
     
     @Override
@@ -691,7 +686,7 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
         FontMetrics fm = g.getFontMetrics();
         
         for (int i = 0; i < (getPlotWidth() - 1) / steps + 1; i++) {// horizontal
-            int xPosition = (int) (getLeftShift() + i * steps);
+            int xPosition = (int) (getLPad() + i * steps);
             int yPosition = g2cy(0.0);
             g.setColor(Color.LIGHT_GRAY);
             g.drawLine(xPosition, yPosition + 2, xPosition, yPosition - 2);
@@ -702,8 +697,9 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
             g.drawString(labelString, xPosition - fm.stringWidth(labelString) / 2, yPosition);
         }
         
-        g.drawLine(getLeftShift(), g2cy(0.0), getLeftShift() + getPlotWidth(), g2cy(0.0));
-        g.drawString(xAxis, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxis)) / 2, getHeight() - 10);
+        g.drawLine(getLPad(), g2cy(0.0), getLPad() + getPlotWidth(), g2cy(0.0));
+        g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
+                getHeight() - 10);
     }
     
     /**
@@ -729,12 +725,12 @@ public abstract class CommonTIFTCanvas extends JPanel implements MouseListener, 
         g.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
         
-        int translateDown = tPad + (getPlotHeight() + g.getFontMetrics().stringWidth(yAxis)) / 2;
+        int translateDown = tPad + (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
         
         g.translate(yLabelWidth, translateDown);
         g.rotate(-Math.PI / 2.0);
         
-        g.drawString(yAxis, 0, 10);
+        g.drawString(yAxisTitle, 0, 10);
         
         g.rotate(Math.PI / 2.0);
         g.translate(-yLabelWidth, -translateDown);

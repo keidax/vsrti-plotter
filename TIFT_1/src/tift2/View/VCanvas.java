@@ -25,8 +25,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
         dataPoints = adapter.getVisiblityGraphPoints();
-        xAxis = "time (s)";
-        yAxis = "Amplitude";
+        xAxisTitle = "time (s)";
+        yAxisTitle = "Amplitude";
         graphTitle = "f(t)";
     }
     

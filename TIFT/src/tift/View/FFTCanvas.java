@@ -25,15 +25,15 @@ public class FFTCanvas extends Canvas {
     
     public FFTCanvas(View v, Adapter a, TreeMap<Double, Double> g, String yaxis, String title, boolean amplitude) {
         super(v, a, g, amplitude);
-        xAxis = "frequency (Hz)";
-        yAxis = yaxis;
+        xAxisTitle = "frequency (Hz)";
+        yAxisTitle = yaxis;
         graphTitle = title;
         amp = amplitude;
         dataPoints = g;
     }
     
     public void setYAxis(String axis) {
-        yAxis = axis;
+        yAxisTitle = axis;
     }
     
     public void setTitle(String t) {

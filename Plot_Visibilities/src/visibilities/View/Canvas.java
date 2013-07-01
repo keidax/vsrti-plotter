@@ -29,7 +29,7 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
 import visibilities.Model.Adapter;
 
-import common.View.CommonCanvas;
+import common.View.CommonVSRTICanvas;
 import common.View.ViewUtilities;
 
 /**
@@ -37,7 +37,7 @@ import common.View.ViewUtilities;
  */
 
 @SuppressWarnings("serial")
-public abstract class Canvas extends CommonCanvas {
+public abstract class Canvas extends CommonVSRTICanvas {
     
     public TreeMap<Double, Double> points;
     public View view;

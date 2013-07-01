@@ -27,7 +27,7 @@ import javax.swing.JPopupMenu;
 
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 
-import common.View.CommonCanvas;
+import common.View.CommonVSRTICanvas;
 import common.View.ViewUtilities;
 
 import fringe.Model.Adapter;
@@ -37,7 +37,7 @@ import fringe.Model.Adapter;
  */
 
 @SuppressWarnings("serial")
-public abstract class Canvas extends CommonCanvas {
+public abstract class Canvas extends CommonVSRTICanvas {
     
     private TreeMap<Double, Double> points;
     public View view;

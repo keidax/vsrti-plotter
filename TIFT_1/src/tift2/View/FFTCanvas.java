@@ -18,8 +18,8 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
     
     public FFTCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
-        xAxis = "frequency (Hz)";
-        yAxis = "Amplitude";
+        xAxisTitle = "frequency (Hz)";
+        yAxisTitle = "Amplitude";
         graphTitle = "F(ν)";
     }
     

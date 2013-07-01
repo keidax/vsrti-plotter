@@ -7,10 +7,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.text.DecimalFormat;
 
-import javax.swing.JPanel;
-
 @SuppressWarnings("serial")
-public abstract class CommonCanvas extends JPanel {
+public abstract class CommonVSRTICanvas extends CommonRootCanvas {
     
     protected String xAxisTitle = "x-axis";
     protected String yAxisTitle = "y-axis";
