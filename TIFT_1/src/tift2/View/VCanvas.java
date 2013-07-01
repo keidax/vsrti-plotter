@@ -12,14 +12,12 @@ import common.View.AbstractOrnament;
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
 
-
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
-
+    
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = { new CircleOrnament(),
-            new SquareOrnament() };
-    protected static Color[] colors = { Color.BLUE, Color.BLACK };
+    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
+    protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
@@ -31,7 +29,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     }
     
     @Override
-    public void drawDataSet(int count, Graphics2D g) {
+    public void drawDataSet(Graphics2D g) {
         if (getPoints().size() == 0) {
             return;
         }
@@ -39,8 +37,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
             g.setColor(Color.BLACK);
-            g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)),
-                    g2cx(key), g2cy(getPoints().get(key)));
+            g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
             previousKey = key;
             drawPoint(g, key, getPoints().get(key));
             if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
@@ -74,7 +71,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     @Override
     public Double getMinYPoint() {
         if (dataPoints.size() == 0) {
-            return (double) -Canvas.defaultY;
+            return (double) -defaultY;
         }
         double min = dataPoints.firstEntry().getValue();
         Set<Double> keys = dataPoints.keySet();
@@ -110,15 +107,13 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void drawPoint(Graphics2D g, double x, double y) {
         
         // System.out.println("RMS = "+adapter.getRms().size());
-        if (adapter.getVisibilityGraphDataPoints().containsKey(x)
-                && adapter.getVisibilityGraphDataPoints().get(x) == y) {
+        if (adapter.getVisibilityGraphDataPoints().containsKey(x) && adapter.getVisibilityGraphDataPoints().get(x) == y) {
             g.setColor(colors[0]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x)
-                        * getSigma() / 2), g2cy(y + adapter.getRms().get(x)
-                        * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y
+                        + adapter.getRms().get(x) * getSigma() / 2));
                 // System.out.println("RMS ["+x+","+adapter.getRms().get(x));
                 // System.out.println("rms = "+adapter.getRms().get(x));
             }
@@ -158,8 +153,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void setCurrentPoint(Double currentPoint) {
         try {
             adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {
-        }
+        } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
     }
 }

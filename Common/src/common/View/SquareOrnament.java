@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 
 public class SquareOrnament extends AbstractOrnament {
     
-    public static int side = 4;
+    public static int side = 6;
     public static int detectSide = side + 1;
     
     @Override

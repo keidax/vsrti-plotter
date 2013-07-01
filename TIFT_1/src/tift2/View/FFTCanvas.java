@@ -10,10 +10,9 @@ import tift2.Model.Adapter;
 
 import common.View.SquareOrnament;
 
-
 public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
                                         // MouseMotionListener {
-
+    
     public FFTCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
         xAxis = "frequency (Hz)";
@@ -22,7 +21,7 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
     }
     
     @Override
-    public void drawDataSet(int count, Graphics2D g) {
+    public void drawDataSet(Graphics2D g) {
         if (getPoints().size() == 0) {
             return;
         }
@@ -30,8 +29,7 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
             new SquareOrnament().draw(g, g2cx(key), g2cy(getPoints().get(key)));
-            g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)),
-                    g2cx(key), g2cy(getPoints().get(key)));
+            g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
             previousKey = key;
             if (key > Double.parseDouble(View.view.fThetaMax.getText())) {
                 break;
@@ -63,7 +61,7 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
     @Override
     public Double getMinYPoint() {
         if (getPoints().size() == 0) {
-            return (double) -Canvas.defaultY;
+            return (double) -defaultY;
         }
         double min = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
@@ -129,9 +127,7 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
         }
         
         if (getCurrentPoint() != null) {
-            double tox =
-                    Math.min(Math.max(getLeftShift(), mCanx), getLeftShift()
-                            + getPlotWidth());
+            double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
             // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));

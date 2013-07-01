@@ -1,6 +1,7 @@
 package tift.View;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -48,7 +49,9 @@ public class FFTCanvas extends Canvas {
         Double previousKey = dataPoints.firstKey();
         for (Double key : keys) {
             if (key >= Double.parseDouble(View.viewer.fThetaMin.getText())) {
+                g.setColor(Color.RED);
                 new SquareOrnament().draw(g, g2cx(key - getMinX()), g2cy(dataPoints.get(key)));
+                g.setColor(Color.BLACK);
                 g.drawLine(g2cx(previousKey - getMinX()), g2cy(dataPoints.get(previousKey)), g2cx(key - getMinX()),
                         g2cy(dataPoints.get(key)));
                 previousKey = key;
@@ -88,7 +91,7 @@ public class FFTCanvas extends Canvas {
     @Override
     public Double getMinYPoint() {
         if (dataPoints.size() == 0) {
-            return (double) -Canvas.defaultY;
+            return (double) -defaultY;
         }
         double min = dataPoints.firstEntry().getValue();
         Set<Double> keys = dataPoints.keySet();

@@ -69,8 +69,10 @@ public class VCanvas extends Canvas {
         Set<Double> keys = dataPoints.keySet();
         Double previousKey = dataPoints.firstKey();
         for (Double key : keys) {
-            if (key > getMinX()) {
+            if (key >= getMinX()) {
+                g.setColor(Color.RED);
                 new SquareOrnament().draw(g, g2cx(key), g2cy(dataPoints.get(key)));
+                g.setColor(Color.BLACK);
                 g.drawLine(g2cx(previousKey), g2cy(dataPoints.get(previousKey)), g2cx(key), g2cy(dataPoints.get(key)));
                 previousKey = key;
             }
@@ -105,7 +107,7 @@ public class VCanvas extends Canvas {
     @Override
     public Double getMinYPoint() {
         if (dataPoints.size() == 0) {
-            return (double) -Canvas.defaultY;
+            return (double) -defaultY;
         }
         double min = dataPoints.firstEntry().getValue();
         Set<Double> keys = dataPoints.keySet();

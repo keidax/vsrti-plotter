@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Set;
 import java.util.TreeMap;
 
+import common.Model.CommonTIFTAdapter;
+
 /**
  * Adapter is a interface between View and Model. Viewers can use only methods
  * that this Adapter offers to them
@@ -11,7 +13,7 @@ import java.util.TreeMap;
  * @author Karel Durktoa
  */
 
-public class Adapter {
+public class Adapter extends CommonTIFTAdapter {
     
     private Model model;
     
@@ -21,7 +23,6 @@ public class Adapter {
     
     public void graphEquation(String eqn) {
         int num = getNumberOfPoints();
-        
     }
     
     public TreeMap<Double, Double> getVisiblityGraphPoints() {
@@ -83,11 +84,8 @@ public class Adapter {
                 break;
             }
         }
-        reduced.putAll(getModel()
-                .getImageGraph()
-                .getPoints()
-                .headMap(
-                        getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
+        reduced.putAll(getModel().getImageGraph().getPoints().headMap(
+                getModel().getImageGraph().getPoints().lastKey() / 2 + 1));
         // System.out.println("Size of reduced "+reduced.size());
         // return reduced;
         return getModel().getImageGraph().getPoints();
