@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 
 public class CircleOrnament extends AbstractOrnament {
     
-    public static int radius = 2;
+    public static int radius = 3;
     public static int detectRadius = radius + 1;
     
     @Override

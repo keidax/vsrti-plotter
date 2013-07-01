@@ -1,5 +1,6 @@
 package tift2.View;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -30,6 +31,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     
     @Override
     public void drawDataSet(Graphics2D g) {
+        g.setStroke(new BasicStroke(strokeSize / 2));
         if (getPoints().size() == 0) {
             return;
         }
@@ -108,7 +110,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         
         // System.out.println("RMS = "+adapter.getRms().size());
         if (adapter.getVisibilityGraphDataPoints().containsKey(x) && adapter.getVisibilityGraphDataPoints().get(x) == y) {
-            g.setColor(colors[0]);
+            g.setColor(Color.RED);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
@@ -118,7 +120,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                 // System.out.println("rms = "+adapter.getRms().get(x));
             }
         } else {
-            g.setColor(colors[1]);
+            g.setColor(Color.RED);
             ornaments[0].draw(g, g2cx(x), g2cy(y));
         }
     }

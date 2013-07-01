@@ -1,5 +1,7 @@
 package tift2.View;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -22,13 +24,16 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
     
     @Override
     public void drawDataSet(Graphics2D g) {
+        g.setStroke(new BasicStroke(strokeSize / 2));
         if (getPoints().size() == 0) {
             return;
         }
         Set<Double> keys = getPoints().keySet();
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
+            g.setColor(Color.RED);
             new SquareOrnament().draw(g, g2cx(key), g2cy(getPoints().get(key)));
+            g.setColor(Color.BLACK);
             g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
             previousKey = key;
             if (key > Double.parseDouble(View.view.fThetaMax.getText())) {
