@@ -17,6 +17,7 @@ import common.View.SquareOrnament;
  * @author Karel Durktoa and Adam Pere
  * 
  */
+@SuppressWarnings("serial")
 public class FFTCanvas extends Canvas {
     
     protected boolean amp;

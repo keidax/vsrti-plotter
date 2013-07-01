@@ -18,6 +18,7 @@ import common.View.SquareOrnament;
  * @author Karel Durktoa and Adam Pere
  * 
  */
+@SuppressWarnings("serial")
 public class VCanvas extends Canvas {
     
     protected TreeMap<Double, Double> dataPoints;

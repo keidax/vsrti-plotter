@@ -12,6 +12,7 @@ import tift2.Model.Adapter;
 
 import common.View.SquareOrnament;
 
+@SuppressWarnings("serial")
 public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
                                         // MouseMotionListener {
     
@@ -132,9 +133,8 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
         }
         
         if (getCurrentPoint() != null) {
-            double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
+            // double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
             double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
-            // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
         }
     }

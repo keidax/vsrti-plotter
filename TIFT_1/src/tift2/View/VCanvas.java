@@ -13,6 +13,7 @@ import common.View.AbstractOrnament;
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
 
+@SuppressWarnings("serial")
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
     
