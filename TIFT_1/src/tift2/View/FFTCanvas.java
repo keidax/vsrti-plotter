@@ -107,6 +107,9 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
     @Override
     public void mousePressed(MouseEvent evt) {
         // this.getVision().getCare().set(this.getVision().getSoul().newMemento());
+        if (evt.getButton() != MouseEvent.BUTTON1) {
+            return;
+        }
         mCanx = evt.getX();
         mCany = evt.getY();
         if (getVerticallyPointOnGraph(mCanx, mCany) != null) {

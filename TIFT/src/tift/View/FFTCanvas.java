@@ -137,6 +137,9 @@ public class FFTCanvas extends Canvas {
      */
     @Override
     public void mousePressed(MouseEvent evt) {
+        if (evt.getButton() != MouseEvent.BUTTON1) {
+            return;
+        }
         mCanx = evt.getX();
         mCany = evt.getY();
         if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
