@@ -41,7 +41,8 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     protected int[] steps = {1, 2, 5};
     protected int squareWidth; // width of vertical line placement
     protected int xLabelWidth;
-    protected int defaultY;
+    protected int defaultY = 2;
+    protected int defaultX = 1;
     
     protected int mCanx, mCany;
     protected Double currentPoint;
@@ -64,7 +65,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         bPad = 60;
         squareWidth = 50;
         xLabelWidth = 30;
-        defaultY = 2;
         setPoints(g);
         commonAdapter = a;
         addMouseListener(this);
@@ -229,7 +229,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     public void drawPoint(Graphics2D g, double x, double y) {}
     
     public double getMaxY() {
-        if (getPoints().isEmpty()) {
+        if (getPoints() == null || getPoints().isEmpty()) {
             return defaultY;
         }
         Double maxy = getMaxYPoint();
@@ -238,7 +238,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     
     public double getMaxX() {
         if (getPoints() == null || getPoints().size() == 0) {
-            return defaultY;
+            return defaultX;
         }
         return getPoints().lastKey();
     }
@@ -250,13 +250,9 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     
     public double getMinY() {
         if (getPoints().isEmpty() || getPoints().size() == 0) {
-            System.out.println("miny is default: " + (-defaultY));
             return -defaultY;
         } else {
-            // System.out.print("getting miny point... ");
-            double miny = getMinYPoint();
-            // System.out.println(miny);
-            return miny;
+            return getMinYPoint();
         }
     }
     
@@ -265,9 +261,9 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
      * 
      * @return
      */
-    public double countHorizontalLabelStep() {// NOT FINISHED
-        int count = getPlotWidth() / squareWidth + 1;// 30
-        double max = getMaxX() - getMinX();// 50
+    public double countHorizontalLabelStep() {
+        int count = getPlotWidth() / squareWidth + 1;
+        double max = getMaxX() - getMinX();
         return max / count;
     }
     
