@@ -9,7 +9,6 @@ import java.util.TreeMap;
 
 import tift.Model.Adapter;
 
-import common.View.AbstractOrnament;
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
 
@@ -21,7 +20,6 @@ import common.View.SquareOrnament;
 @SuppressWarnings("serial")
 public class VCanvas extends Canvas {
     
-    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
     protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
     final boolean amp;
@@ -44,17 +42,16 @@ public class VCanvas extends Canvas {
     
     @Override
     public void drawPoint(Graphics2D g, double x, double y) {
-        
         if (getPoints().containsKey(x) && getPoints().get(x) == y) {
             g.setColor(colors[1]);
-            ornaments[1].draw(g, g2cx(x), g2cy(y));
+            new SquareOrnament(getOrnamentSize(x)).draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
                 drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y
                         + adapter.getRms().get(x) * getSigma() / 2));
             }
         } else {
             g.setColor(colors[1]);
-            ornaments[0].draw(g, g2cx(x), g2cy(y));
+            new CircleOrnament(getOrnamentSize(x)).draw(g, g2cx(x), g2cy(y));
         }
     }
     
@@ -69,7 +66,7 @@ public class VCanvas extends Canvas {
         for (Double key : keys) {
             if (key >= getMinX()) {
                 g.setColor(Color.RED);
-                new SquareOrnament().draw(g, g2cx(key), g2cy(getPoints().get(key)));
+                new SquareOrnament(getOrnamentSize(key)).draw(g, g2cx(key), g2cy(getPoints().get(key)));
                 g.setColor(Color.RED);
                 g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
                 previousKey = key;

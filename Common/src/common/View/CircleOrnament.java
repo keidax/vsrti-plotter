@@ -4,8 +4,13 @@ import java.awt.Graphics2D;
 
 public class CircleOrnament extends AbstractOrnament {
     
-    public static int radius = 3;
-    public static int detectRadius = radius + 1;
+    public int radius = 3;
+    public int detectRadius = radius + 1;
+    
+    public CircleOrnament(int radius) {
+        super();
+        this.radius = radius;
+    }
     
     @Override
     public void draw(Graphics2D g, int x, int y) {

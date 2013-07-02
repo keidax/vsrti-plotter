@@ -43,14 +43,14 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     public View view;
     public Adapter adapter;
     protected static int lPad = 20, rPad = 30, tPad = 30, bPad = 40;
-    protected static int[] steps = { 1, 2, 5 };
+    protected static int[] steps = {1, 2, 5};
     protected static int squareWidth = 30;
     protected static int yLabelWidth = 40;
     protected static int xLabelWidth = 30;
     protected static int defaultY = 9;
     protected int mCanx, mCany;
     protected Double currentPoint;
-    protected static Color[] colors = { Color.BLACK };
+    protected static Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
     final JPopupMenu menu = new JPopupMenu();
     protected String xAxis = "x-axis";
@@ -116,8 +116,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                         paint(image.createGraphics());
                         ImageIO.write(image, "jpeg", f);
                         out.close();
-                    } catch (IOException ex) {
-                    }
+                    } catch (IOException ex) {}
                 } else {
                     JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -181,8 +180,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                         // paint(image.createGraphics());
                         // ImageIO.write(image, "eps", f);
                         // out.close();
-                    } catch (IOException ex) {
-                    }
+                    } catch (IOException ex) {}
                 } else {
                     JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -232,11 +230,9 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         
     }
     
-    public void drawPoint(Graphics2D g, double x, double y) {
-    }
+    public void drawPoint(Graphics2D g, double x, double y) {}
     
-    public void drawPoint(Graphics2D g, double x, double y, boolean b) {
-    }
+    public void drawPoint(Graphics2D g, double x, double y, boolean b) {}
     
     public int g2cx(double x) {
         double ratio = getRatioX();
@@ -280,11 +276,11 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                 g.drawString(View.viewer.currentNode.fStart + "+", 0, getHeight() - 17);
             }
             if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle")) {
-                g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.viewer.min),
-                        (int) (getLeftShift() + i * steps - xLabelWidth / 4), getHeight() - 17);
+                g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.viewer.min), (int) (getLeftShift() + i
+                        * steps - xLabelWidth / 4), getHeight() - 17);
             } else {
-                g.drawString("" + df.format(i * lstep * 100 / 100.0), (int) (getLeftShift() + i * steps - xLabelWidth / 4),
-                        getHeight() - 17);
+                g.drawString("" + df.format(i * lstep * 100 / 100.0),
+                        (int) (getLeftShift() + i * steps - xLabelWidth / 4), getHeight() - 17);
             }
             
         }
@@ -316,7 +312,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         g.drawLine(x, Canvas.tPad, x, getHeight() - Canvas.bPad);// vertical
         g.setColor(Color.LIGHT_GRAY);
         for (int i = 0; i < (getPlotHeight() - 1) / steps + 1; i++) {// horizontal
-            g.drawLine(x - 2, (int) (getHeight() - Canvas.bPad - i * steps), x + 2, (int) (getHeight() - Canvas.bPad - i * steps));
+            g.drawLine(x - 2, (int) (getHeight() - Canvas.bPad - i * steps), x + 2,
+                    (int) (getHeight() - Canvas.bPad - i * steps));
         }
     }
     
@@ -331,12 +328,12 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
     public void drawVerticalMetric(int x, double strStep, double plotStep, Graphics2D g) {
         g.setFont(new Font(g.getFont().getFontName(), 0, 11));
         for (int i = 0; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {
-            g.drawString("" + Math.round(c2gy((getHeight() - Canvas.bPad - tPad) / 2 + tPad - i * plotStep) * 10) / 10.0, x,
-                    (int) ((getHeight() - Canvas.bPad - tPad) / 2 + tPad - i * plotStep));
+            g.drawString("" + Math.round(c2gy((getHeight() - Canvas.bPad - tPad) / 2 + tPad - i * plotStep) * 10)
+                    / 10.0, x, (int) ((getHeight() - Canvas.bPad - tPad) / 2 + tPad - i * plotStep));
         }
         for (int i = 1; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {// horizontal
-            g.drawString("" + Math.round(c2gy((getHeight() - Canvas.bPad - tPad) / 2 + tPad + i * plotStep) * 10) / 10.0, x - 5,
-                    (int) ((getHeight() - Canvas.bPad - tPad) / 2 + tPad + i * plotStep));
+            g.drawString("" + Math.round(c2gy((getHeight() - Canvas.bPad - tPad) / 2 + tPad + i * plotStep) * 10)
+                    / 10.0, x - 5, (int) ((getHeight() - Canvas.bPad - tPad) / 2 + tPad + i * plotStep));
         }
     }
     
@@ -690,7 +687,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInside(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament(3).isInside(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
                 return key;
             }
         }
@@ -701,7 +698,7 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInsideVertically(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament(3).isInsideVertically(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
                 return key;
             }
             
@@ -719,7 +716,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         mCany = evt.getY();
         double p = 0;
         
-        if (View.viewer.choosingDelete && getPointOnGraph(mCanx, mCany) != null && evt.getButton() != MouseEvent.BUTTON2) {
+        if (View.viewer.choosingDelete && getPointOnGraph(mCanx, mCany) != null
+                && evt.getButton() != MouseEvent.BUTTON2) {
             p = getPointOnGraph(mCanx, mCany);
             if (View.viewer.deleting[(int) p - 1] != -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p), false);
@@ -748,7 +746,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         mCanx = evt.getX();
         mCany = evt.getY();
         double p = 0;
-        if (evt.getButton() != MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null && View.viewer.choosingDelete) {
+        if (evt.getButton() != MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null
+                && View.viewer.choosingDelete) {
             p = getVerticallyPointOnGraph(mCanx, mCany);
             
             if (View.viewer.deleting[(int) p - 1] != -1) {
@@ -756,7 +755,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
                 View.viewer.deleting[(int) p - 1] = -1;
             }
         }
-        if (evt.getButton() == MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null && View.viewer.choosingDelete) {
+        if (evt.getButton() == MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null
+                && View.viewer.choosingDelete) {
             p = getVerticallyPointOnGraph(mCanx, mCany);
             
             if (View.viewer.deleting[(int) p - 1] == -1) {
@@ -780,7 +780,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
             double p = getVerticallyPointOnGraph(mCanx, mCany);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]  Data Block: "
                     + View.viewer.taPlotted[(int) p] + ")");
-        } else if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle") && getPointOnGraph(mCanx, mCany) != null) {
+        } else if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle")
+                && getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
             setToolTipText("[" + df.format(p + View.viewer.min) + "; " + df.format(getPoints().get(p)) + "]");
         } else if (getPointOnGraph(mCanx, mCany) != null) {
@@ -848,7 +849,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         drawYAxis(i++, g2); // draw vertical axis
         // draw axes
         g2.setColor(Color.BLACK);
-        g2.drawLine(getLeftShift(), g2cy(0.0), getLeftShift() + getPlotWidth(), g2cy(0.0));// horizontal// draw horizontal axis
+        g2.drawLine(getLeftShift(), g2cy(0.0), getLeftShift() + getPlotWidth(), g2cy(0.0));// horizontal// draw
+                                                                                           // horizontal axis
         g2.drawString(graphTitle, getWidth() / 2 - 80, tPad / 2);
         i = 0;
         g2.setColor(colors[0]);
@@ -862,8 +864,8 @@ public abstract class Canvas extends JPanel implements MouseListener, MouseMotio
         g.setColor(Color.red);
         double last = -maxX;
         for (double i = -maxX + getPlotWidth() / 80; i < maxX; i += .5) {
-            g.drawLine(g2cx(i), g2cy(sinc(i) * (points.containsKey(0.0) ? points.get(0.0) : 1)), g2cx(last), g2cy(sinc(last)
-                    * (points.containsKey(0.0) ? points.get(0.0) : 1)));
+            g.drawLine(g2cx(i), g2cy(sinc(i) * (points.containsKey(0.0) ? points.get(0.0) : 1)), g2cx(last),
+                    g2cy(sinc(last) * (points.containsKey(0.0) ? points.get(0.0) : 1)));
             last = i;
         }
     }

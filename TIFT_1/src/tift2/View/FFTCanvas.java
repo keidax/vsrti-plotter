@@ -33,7 +33,7 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
             g.setColor(Color.RED);
-            new SquareOrnament().draw(g, g2cx(key), g2cy(getPoints().get(key)));
+            new SquareOrnament(getOrnamentSize(key)).draw(g, g2cx(key), g2cy(getPoints().get(key)));
             g.setColor(Color.RED);
             g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
             previousKey = key;

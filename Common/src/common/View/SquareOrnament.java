@@ -4,8 +4,12 @@ import java.awt.Graphics2D;
 
 public class SquareOrnament extends AbstractOrnament {
     
-    public static int side = 6;
-    public static int detectSide = side + 1;
+    public int side = 6;
+    public int detectSide = side + 1;
+    
+    public SquareOrnament(int radius) {
+        this.side = radius * 2;
+    }
     
     @Override
     public void draw(Graphics2D g, int x, int y) {

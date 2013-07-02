@@ -17,8 +17,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
     
     protected TreeMap<Double, Double> dataPoints;
-    protected static AbstractOrnament[] ornaments = { new CircleOrnament(), new SquareOrnament() };
-    protected static Color[] colors = { Color.BLUE, Color.BLACK };
+    protected static AbstractOrnament[] ornaments = {new CircleOrnament(3), new SquareOrnament(3)};
+    protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
@@ -38,7 +38,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             g.setColor(Color.BLACK);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y + adapter.getRms().get(x) * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y
+                        + adapter.getRms().get(x) * getSigma() / 2));
             }
         } else {
             g.setColor(Color.BLACK);
@@ -103,8 +104,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     public void setCurrentPoint(Double currentPoint) {
         try {
             adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {
-        }
+        } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
     }
 }

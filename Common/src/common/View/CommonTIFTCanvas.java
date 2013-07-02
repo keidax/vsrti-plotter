@@ -219,6 +219,14 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         
     }
     
+    public int getOrnamentSize(double x) {
+        if (x <= getMinX()) {
+            return 5;
+        } else {
+            return 3;
+        }
+    }
+    
     /**
      * Draw a single point
      * 
@@ -492,7 +500,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInside(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament(getOrnamentSize(key)).isInside(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
                 return key;
             }
         }
@@ -503,7 +511,8 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (new SquareOrnament().isInsideVertically(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament(getOrnamentSize(key)).isInsideVertically(mCanx, mCany, g2cx(key), g2cy(getPoints()
+                    .get(key)))) {
                 return key;
             }
         }

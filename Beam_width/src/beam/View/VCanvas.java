@@ -21,7 +21,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     
     // protected TreeMap<Double, Double> dataPoints;
     protected TreeMap<Double, Double> rmsPoints;
-    protected AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
+    protected AbstractOrnament[] ornaments = {new CircleOrnament(3), new SquareOrnament(3)};
     protected Color[] colors = {Color.BLUE, Color.BLACK};
     protected double displayFactor = 1;
     

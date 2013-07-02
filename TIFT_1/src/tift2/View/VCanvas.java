@@ -9,7 +9,6 @@ import java.util.TreeMap;
 
 import tift2.Model.Adapter;
 
-import common.View.AbstractOrnament;
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
 
@@ -17,7 +16,6 @@ import common.View.SquareOrnament;
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
     
-    protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
     protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
     
@@ -114,7 +112,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         // System.out.println("RMS = "+adapter.getRms().size());
         if (adapter.getVisibilityGraphDataPoints().containsKey(x) && adapter.getVisibilityGraphDataPoints().get(x) == y) {
             g.setColor(Color.RED);
-            ornaments[1].draw(g, g2cx(x), g2cy(y));
+            new SquareOrnament(getOrnamentSize(x)).draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
                 // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*adapter.getRms().get(x)));
                 drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y
@@ -124,7 +122,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             }
         } else {
             g.setColor(Color.RED);
-            ornaments[0].draw(g, g2cx(x), g2cy(y));
+            new CircleOrnament(getOrnamentSize(x)).draw(g, g2cx(x), g2cy(y));
         }
     }
     
