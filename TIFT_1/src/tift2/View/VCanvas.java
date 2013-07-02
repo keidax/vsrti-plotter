@@ -37,7 +37,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         Set<Double> keys = getPoints().keySet();
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
-            g.setColor(Color.BLACK);
+            g.setColor(Color.RED);
             g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
             previousKey = key;
             drawPoint(g, key, getPoints().get(key));

@@ -50,7 +50,7 @@ public class FFTCanvas extends Canvas {
             if (key >= Double.parseDouble(View.viewer.fThetaMin.getText())) {
                 g.setColor(Color.RED);
                 new SquareOrnament().draw(g, g2cx(key - getMinX()), g2cy(getPoints().get(key)));
-                g.setColor(Color.BLACK);
+                g.setColor(Color.RED);
                 g.drawLine(g2cx(previousKey - getMinX()), g2cy(getPoints().get(previousKey)), g2cx(key - getMinX()),
                         g2cy(getPoints().get(key)));
                 previousKey = key;

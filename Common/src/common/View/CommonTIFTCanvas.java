@@ -624,30 +624,53 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
      * @param g
      */
     public void drawXAxis(Graphics2D g) {
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
         g.setStroke(new BasicStroke(strokeSize));
-        double steps = countHorizontalStep();
-        double lstep = countHorizontalLabelStep();
-        DecimalFormat df = new DecimalFormat("#.##");
+        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+        DecimalFormat df = new DecimalFormat("#.#");
         FontMetrics fm = g.getFontMetrics();
         
-        for (int i = 0; i < (getPlotWidth() - 1) / steps + 1; i++) {// horizontal
-            int xPosition = (int) (getLPad() + i * steps);
-            int yPosition = g2cy(0.0);
+        // determine spacing for marks on x-axis
+        double xSpacing = 1;
+        double pixelsPerNumber = this.getPlotWidth() * 1.0 / (getMaxX() - getMinX());
+        if (pixelsPerNumber > 350) {
+            xSpacing = 0.1;
+        } else if (pixelsPerNumber > 200) {
+            xSpacing = 0.2;
+        } else if (pixelsPerNumber > 100) {
+            xSpacing = 0.5;
+        } else if (pixelsPerNumber > 35) {
+            xSpacing = 1;
+        } else if (pixelsPerNumber > 25) {
+            xSpacing = 2;
+        } else if (pixelsPerNumber > 8) {
+            xSpacing = 5;
+        } else if (pixelsPerNumber > 3.5) {
+            xSpacing = 10;
+        } else {
+            xSpacing = 15;
+        }
+        
+        System.out.println(pixelsPerNumber);
+        
+        // draw axis title
+        g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
+                getHeight() - 10);
+        // draw horizontal axis
+        g.drawLine(getLPad(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
+        
+        for (double i = (int) ((int) (getMinX() / xSpacing) * xSpacing); i <= getMaxX(); i += xSpacing) {
+            int xPosition = g2cx(i);
+            int yPosition = getHeight() - bPad;
+            
+            // draw vertical marks
             g.setColor(Color.LIGHT_GRAY);
             g.drawLine(xPosition, yPosition + 2, xPosition, yPosition - 2);
             
+            // draw labels for each mark
             g.setColor(Color.BLACK);
-            String labelString = "" + df.format(Math.round(i * lstep * 100) / 100.0 + getMinX());
-            yPosition = getHeight() - bPad + fm.getAscent() + 5;
-            g.drawString(labelString, xPosition - fm.stringWidth(labelString) / 2, yPosition);
+            String lString = df.format(i);
+            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + 5);
         }
-        
-        g.drawLine(getLPad(), g2cy(0.0), getLPad() + getPlotWidth(), g2cy(0.0));
-        g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
-                getHeight() - 10);
-        
-        System.out.println("g2cy(0) = " + g2cy(0.0));
         
     }
     
@@ -661,9 +684,42 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         g.setStroke(new BasicStroke(strokeSize));
         g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
         g.setColor(Color.BLACK);
-        drawVerticalLine(countVerticalStep(), g);
-        g.setColor(colors[count % colors.length]);
-        drawVerticalMetric(countVerticalStep(), g);
+        FontMetrics fm = g.getFontMetrics();
+        DecimalFormat df = new DecimalFormat("#.#");
+        
+        g.drawLine(getLPad(), tPad, getLPad(), getHeight() - bPad);
+        
+        // determine spacing for marks on y-axis
+        double ySpacing = 1;
+        double pixelsPerNumber = this.getPlotHeight() * 1.0 / (getMaxY() - getMinY());
+        if (pixelsPerNumber > 200) {
+            ySpacing = 0.1;
+        } else if (pixelsPerNumber > 90) {
+            ySpacing = 0.2;
+        } else if (pixelsPerNumber > 35) {
+            ySpacing = 0.5;
+        } else if (pixelsPerNumber > 20) {
+            ySpacing = 1;
+        } else if (pixelsPerNumber > 8) {
+            ySpacing = 2;
+        } else if (pixelsPerNumber > 3.5) {
+            ySpacing = 5;
+        } else {
+            ySpacing = 10;
+        }
+        
+        for (double i = (int) ((int) (getMinY() / ySpacing) * ySpacing); i <= getMaxY(); i += ySpacing) {
+            int xPosition = lPad;
+            int yPosition = g2cy(i);
+            // draw horixontal marks
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(xPosition - 2, yPosition, xPosition + 2, yPosition);
+            // draw label for each mark
+            g.setColor(Color.BLACK);
+            String tempString = df.format(i);
+            g.drawString(tempString, xPosition - fm.stringWidth(tempString) - 5, yPosition + fm.getAscent() / 2);
+        }
+        
         drawVerticalLabel(g);
     }
     
@@ -683,22 +739,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         
         g.rotate(Math.PI / 2.0);
         g.translate(-yLabelWidth, -translateDown);
-    }
-    
-    /**
-     * Draws vertical lines
-     * 
-     * @param x
-     * @param steps
-     * @param g
-     */
-    public void drawVerticalLine(double steps, Graphics2D g) {
-        g.drawLine(lPad, tPad, lPad, getHeight() - bPad);// vertical
-        g.setColor(Color.LIGHT_GRAY);
-        for (int i = 0; i < (getPlotHeight() - 1) / steps + 1; i++) {// horizontal
-            g.drawLine(lPad - 2, (int) (getHeight() - bPad - i * steps), lPad + 2, (int) (getHeight() - bPad - i
-                    * steps));
-        }
     }
     
     /**

@@ -217,7 +217,7 @@ public abstract class Canvas extends CommonVSRTICanvas {
                 continue;
             }
             g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(stroke));
+            g.setStroke(new BasicStroke(strokeSize));
             g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)), g2cx(key), g2cy(points.get(key)));
             previousKey = key;
             System.out.println("point at " + key + " - ");
