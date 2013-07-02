@@ -37,7 +37,6 @@ import common.View.ViewUtilities;
 @SuppressWarnings("serial")
 public abstract class Canvas extends CommonVSRTICanvas {
     
-    public TreeMap<Double, Double> points;
     public View view;
     
     /**

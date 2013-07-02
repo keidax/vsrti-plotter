@@ -17,14 +17,12 @@ import common.View.SquareOrnament;
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
                                      // MouseMotionListener {
     
-    protected TreeMap<Double, Double> dataPoints;
     protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
     protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
-        dataPoints = adapter.getVisiblityGraphPoints();
         xAxisTitle = "time (s)";
         yAxisTitle = "Amplitude";
         graphTitle = "f(t)";
@@ -51,15 +49,15 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     }
     
     @Override
-    public Double getMaxYPoint() {
-        if (dataPoints.size() == 0) {
-            return null;
+    public double getMaxYPoint() {
+        if (getPoints().size() == 0) {
+            return 0;
         }
-        double max = dataPoints.firstEntry().getValue();
-        Set<Double> keys = dataPoints.keySet();
+        double max = getPoints().firstEntry().getValue();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (dataPoints.get(key) > max) {
-                max = dataPoints.get(key);
+            if (getPoints().get(key) > max) {
+                max = getPoints().get(key);
             }
             if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
                 break;
@@ -68,42 +66,46 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         if (max < 2.0) {
             return 2.0;
         }
-        return max;
+        return max * 1.1;
     }
     
     @Override
-    public Double getMinYPoint() {
-        if (dataPoints.size() == 0) {
+    public double getMinYPoint() {
+        if (getPoints().size() == 0) {
             return (double) -defaultY;
         }
-        double min = dataPoints.firstEntry().getValue();
-        Set<Double> keys = dataPoints.keySet();
+        double min = getPoints().firstEntry().getValue();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (dataPoints.get(key) < min) {
-                min = dataPoints.get(key);
+            if (getPoints().get(key) < min) {
+                min = getPoints().get(key);
             }
             if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
                 break;
             }
         }
-        return min;
+        
+        if (min > -defaultY) {
+            return -defaultY;
+        }
+        return min * 1.1;
     }
     
     @Override
     public double getMaxX() {
         // show only half of the points because any points after nyquist
         // frequency/2 are useless
-        if (dataPoints == null || dataPoints.size() == 0) {
+        if (getPoints() == null || getPoints().size() == 0) {
             return defaultY;
         }
-        Set<Double> keys = dataPoints.keySet();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
             if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
                 return key;
             }
             
         }
-        return dataPoints.lastKey();
+        return getPoints().lastKey();
     }
     
     @Override
@@ -135,12 +137,12 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
     }
     
     public void update() {
-        dataPoints = adapter.getVisiblityGraphPoints();
+        setPoints(adapter.getVisiblityGraphPoints());
     }
     
     @Override
     public void update(Graphics g) {
-        dataPoints = adapter.getVisiblityGraphPoints();
+        setPoints(adapter.getVisiblityGraphPoints());
         paint(g);
     }
     

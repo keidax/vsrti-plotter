@@ -21,7 +21,6 @@ import common.View.SquareOrnament;
 public class FFTCanvas extends Canvas {
     
     protected boolean amp;
-    protected TreeMap<Double, Double> dataPoints;
     
     public FFTCanvas(View v, Adapter a, TreeMap<Double, Double> g, String yaxis, String title, boolean amplitude) {
         super(v, a, g, amplitude);
@@ -29,7 +28,6 @@ public class FFTCanvas extends Canvas {
         yAxisTitle = yaxis;
         graphTitle = title;
         amp = amplitude;
-        dataPoints = g;
     }
     
     public void setYAxis(String axis) {
@@ -43,18 +41,18 @@ public class FFTCanvas extends Canvas {
     @Override
     public void drawDataSet(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize / 2));
-        if (dataPoints.size() == 0) {
+        if (getPoints().size() == 0) {
             return;
         }
-        Set<Double> keys = dataPoints.keySet();
-        Double previousKey = dataPoints.firstKey();
+        Set<Double> keys = getPoints().keySet();
+        Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
             if (key >= Double.parseDouble(View.viewer.fThetaMin.getText())) {
                 g.setColor(Color.RED);
-                new SquareOrnament().draw(g, g2cx(key - getMinX()), g2cy(dataPoints.get(key)));
+                new SquareOrnament().draw(g, g2cx(key - getMinX()), g2cy(getPoints().get(key)));
                 g.setColor(Color.BLACK);
-                g.drawLine(g2cx(previousKey - getMinX()), g2cy(dataPoints.get(previousKey)), g2cx(key - getMinX()),
-                        g2cy(dataPoints.get(key)));
+                g.drawLine(g2cx(previousKey - getMinX()), g2cy(getPoints().get(previousKey)), g2cx(key - getMinX()),
+                        g2cy(getPoints().get(key)));
                 previousKey = key;
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
                         || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
@@ -65,16 +63,16 @@ public class FFTCanvas extends Canvas {
     }
     
     @Override
-    public Double getMaxYPoint() {
-        if (dataPoints.size() == 0) {
-            return null;
+    public double getMaxYPoint() {
+        if (getPoints().size() == 0) {
+            return 0;
         }
-        double max = dataPoints.firstEntry().getValue();
-        Set<Double> keys = dataPoints.keySet();
+        double max = getPoints().firstEntry().getValue();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
             if (key > Double.parseDouble(View.viewer.fThetaMin.getText())) {
-                if (dataPoints.get(key) > max) {
-                    max = dataPoints.get(key);
+                if (getPoints().get(key) > max) {
+                    max = getPoints().get(key);
                 }
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
                         || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
@@ -86,20 +84,20 @@ public class FFTCanvas extends Canvas {
         if (max < 2.0) {
             return 2.0;
         }
-        return max;
+        return max * 1.1;
     }
     
     @Override
-    public Double getMinYPoint() {
-        if (dataPoints.size() == 0) {
-            return (double) -defaultY;
+    public double getMinYPoint() {
+        if (getPoints().isEmpty()) {
+            return -defaultY;
         }
-        double min = dataPoints.firstEntry().getValue();
-        Set<Double> keys = dataPoints.keySet();
+        double min = getPoints().firstEntry().getValue();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
             if (key > Double.parseDouble(View.viewer.fThetaMin.getText())) {
-                if (dataPoints.get(key) < min) {
-                    min = dataPoints.get(key);
+                if (getPoints().get(key) < min) {
+                    min = getPoints().get(key);
                 }
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
                         || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
@@ -107,17 +105,20 @@ public class FFTCanvas extends Canvas {
                 }
             }
         }
-        return min;
+        if (min > -defaultY) {
+            return -defaultY;
+        }
+        return min * 1.1;
     }
     
     @Override
     public double getMaxX() {
         // show only half of the points because any points after nyquist
         // frequency/2 are redundant
-        if (dataPoints == null || dataPoints.size() == 0) {
+        if (getPoints() == null || getPoints().size() == 0) {
             return defaultY;
         }
-        Set<Double> keys = dataPoints.keySet();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
             if (key > Double.parseDouble(View.viewer.fThetaMin.getText())) {
                 if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
@@ -126,7 +127,7 @@ public class FFTCanvas extends Canvas {
                 }
             }
         }
-        return dataPoints.lastKey();
+        return getPoints().lastKey();
     }
     
     /**
@@ -175,9 +176,9 @@ public class FFTCanvas extends Canvas {
     @Override
     public void update(Graphics g) {
         if (amp) {
-            dataPoints = adapter.getVisibilityGraphDataPoints();
+            setPoints(adapter.getVisibilityGraphDataPoints());
         } else {
-            dataPoints = adapter.getVisibilityGraphDataPoints2();
+            setPoints(adapter.getVisibilityGraphDataPoints2());
         }
         paint(g);
     }

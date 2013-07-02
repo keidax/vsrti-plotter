@@ -21,7 +21,6 @@ import common.View.SquareOrnament;
 @SuppressWarnings("serial")
 public class VCanvas extends Canvas {
     
-    protected TreeMap<Double, Double> dataPoints;
     protected static AbstractOrnament[] ornaments = {new CircleOrnament(), new SquareOrnament()};
     protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
@@ -29,8 +28,6 @@ public class VCanvas extends Canvas {
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g, String yaxis, String title, boolean amplitude) {
         super(v, a, g, amplitude);
-        dataPoints = g;
-        System.out.println(dataPoints.size());
         xAxisTitle = "time (s)";
         yAxisTitle = yaxis;
         graphTitle = title;
@@ -48,7 +45,7 @@ public class VCanvas extends Canvas {
     @Override
     public void drawPoint(Graphics2D g, double x, double y) {
         
-        if (dataPoints.containsKey(x) && dataPoints.get(x) == y) {
+        if (getPoints().containsKey(x) && getPoints().get(x) == y) {
             g.setColor(colors[1]);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
@@ -64,17 +61,17 @@ public class VCanvas extends Canvas {
     @Override
     public void drawDataSet(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize / 2));
-        if (dataPoints.size() == 0) {
+        if (getPoints().size() == 0) {
             return;
         }
-        Set<Double> keys = dataPoints.keySet();
-        Double previousKey = dataPoints.firstKey();
+        Set<Double> keys = getPoints().keySet();
+        Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
             if (key >= getMinX()) {
                 g.setColor(Color.RED);
-                new SquareOrnament().draw(g, g2cx(key), g2cy(dataPoints.get(key)));
+                new SquareOrnament().draw(g, g2cx(key), g2cy(getPoints().get(key)));
                 g.setColor(Color.BLACK);
-                g.drawLine(g2cx(previousKey), g2cy(dataPoints.get(previousKey)), g2cx(key), g2cy(dataPoints.get(key)));
+                g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
                 previousKey = key;
             }
             
@@ -85,15 +82,15 @@ public class VCanvas extends Canvas {
     }
     
     @Override
-    public Double getMaxYPoint() {
-        if (dataPoints.size() == 0) {
-            return null;
+    public double getMaxYPoint() {
+        if (getPoints().size() == 0) {
+            return 0;
         }
-        double max = dataPoints.firstEntry().getValue();
-        Set<Double> keys = dataPoints.keySet();
+        double max = getPoints().firstEntry().getValue();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (dataPoints.get(key) > max) {
-                max = dataPoints.get(key);
+            if (getPoints().get(key) > max) {
+                max = getPoints().get(key);
             }
             if (key > Double.parseDouble(View.viewer.fMaxTime.getText())) {
                 break;
@@ -102,42 +99,45 @@ public class VCanvas extends Canvas {
         if (max < 2.0) {
             return 2.0;
         }
-        return max;
+        return max * 1.1;
     }
     
     @Override
-    public Double getMinYPoint() {
-        if (dataPoints.size() == 0) {
-            return (double) -defaultY;
+    public double getMinYPoint() {
+        if (getPoints().size() == 0) {
+            return -defaultY;
         }
-        double min = dataPoints.firstEntry().getValue();
-        Set<Double> keys = dataPoints.keySet();
+        double min = getPoints().firstEntry().getValue();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (dataPoints.get(key) < min) {
-                min = dataPoints.get(key);
+            if (getPoints().get(key) < min) {
+                min = getPoints().get(key);
             }
             if (key > Double.parseDouble(View.viewer.fMaxTime.getText())) {
                 break;
             }
         }
-        return min;
+        if (min > -defaultY) {
+            return -defaultY;
+        }
+        return min * 1.1;
     }
     
     @Override
     public double getMaxX() {
         // show only half of the points because any points after nyquist
         // frequency/2 are useless
-        if (dataPoints == null || dataPoints.size() == 0) {
+        if (getPoints() == null || getPoints().size() == 0) {
             return defaultY;
         }
-        Set<Double> keys = dataPoints.keySet();
+        Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
             if (key > Double.parseDouble(View.viewer.fMaxTime.getText())) {
                 return key;
             }
             
         }
-        return dataPoints.lastKey();
+        return getPoints().lastKey();
     }
     
     public void drawRms(Graphics2D g, int x, int y1, int y2) {
@@ -148,18 +148,18 @@ public class VCanvas extends Canvas {
     
     public void update() {
         if (amp) {
-            dataPoints = adapter.getVisibilityGraphDataPoints();
+            setPoints(adapter.getVisibilityGraphDataPoints());
         } else {
-            dataPoints = adapter.getVisibilityGraphDataPoints2();
+            setPoints(adapter.getVisibilityGraphDataPoints2());
         }
     }
     
     @Override
     public void update(Graphics g) {
         if (amp) {
-            dataPoints = adapter.getVisibilityGraphDataPoints();
+            setPoints(adapter.getVisibilityGraphDataPoints());
         } else {
-            dataPoints = adapter.getVisibilityGraphDataPoints2();
+            setPoints(adapter.getVisibilityGraphDataPoints2());
         }
         paint(g);
     }

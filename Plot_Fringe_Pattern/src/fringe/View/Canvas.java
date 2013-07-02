@@ -39,7 +39,6 @@ import fringe.Model.Adapter;
 @SuppressWarnings("serial")
 public abstract class Canvas extends CommonVSRTICanvas {
     
-    private TreeMap<Double, Double> points;
     public View view;
     public Adapter adapter;
     

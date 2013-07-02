@@ -38,17 +38,10 @@ import common.Model.CommonTIFTAdapter;
 @SuppressWarnings("serial")
 public abstract class CommonTIFTCanvas extends CommonRootCanvas implements MouseListener, MouseMotionListener {
     
-    protected int lPad, rPad, tPad, bPad; // Margins
     protected int[] steps = {1, 2, 5};
     protected int squareWidth; // width of vertical line placement
-    protected int yLabelWidth;
     protected int xLabelWidth;
     protected int defaultY;
-    
-    public TreeMap<Double, Double> points;
-    protected String xAxisTitle = "x-axis";
-    protected String yAxisTitle = "y-axis";
-    protected String graphTitle = "Untitled";
     
     protected int mCanx, mCany;
     protected Double currentPoint;
@@ -69,10 +62,9 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         rPad = 30;
         tPad = 40;
         bPad = 60;
-        squareWidth = 60;
-        yLabelWidth = 10;
+        squareWidth = 50;
         xLabelWidth = 30;
-        defaultY = 9;
+        defaultY = 2;
         setPoints(g);
         commonAdapter = a;
         addMouseListener(this);
@@ -206,20 +198,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         menu.add(item2);
     }
     
-    public double c2gx(int x) {
-        double ratio = getRatioX();
-        return (x - getLPad()) / ratio;
-    }
-    
-    public double c2gy(double toy) {
-        double ratio = getRatioY();
-        // return (toy+bPad-getHeight())/-ratio;
-        return (getPlotHeight() / 2 + tPad - toy) / ratio;
-        // return ((getHeight()+tPad+bPad)/2-toy-bPad)/ratio;
-        // return (this.getHeight()-bPad-tPad)/2+tPad-toy*ratio;
-        // return ((this.getHeight()-bPad-tPad)/2-toy+tPad)/ratio;
-    }
-    
     /**
      * Draw the points
      * 
@@ -250,42 +228,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
      */
     public void drawPoint(Graphics2D g, double x, double y) {}
     
-    public int g2cx(double x) {
-        double ratio = getRatioX();
-        return (int) (x * ratio) + getLPad();
-    }
-    
-    public int g2cy(double y) {
-        double ratio = getRatioY();
-        // height-(height-t-b)/2-bpad-y*ratio
-        // (2*height-heihgt+t+b)/2 - b - y*ratio
-        return (int) (getPlotHeight() / 2 + tPad - y * ratio);
-        // return (int)((this.getHeight()+tPad+bPad)/2-y*ratio-bPad);
-    }
-    
-    public double getRatioX() {
-        if (getPoints() == null) {
-            return (double) getPlotWidth() / (double) countMax(defaultY);
-        }
-        return getPlotWidth() / (getMaxX() - getMinX());
-    }
-    
-    public double getRatioY() {
-        if (getPoints() == null || getMaxYPoint() == null) {
-            return (double) getPlotHeight() / (double) countMax(defaultY);
-        } else {
-            return getPlotHeight() / (2 * Math.max(Math.abs(getMaxY()), Math.abs(getMinYPoint())) * 1.1);
-        }
-    }
-    
-    protected int getPlotWidth() {
-        return getWidth() - yLabelWidth - lPad - rPad;
-    }
-    
-    protected int getPlotHeight() {
-        return getHeight() - tPad - bPad;
-    }
-    
     public double getMaxY() {
         if (getPoints().isEmpty()) {
             return defaultY;
@@ -307,10 +249,14 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     }
     
     public double getMinY() {
-        if (getPoints().isEmpty()) {
+        if (getPoints().isEmpty() || getPoints().size() == 0) {
+            System.out.println("miny is default: " + (-defaultY));
             return -defaultY;
         } else {
-            return getMinYPoint();
+            // System.out.print("getting miny point... ");
+            double miny = getMinYPoint();
+            // System.out.println(miny);
+            return miny;
         }
     }
     
@@ -346,7 +292,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     public double countVerticalLabelStep() {// NOT FINISHED
         int count = getPlotHeight() / squareWidth + 1;// 30
         int max;
-        if (getPoints() == null || getMaxYPoint() == null) {
+        if (getPoints() == null || getPoints().size() == 0) {
             max = countMax(defaultY);// 50
         } else {
             max = countMaxVertical(Math.max(Math.abs(getMaxYPoint()), Math.abs(getMinYPoint())));// 50
@@ -379,9 +325,9 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         this.points = points;
     }
     
-    public Double getMaxYPoint() {
+    public double getMaxYPoint() {
         if (getPoints().size() == 0) {
-            return null;
+            return 0;
         }
         double max = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
@@ -393,12 +339,12 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         if (max < 1) {
             return 1.0;
         }
-        return max;
+        return max * 1.1;
     }
     
-    public Double getMinYPoint() {
-        if (getPoints().size() == 0) {
-            return (double) -defaultY;
+    public double getMinYPoint() {
+        if (getPoints().isEmpty()) {
+            return -defaultY;
         }
         double min = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
@@ -407,7 +353,11 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
                 min = getPoints().get(key);
             }
         }
-        return min;
+        
+        if (min > -defaultY) {
+            return -defaultY;
+        }
+        return min * 1.1;
     }
     
     public int countMax(double max) {
@@ -700,6 +650,9 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         g.drawLine(getLPad(), g2cy(0.0), getLPad() + getPlotWidth(), g2cy(0.0));
         g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
                 getHeight() - 10);
+        
+        System.out.println("g2cy(0) = " + g2cy(0.0));
+        
     }
     
     /**
