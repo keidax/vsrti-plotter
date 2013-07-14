@@ -337,6 +337,7 @@ public class View extends BaseView implements ModelListener {
                 tableModel.removeAllInputFiles();
                 jTable.repaint();
                 View.this.adapter.fullReset();
+                vCanvas.setGraphTitle("Visibilities");
             }
         });
         

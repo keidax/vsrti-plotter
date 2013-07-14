@@ -299,6 +299,7 @@ public class View extends BaseView implements ModelListener {
             public void actionPerformed(ActionEvent arg0) {
                 tableModel.removeAllInputFiles();
                 View.this.adapter.fullReset();
+                vCanvas.setGraphTitle("Fringe Function");
             }
         });
         

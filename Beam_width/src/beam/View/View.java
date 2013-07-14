@@ -255,6 +255,7 @@ public class View extends BaseView implements ModelListener {
             public void actionPerformed(ActionEvent arg0) {
                 tableModel.removeAllInputFiles();
                 listener.fullReset();
+                vCanvas.setGraphTitle("Beam");
             }
         });
         
