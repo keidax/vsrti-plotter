@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -57,6 +58,8 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     protected int fontSize = 20;
     
     protected CommonTIFTAdapter commonAdapter;
+    
+    private Font titleFont, normalFont;
     
     public CommonTIFTCanvas(CommonTIFTAdapter a, TreeMap<Double, Double> g) {
         lPad = 80;
@@ -621,6 +624,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         drawYAxis(i++, g2);
         drawXAxis(g2);
         g2.setColor(Color.BLACK);
+        g2.setFont(getTitleFont());
         g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tPad + g2
                 .getFontMetrics().getHeight() / 2) / 2);
         g2.setColor(colors[0]);
@@ -634,7 +638,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
      */
     public void drawXAxis(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize));
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+        g.setFont(getNormalFont());
         DecimalFormat df = new DecimalFormat("#.#");
         FontMetrics fm = g.getFontMetrics();
         
@@ -691,7 +695,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
      */
     public void drawYAxis(int count, Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize));
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+        g.setFont(getNormalFont());
         g.setColor(Color.BLACK);
         FontMetrics fm = g.getFontMetrics();
         DecimalFormat df = new DecimalFormat("#.#");
@@ -737,7 +741,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
      */
     public void drawVerticalLabel(Graphics2D g) {
         g.setColor(Color.BLACK);
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+        g.setFont(getNormalFont());
         
         int translateDown = tPad + (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
         
@@ -775,6 +779,31 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
             y = (int) (getPlotHeight() / 2 + tPad + i * plotStep) + fm.getAscent() / 2;
             g.drawString(label, x, y);
         }
+    }
+    
+    private Font getTitleFont() {
+        if (titleFont == null) {
+            try {
+                titleFont =
+                        Font.createFont(Font.TRUETYPE_FONT, CommonTIFTCanvas.class.getClassLoader()
+                                .getResourceAsStream("FreeSerif.ttf"));
+                titleFont = titleFont.deriveFont((float) (fontSize * 1.2));
+            } catch (FontFormatException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        return titleFont;
+    }
+    
+    private Font getNormalFont() {
+        if (normalFont == null) {
+            normalFont = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize);
+        }
+        return normalFont;
     }
     
 }
