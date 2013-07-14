@@ -181,7 +181,7 @@ public abstract class CommonVSRTICanvas extends CommonRootCanvas {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             
         } else {
-            this.setToolTipText("");
+            this.setToolTipText(null);
             this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }

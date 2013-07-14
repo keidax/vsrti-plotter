@@ -545,7 +545,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
             
         } else {
             setCursor(Cursor.getDefaultCursor());
-            setToolTipText("");
+            setToolTipText(null);
         }
     }
     
