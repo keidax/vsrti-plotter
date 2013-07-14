@@ -51,28 +51,27 @@ public abstract class Canvas extends CommonTIFTCanvas {
      * distance then MyCanvas.r
      */
     @Override
-    public void mousePressed(MouseEvent evt) {
-        mouseButton = evt.getButton();
-        if (evt.getButton() != MouseEvent.BUTTON1) {
+    public void mousePressed(MouseEvent e) {
+        mouseButton = e.getButton();
+        if (e.getButton() != MouseEvent.BUTTON1) {
             return;
         }
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (evt.getButton() == MouseEvent.BUTTON2) {
-            if (getPointOnGraph(mCanx, mCany) != null) {
-                setCurrentPoint(getPointOnGraph(mCanx, mCany));
+        
+        if (e.getButton() == MouseEvent.BUTTON2) {
+            if (getPointOnGraph(e.getX(), e.getY()) != null) {
+                setCurrentPoint(getPointOnGraph(e.getX(), e.getY()));
             } else {
                 setCurrentPoint(null);
             }
         } else {
-            if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-                setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
+            if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
+                setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
             } else {
                 setCurrentPoint(null);
             }
         }
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
+            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
             if (amp) {
                 adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
             } else {
@@ -82,22 +81,20 @@ public abstract class Canvas extends CommonTIFTCanvas {
     }
     
     @Override
-    public void mouseDragged(MouseEvent evt) {
+    public void mouseDragged(MouseEvent e) {
         if (mouseButton != MouseEvent.BUTTON1) {
             return;
         }
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (evt.getButton() != MouseEvent.BUTTON2) {
-            if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-                setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
+        if (e.getButton() != MouseEvent.BUTTON2) {
+            if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
+                setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
             } else {
                 setCurrentPoint(null);
             }
         }
         
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
+            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
             if (amp) {
                 adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
             } else {

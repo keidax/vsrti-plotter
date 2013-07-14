@@ -105,21 +105,19 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
      * distance then MyCanvas.r
      */
     @Override
-    public void mousePressed(MouseEvent evt) {
+    public void mousePressed(MouseEvent e) {
         // this.getVision().getCare().set(this.getVision().getSoul().newMemento());
-        if (evt.getButton() != MouseEvent.BUTTON1) {
+        if (e.getButton() != MouseEvent.BUTTON1) {
             return;
         }
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-            setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
+        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
+            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
         } else {
             setCurrentPoint(null);
         }
         
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
+            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
             // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
             // getCurrentPoint().movePoint(getCurrentPoint(),
@@ -129,18 +127,16 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
     }
     
     @Override
-    public void mouseDragged(MouseEvent evt) {
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-            setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
+    public void mouseDragged(MouseEvent e) {
+        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
+            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
         } else {
             setCurrentPoint(null);
         }
         
         if (getCurrentPoint() != null) {
             // double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
+            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
             adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
         }
     }

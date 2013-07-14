@@ -136,19 +136,17 @@ public class FFTCanvas extends Canvas {
      * distance then MyCanvas.r
      */
     @Override
-    public void mousePressed(MouseEvent evt) {
-        if (evt.getButton() != MouseEvent.BUTTON1) {
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() != MouseEvent.BUTTON1) {
             return;
         }
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-            setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
+        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
+            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
         } else {
             setCurrentPoint(null);
         }
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
+            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
             if (amp) {
                 adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
             } else {
@@ -158,17 +156,15 @@ public class FFTCanvas extends Canvas {
     }
     
     @Override
-    public void mouseDragged(MouseEvent evt) {
-        mCanx = evt.getX();
-        mCany = evt.getY();
-        if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
-            setCurrentPoint(getVerticallyPointOnGraph(mCanx, mCany));
+    public void mouseDragged(MouseEvent e) {
+        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
+            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
         } else {
             setCurrentPoint(null);
         }
         
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, mCany), getHeight() - bPad);
+            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
             if (amp) {
                 adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
             } else {

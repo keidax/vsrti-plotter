@@ -11,7 +11,6 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.File;
@@ -37,7 +36,7 @@ import common.View.ViewUtilities;
  */
 
 @SuppressWarnings("serial")
-public abstract class Canvas extends CommonVSRTICanvas implements MouseListener {
+public abstract class Canvas extends CommonVSRTICanvas {
     
     public View view;
     
@@ -74,8 +73,6 @@ public abstract class Canvas extends CommonVSRTICanvas implements MouseListener 
         rPad = 30;
         tPad = 50;
         bPad = 60;
-        
-        addMouseListener(this);
         setSize(new Dimension(200, 50));
         setVisible(true);
         fileChooser = new JFileChooser();
@@ -380,18 +377,6 @@ public abstract class Canvas extends CommonVSRTICanvas implements MouseListener 
             menu.show(this, e.getX(), e.getY());
         }
     }
-    
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-    
-    @Override
-    public void mouseExited(MouseEvent e) {}
-    
-    @Override
-    public void mousePressed(MouseEvent evt) {}
-    
-    @Override
-    public void mouseReleased(MouseEvent evt) {}
     
     @Override
     public void update(Graphics g) {

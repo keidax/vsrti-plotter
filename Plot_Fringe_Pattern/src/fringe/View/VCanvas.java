@@ -13,8 +13,7 @@ import common.View.SquareOrnament;
 import fringe.Model.Adapter;
 
 @SuppressWarnings("serial")
-public class VCanvas extends Canvas {// JPanel implements MouseListener,
-                                     // MouseMotionListener {
+public class VCanvas extends Canvas {
     
     protected TreeMap<Double, Double> dataPoints;
     protected static AbstractOrnament[] ornaments = {new CircleOrnament(3), new SquareOrnament(3)};

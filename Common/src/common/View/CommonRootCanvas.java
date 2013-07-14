@@ -1,13 +1,17 @@
 package common.View;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public abstract class CommonRootCanvas extends JPanel {
+public abstract class CommonRootCanvas extends JPanel implements MouseListener, MouseMotionListener {
     
-    public TreeMap<Double, Double> points;
+    protected TreeMap<Double, Double> points;
     
     protected int lPad, rPad, tPad, bPad;
     
@@ -16,6 +20,10 @@ public abstract class CommonRootCanvas extends JPanel {
     protected String graphTitle = "Untitled";
     
     protected int yLabelWidth = 10;
+    
+    public CommonRootCanvas() {
+        
+    }
     
     public int g2cx(double x) {
         return (int) (lPad + (x - getMinX()) * getRatioX());
@@ -65,6 +73,48 @@ public abstract class CommonRootCanvas extends JPanel {
     
     protected abstract double getMaxY();
     
+    /**
+     * 
+     * @return The points on the graph
+     */
+    public TreeMap<Double, Double> getPoints() {
+        return points;
+    }
+    
+    /**
+     * Set the points on the graph
+     * 
+     * @param points
+     */
+    public void setPoints(TreeMap<Double, Double> points) {
+        this.points = points;
+    }
+    
+    /**
+     * Returns the object MyPoint which is in closer then MyCanvas.r to
+     * coordinates [x,y]
+     * 
+     * @param x
+     *            int
+     * @param y
+     *            int
+     * @return MyPoint
+     */
+    protected Double getPointOnGraph(int x, int y) {
+        
+        Set<Double> keys = getPoints().keySet();
+        for (Double key : keys) {
+            if (new SquareOrnament(getOrnamentSize(key)).isInside(x, y, g2cx(key), g2cy(getPoints().get(key)))) {
+                return key;
+            }
+        }
+        return null;
+    }
+    
+    protected int getOrnamentSize(double x) {
+        return 3;
+    }
+    
     public double getRatioY() {
         return getPlotHeight() / (getMaxY() - getMinY());
     }
@@ -72,5 +122,26 @@ public abstract class CommonRootCanvas extends JPanel {
     public double getRatioX() {
         return getPlotWidth() / (getMaxX() - getMinX());
     }
+    
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+    
+    @Override
+    public void mouseExited(MouseEvent e) {}
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+    
+    @Override
+    public void mousePressed(MouseEvent e) {}
+    
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+    
+    @Override
+    public void mouseMoved(MouseEvent e) {}
+    
+    @Override
+    public void mouseDragged(MouseEvent e) {}
     
 }

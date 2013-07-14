@@ -14,8 +14,6 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.File;
@@ -37,7 +35,7 @@ import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 import common.Model.CommonTIFTAdapter;
 
 @SuppressWarnings("serial")
-public abstract class CommonTIFTCanvas extends CommonRootCanvas implements MouseListener, MouseMotionListener {
+public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     
     protected int[] steps = {1, 2, 5};
     protected int squareWidth; // width of vertical line placement
@@ -45,7 +43,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
     protected int defaultY = 2;
     protected int defaultX = 1;
     
-    protected int mCanx, mCany;
     protected Double currentPoint;
     protected static Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
@@ -222,7 +219,8 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         
     }
     
-    public int getOrnamentSize(double x) {
+    @Override
+    protected int getOrnamentSize(double x) {
         if (x <= getMinX()) {
             return 5;
         } else {
@@ -313,23 +311,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         } else {
             return getMaxYPoint() - getMinYPoint();
         }
-    }
-    
-    /**
-     * 
-     * @return The points on the graph
-     */
-    public TreeMap<Double, Double> getPoints() {
-        return points;
-    }
-    
-    /**
-     * Set the points on the graph
-     * 
-     * @param points
-     */
-    public void setPoints(TreeMap<Double, Double> points) {
-        this.points = points;
     }
     
     public double getMaxYPoint() {
@@ -465,22 +446,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         this.defaultY = defaultY;
     }
     
-    public int getMCanx() {
-        return mCanx;
-    }
-    
-    public void setMCanx(int canx) {
-        mCanx = canx;
-    }
-    
-    public int getMCany() {
-        return mCany;
-    }
-    
-    public void setMCany(int cany) {
-        mCany = cany;
-    }
-    
     public Double getCurrentPoint() {
         return currentPoint;
     }
@@ -489,33 +454,12 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         this.currentPoint = currentPoint;
     }
     
-    /**
-     * Returns the object MyPoint which is in closer then MyCanvas.r to
-     * coordinates [x,y]
-     * 
-     * @param x
-     *            int
-     * @param y
-     *            int
-     * @return MyPoint
-     */
-    protected Double getPointOnGraph(int x, int y) {
-        
-        Set<Double> keys = getPoints().keySet();
-        for (Double key : keys) {
-            if (new SquareOrnament(getOrnamentSize(key)).isInside(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
-                return key;
-            }
-        }
-        return null;
-    }
-    
     protected Double getVerticallyPointOnGraph(int x, int y) {
         
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (new SquareOrnament(getOrnamentSize(key)).isInsideVertically(mCanx, mCany, g2cx(key), g2cy(getPoints()
-                    .get(key)))) {
+            if (new SquareOrnament(getOrnamentSize(key))
+                    .isInsideVertically(x, y, g2cx(key), g2cy(getPoints().get(key)))) {
                 return key;
             }
         }
@@ -575,38 +519,28 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas implements Mouse
         }
     }
     
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-    
-    @Override
-    public void mouseExited(MouseEvent e) {}
-    
     /**
      * Records coordinates mouse was released and if there was no currentPoint,
      * then creates new point with particular coordinates
      */
     @Override
-    public void mouseReleased(MouseEvent evt) {
+    public void mouseReleased(MouseEvent e) {
         mouseButton = 0;
         // NOT FINISHED (just redo getCurrentDataSet to
         // getViewer().getCurrentDataSet
-        mCanx = evt.getX();
-        mCany = evt.getY();
         
-        if (currentPoint == null && mCanx >= getLPad() && mCanx <= getLPad() + getPlotWidth() && mCany >= tPad
-                && mCany < getWidth() - bPad) {}
+        if (currentPoint == null && e.getX() >= getLPad() && e.getX() <= getLPad() + getPlotWidth() && e.getY() >= tPad
+                && e.getY() < getWidth() - bPad) {}
     }
     
     @Override
-    public void mouseMoved(MouseEvent evt) {
-        mCanx = evt.getX();
-        mCany = evt.getY();
+    public void mouseMoved(MouseEvent e) {
         DecimalFormat df = new DecimalFormat("#.##");
-        if (getPointOnGraph(mCanx, mCany) != null) {
-            double p = getVerticallyPointOnGraph(mCanx, mCany);
-            setToolTipText("[" + df.format(p) + "; " + df.format(getPoints().get(p)) + "]");
+        if (getPointOnGraph(e.getX(), e.getY()) != null) {
+            double p = getVerticallyPointOnGraph(e.getX(), e.getY());
+            setToolTipText("(" + df.format(p) + ", " + df.format(getPoints().get(p)) + ")");
         }
-        if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
+        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
             setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             
         } else {

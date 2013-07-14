@@ -2,9 +2,11 @@ package common.View;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 
 @SuppressWarnings("serial")
@@ -15,6 +17,11 @@ public abstract class CommonVSRTICanvas extends CommonRootCanvas {
      */
     protected int fontSize = 20;
     protected int strokeSize = 5;
+    
+    public CommonVSRTICanvas() {
+        addMouseListener(this);
+        addMouseMotionListener(this);
+    }
     
     public void drawXAxis(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize));
@@ -162,6 +169,21 @@ public abstract class CommonVSRTICanvas extends CommonRootCanvas {
     
     public void setBPad(int pad) {
         bPad = pad;
+    }
+    
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        // System.out.println("moved!!!");
+        DecimalFormat df = new DecimalFormat("#.##");
+        if (getPointOnGraph(e.getX(), e.getY()) != null) {
+            double p = getPointOnGraph(e.getX(), e.getY());
+            this.setToolTipText("(" + df.format(p) + ", " + df.format(getPoints().get(p)) + ")");
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            
+        } else {
+            this.setToolTipText("");
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
     }
     
 }

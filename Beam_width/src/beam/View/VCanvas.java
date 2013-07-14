@@ -16,8 +16,7 @@ import common.View.SquareOrnament;
  */
 
 @SuppressWarnings("serial")
-public class VCanvas extends Canvas {// JPanel implements MouseListener,
-                                     // MouseMotionListener {
+public class VCanvas extends Canvas {
     
     // protected TreeMap<Double, Double> dataPoints;
     protected TreeMap<Double, Double> rmsPoints;
