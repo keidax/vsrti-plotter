@@ -242,6 +242,8 @@ public class View extends BaseView implements ModelListener {
                 View.this.adapter.importVisibilityGraphPoints(tm[0]);
                 View.this.adapter.importVisibilityGraphRms(tm[1]);
                 
+                vCanvas.setGraphTitle("Fringe Function (" + getShortFileName(f) + ")");
+                
             }
         });
         
@@ -363,13 +365,14 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void filesDropped(java.io.File[] files) {
+                vCanvas.setGraphTitle("Fringe Function (" + getShortFileName(files[0]) + ")");
                 for (int i = 0; i < files.length; i++) {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
                     } else {
                         JOptionPane.showMessageDialog(View.this,
                                 "Incorrect data file format. Try to open file instead of drag-and-drop.",
-                                "Incorrett format", JOptionPane.ERROR_MESSAGE);
+                                "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 

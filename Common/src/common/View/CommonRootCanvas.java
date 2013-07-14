@@ -25,6 +25,14 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
         
     }
     
+    public String getGraphTitle() {
+        return graphTitle;
+    }
+    
+    public void setGraphTitle(String graphTitle) {
+        this.graphTitle = graphTitle;
+    }
+    
     public int g2cx(double x) {
         return (int) (lPad + (x - getMinX()) * getRatioX());
     }

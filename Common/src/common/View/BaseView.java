@@ -1,5 +1,7 @@
 package common.View;
 
+import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -22,5 +24,18 @@ public abstract class BaseView extends JFrame {
     public abstract void updateValuesFromModel();
     
     public abstract void updateModelFromValues();
+    
+    public static String getShortFileName(File f) {
+        String fileName = f.getName();
+        String shortName = "";
+        if (fileName.endsWith(".rad") && fileName.contains("'")) {
+            shortName = fileName.split("'")[0];
+        } else {
+            int startOfFileExtension = fileName.lastIndexOf(".");
+            shortName = fileName.substring(0, startOfFileExtension);
+        }
+        
+        return shortName;
+    }
     
 }

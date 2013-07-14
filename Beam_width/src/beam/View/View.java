@@ -211,6 +211,8 @@ public class View extends BaseView implements ModelListener {
                 if (tm != null) {
                     model.importPoints(tm[0]);
                     model.importRms(tm[1]);
+                    
+                    vCanvas.setGraphTitle("Beam (" + getShortFileName(f) + ")");
                 }
                 
                 model.update();
@@ -303,6 +305,7 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void filesDropped(java.io.File[] files) {
+                vCanvas.setGraphTitle("Beam (" + getShortFileName(files[0]) + ")");
                 for (int i = 0; i < files.length; i++) {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));

@@ -253,6 +253,7 @@ public class View extends BaseView implements ModelListener {
                 TreeMap<Double, Double>[] tm = parseFile(f);
                 View.this.adapter.importVisibilityGraphPoints(tm[0]);
                 View.this.adapter.importVisibilityGraphRms(tm[1]);
+                vCanvas.setGraphTitle("Visibility (" + getShortFileName(f) + ")");
                 update();
             }
         });
@@ -372,6 +373,8 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void filesDropped(java.io.File[] files) {
+                vCanvas.setGraphTitle("Visibility (" + getShortFileName(files[0]) + ")");
+                
                 for (int i = 0; i < files.length; i++) {
                     
                     tableModel.addInputFile(new InputFile(files[i]));
