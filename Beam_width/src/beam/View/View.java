@@ -319,12 +319,18 @@ public class View extends BaseView implements ModelListener {
             }
         });
         
-        updateButton.addActionListener(new ActionListener() {
+        ActionListener updateListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateModelFromValues();
             }
-        });
+        };
+        
+        updateButton.addActionListener(updateListener);
+        
+        for (JTextField jt : new JTextField[] {fD, fLambda, fSigma, fNoise}) {
+            jt.addActionListener(updateListener);
+        }
         
         // this.setSize(1200, 800);
         this.pack();

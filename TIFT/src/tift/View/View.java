@@ -141,6 +141,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         fNumber.setToolTipText("<HTML><P WIDTH = '300px'>number of points graphed.</P></HTML>");
         // Yellow Pop up box when mouse hovers over text box
         
+        // TODO Figure out if these are necessary
         fDelta.addMouseListener(new MouseAdapter() {
             
             final int defaultTimeout = ToolTipManager.sharedInstance().getInitialDelay();
@@ -787,6 +788,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         getAdapter().getModel().getListeners().add(this);
     }
     
+    // TODO move this code elsewhere
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(fDelta)) {

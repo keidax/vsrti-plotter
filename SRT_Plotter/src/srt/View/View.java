@@ -1,5 +1,3 @@
-// This controls the size of everything that you see, the buttons, the buttons'
-// labels, normal labels, opening and saving files, etc.
 package srt.View;
 
 import java.awt.Dimension;
@@ -45,8 +43,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public JButton exit;
     public TableModel tableModel;
     public FileTable jTable;
-    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks, bSpectrum, bTime,
-            bSubtract, bUndo, bBeam;
+    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks,
+            bSpectrum, bTime, bSubtract, bUndo, bBeam;
     public static View viewer;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_SRT_Plotter.html";
     public boolean canDelete = true;
@@ -270,8 +268,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             ListNode B = list.getNode(a[1]);
                             
                             if (A.data.length != B.data.length || A.fStart != B.fStart || A.fStep != B.fStep) {
-                                JOptionPane.showMessageDialog(null,
-                                        "Both data blocks must have the same data length, start frequency, and step frequency");
+                                JOptionPane
+                                        .showMessageDialog(null,
+                                                "Both data blocks must have the same data length, start frequency, and step frequency");
                                 return;
                             } else {
                                 double[] data = new double[A.data.length];
@@ -309,7 +308,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                                         endChannels[i] = 0;
                                     }
                                 }
-                                list.insertAtTail(new ListNode("SUB: " + a[0] + " - " + a[1], data, A.fStart, A.fStep, deleted, endChannels));
+                                list.insertAtTail(new ListNode("SUB: " + a[0] + " - " + a[1], data, A.fStart, A.fStep,
+                                        deleted, endChannels));
                                 gotB = false;
                                 jTable.clearSelection();
                                 jTable.changeSelection(list.getLength() - 1, 0, false, false);
@@ -428,9 +428,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 JScrollPane jSC = new JScrollPane(table);
                 jSC.setMaximumSize(new Dimension(800, 300));
                 
-                Object[] o = { "Cancel", "Elevation", "Azimuth" };
-                int opt = JOptionPane.showOptionDialog(null, "Would you like to plot vs. azimuth or vs. elevation?", "Plot Beam",
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, o, o[2]);
+                Object[] o = {"Cancel", "Elevation", "Azimuth"};
+                int opt =
+                        JOptionPane.showOptionDialog(null, "Would you like to plot vs. azimuth or vs. elevation?",
+                                "Plot Beam", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, o, o[2]);
                 String[] temp;
                 int count = 0;
                 if (opt == 0) {
@@ -617,8 +618,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 int opt = 1;
                 File f;
                 if (jTable.getSelectedRows().length != 0) {
-                    opt = JOptionPane.showOptionDialog(null, "Save only the selected data block? (Choose no to save all)",
-                            "SRT Plotter - Save File", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+                    opt =
+                            JOptionPane.showOptionDialog(null,
+                                    "Save only the selected data block? (Choose no to save all)",
+                                    "SRT Plotter - Save File", JOptionPane.YES_NO_CANCEL_OPTION,
+                                    JOptionPane.PLAIN_MESSAGE, null, null, null);
                 }
                 if (opt == 0)// yes
                 {
@@ -726,10 +730,12 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             for (int i = 0; i < data.length; i++) {
                                 data[i] = nodes[0].data[i];
                                 for (int j = 1; j < nodes.length; j++) {
-                                    if (nodes[j - 1].data.length != nodes[j].data.length || nodes[j - 1].fStart != nodes[j].fStart
+                                    if (nodes[j - 1].data.length != nodes[j].data.length
+                                            || nodes[j - 1].fStart != nodes[j].fStart
                                             || nodes[j - 1].fStep != nodes[j].fStep) {
-                                        JOptionPane.showMessageDialog(null,
-                                                "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
+                                        JOptionPane
+                                                .showMessageDialog(null,
+                                                        "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
                                         return;
                                     }
                                     data[i] = data[i] + nodes[j].data[i];
@@ -763,9 +769,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
             public void actionPerformed(ActionEvent e) {
                 DecimalFormat df = new DecimalFormat("#.####");
                 if (currentNode == null) {
-                    JOptionPane.showMessageDialog(null, "You must select a data block before you can find its average over frequency.");
+                    JOptionPane.showMessageDialog(null,
+                            "You must select a data block before you can find its average over frequency.");
                 } else {
-                    View.viewer.lDelta.setText("Average Over Frequency: " + df.format(currentNode.getAverageOverFrequency()));
+                    View.viewer.lDelta.setText("Average Over Frequency: "
+                            + df.format(currentNode.getAverageOverFrequency()));
                 }
             }
         });
@@ -817,7 +825,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     return;
                 }
                 if (currentNode == null) {
-                    JOptionPane.showMessageDialog(null, "You must first select a data block before you can delete data points.");
+                    JOptionPane.showMessageDialog(null,
+                            "You must first select a data block before you can delete data points.");
                     return;
                 }
                 if (!choosingDelete) {
@@ -842,7 +851,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (currentNode == null || View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
+                if (currentNode == null
+                        || View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
                         || View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order")) {
                     return;
                 }
@@ -912,10 +922,12 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             if (selectedRows.length > 0) {
                                 for (int i = 1; i < selectedRows.length; i++) {
                                     if (list.getNode(selectedRows[i - 1]).data.length != list.getNode(selectedRows[i]).data.length
-                                            || list.getNode(selectedRows[i - 1]).fStart != list.getNode(selectedRows[i]).fStart
+                                            || list.getNode(selectedRows[i - 1]).fStart != list
+                                                    .getNode(selectedRows[i]).fStart
                                             || list.getNode(selectedRows[i - 1]).fStep != list.getNode(selectedRows[i]).fStep) {
-                                        JOptionPane.showMessageDialog(null,
-                                                "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
+                                        JOptionPane
+                                                .showMessageDialog(null,
+                                                        "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
                                         return;
                                     }
                                 }
@@ -927,8 +939,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                                 bSelectEnd.setText("Delete Selected End Channels");
                                 jf.setVisible(false);
                                 canDelete = true;
-                                JOptionPane.showMessageDialog(null,
-                                        "Select the end channels to be deleted and then click the 'delete selected channels' button.");
+                                JOptionPane
+                                        .showMessageDialog(null,
+                                                "Select the end channels to be deleted and then click the 'delete selected channels' button.");
                             } else {
                                 JOptionPane.showMessageDialog(null, "You must select one or more data blocks.");
                             }
@@ -946,10 +959,12 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             if (selectedRows.length > 0) {
                                 for (int i = 1; i < selectedRows.length; i++) {
                                     if (list.getNode(selectedRows[i - 1]).data.length != list.getNode(selectedRows[i]).data.length
-                                            || list.getNode(selectedRows[i - 1]).fStart != list.getNode(selectedRows[i]).fStart
+                                            || list.getNode(selectedRows[i - 1]).fStart != list
+                                                    .getNode(selectedRows[i]).fStart
                                             || list.getNode(selectedRows[i - 1]).fStep != list.getNode(selectedRows[i]).fStep) {
-                                        JOptionPane.showMessageDialog(null,
-                                                "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
+                                        JOptionPane
+                                                .showMessageDialog(null,
+                                                        "All blocks of data must have the same length, start frequency, and step for Average Blocks of Data.");
                                         return;
                                     }
                                 }
@@ -961,8 +976,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                                 bSelectEnd.setText("Delete Selected End Channels");
                                 jf.setVisible(false);
                                 canDelete = true;
-                                JOptionPane.showMessageDialog(null,
-                                        "Select the end channels to be deleted and then click the 'delete selected channels' button.");
+                                JOptionPane
+                                        .showMessageDialog(null,
+                                                "Select the end channels to be deleted and then click the 'delete selected channels' button.");
                             } else {
                                 JOptionPane.showMessageDialog(null, "You must select one or more data blocks.");
                             }
@@ -1054,7 +1070,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             while ((strLine = br.readLine()) != null) {
                 
-                if (strLine.trim().startsWith("*") || strLine.trim().startsWith("AVG") || strLine.trim().startsWith("SUB")) {
+                if (strLine.trim().startsWith("*") || strLine.trim().startsWith("AVG")
+                        || strLine.trim().startsWith("SUB")) {
                     
                     currentBlock++;
                     if (currentBlock != 0 && !first) {

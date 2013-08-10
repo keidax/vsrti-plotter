@@ -382,38 +382,18 @@ public class View extends BaseView implements ModelListener {
             }
         });
         
-        updateButton.addActionListener(new ActionListener() {
+        ActionListener updateListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("lambda text is " + fLambda.getText());
-                try {
-                    double tempDiameter = Double.parseDouble(fD.getText());
-                    model.setDiameter(tempDiameter);
-                } catch (NumberFormatException e1) {}
-                try {
-                    double tempT1 = Double.parseDouble(fT1.getText());
-                    model.setT1(tempT1);
-                } catch (NumberFormatException e1) {}
-                try {
-                    double tempT2 = Double.parseDouble(fT2.getText());
-                    model.setT2(tempT2);
-                } catch (NumberFormatException e1) {}
-                try {
-                    double tempBaseline = Double.parseDouble(fBaseline.getText());
-                    model.setBaseline(tempBaseline);
-                } catch (NumberFormatException e1) {}
-                try {
-                    double tempLambda = Double.parseDouble(fLambda.getText());
-                    model.setLambda(tempLambda);
-                } catch (NumberFormatException e1) {}
-                try {
-                    double tempSigma = Double.parseDouble(fSigma.getText());
-                    model.setDisplayFactor(tempSigma);
-                } catch (NumberFormatException e1) {}
-                
-                update();
+                updateModelFromValues();
             }
-        });
+        };
+        
+        updateButton.addActionListener(updateListener);
+        
+        for (JTextField jt : new JTextField[] {fD, fLambda, fSigma, fT1, fT2, fBaseline}) {
+            jt.addActionListener(updateListener);
+        }
         
         // this.setSize(800, 600);
         this.pack();
@@ -593,7 +573,32 @@ public class View extends BaseView implements ModelListener {
     
     @Override
     public void updateModelFromValues() {
-        // TODO Auto-generated method stub
+        System.out.println("lambda text is " + fLambda.getText());
+        try {
+            double tempDiameter = Double.parseDouble(fD.getText());
+            model.setDiameter(tempDiameter);
+        } catch (NumberFormatException e1) {}
+        try {
+            double tempT1 = Double.parseDouble(fT1.getText());
+            model.setT1(tempT1);
+        } catch (NumberFormatException e1) {}
+        try {
+            double tempT2 = Double.parseDouble(fT2.getText());
+            model.setT2(tempT2);
+        } catch (NumberFormatException e1) {}
+        try {
+            double tempBaseline = Double.parseDouble(fBaseline.getText());
+            model.setBaseline(tempBaseline);
+        } catch (NumberFormatException e1) {}
+        try {
+            double tempLambda = Double.parseDouble(fLambda.getText());
+            model.setLambda(tempLambda);
+        } catch (NumberFormatException e1) {}
+        try {
+            double tempSigma = Double.parseDouble(fSigma.getText());
+            model.setDisplayFactor(tempSigma);
+        } catch (NumberFormatException e1) {}
         
+        update();
     }
 }
