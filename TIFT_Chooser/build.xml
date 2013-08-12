@@ -21,7 +21,9 @@
 		<mkdir dir="dist" />
 		<!-- Build the jar file -->
 		<jar destfile="dist/${ant.project.name}.jar" basedir="${build}">
-			<fileset dir="Common/resources" includes="*"/>
+			<fileset dir="Common/resources">
+				<include name="FreeSerif-min.ttf" />
+			</fileset>
 			<manifest>
 				<attribute name="Main-Class" value="tiftchooser.Form" />
 			</manifest>

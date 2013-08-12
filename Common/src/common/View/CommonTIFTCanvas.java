@@ -720,7 +720,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
             try {
                 titleFont =
                         Font.createFont(Font.TRUETYPE_FONT, CommonTIFTCanvas.class.getClassLoader()
-                                .getResourceAsStream("FreeSerif.ttf"));
+                                .getResourceAsStream("FreeSerif-min.ttf"));
                 titleFont = titleFont.deriveFont((float) (fontSize * 1.2));
             } catch (FontFormatException e) {
                 // TODO Auto-generated catch block
