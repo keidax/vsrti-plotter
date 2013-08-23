@@ -37,24 +37,8 @@ public class VCanvas extends Canvas {
     
     @Override
     public void drawPoint(Graphics2D g, double x, double y) {
-        // System.out.println("point at ["+x+","+y+"]");
-        // System.out.println("RMS = "+rmsPoints.size());
-        /*
-         * if (dataPoints.containsKey(x) && dataPoints.get(x) == y) {
-         */// TODO not sure what the point of dataPoints is...
         g.setColor(colors[0]);
         ornaments[1].draw(g, g2cx(x), g2cy(y));
-        if (rmsPoints.containsKey(x)) {
-            // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-            drawRms(g, g2cx(x), g2cy(y - rmsPoints.get(x) * getDisplayFactor() / 2), g2cy(y + rmsPoints.get(x)
-                    * getDisplayFactor() / 2));
-            // System.out.println("RMS ["+x+","+rmsPoints.get(x));
-            // System.out.println("rms = "+rmsPoints.get(x));
-        }
-        /*
-         * } else { g.setColor(colors[1]); ornaments[0].draw(g, g2cx(x),
-         * g2cy(y)); }
-         */
     }
     
     @Override
@@ -69,29 +53,29 @@ public class VCanvas extends Canvas {
             g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)), g2cx(key), g2cy(points.get(key)));
             previousKey = key;
             drawPoint(g, key, points.get(key));
-            System.out.println("** " + key);
             if (rmsPoints.containsKey(key)) {
-                // System.out.println("g2cy(y + Sigma*rms) "+g2cy(y+getSigma()*rmsPoints.get(x)));
-                drawRms(g, g2cx(key), g2cy(points.get(key) - rmsPoints.get(key) * getDisplayFactor() / 2), g2cy(points
-                        .get(key)
-                        + rmsPoints.get(key) * getDisplayFactor() / 2));
-                // new SquareOrnament().draw(g,
-                // g2cx(key),g2cy(this.points.get(key)));
-                // System.out.println("Drawing point at ["+key+","+this.points.get(key)+"]");
-                // System.out.println("Draw a point ["+p.getX()+","+p.getY()+"] at ["+g2cx(p.getX())+","+g2cy(p.getY(),ds)+"]");
+                drawRms(g, key, points.get(key));
+            }
+            if (view.getModel().getHorizontalError() > 0) {
+                drawHorizontalError(g, key, points.get(key));
             }
         }
-        
-        // System.out.println(points);
-        
     }
     
-    public void drawRms(Graphics2D g, int x, int y1, int y2) {
-        // height*=10;
-        // System.out.println("draw:["+x+","+y1+"-"+y2+"]");
-        g.drawLine(x, y1, x, y2);
-        g.drawLine(x - 1, y1, x + 1, y1);
-        g.drawLine(x - 1, y2, x + 1, y2);
+    public void drawRms(Graphics2D g, double x, double y) {
+        double upperY = y + rmsPoints.get(x).doubleValue() * getDisplayFactor() / 2;
+        double lowerY = y - rmsPoints.get(x).doubleValue() * getDisplayFactor() / 2;
+        g.drawLine(g2cx(x), g2cy(lowerY), g2cx(x), g2cy(upperY));
+        g.drawLine(g2cx(x) - 1, g2cy(lowerY), g2cx(x) + 1, g2cy(lowerY));
+        g.drawLine(g2cx(x) - 1, g2cy(upperY), g2cx(x) + 1, g2cy(upperY));
+    }
+    
+    public void drawHorizontalError(Graphics2D g, double x, double y) {
+        double leftX = x - view.getModel().getHorizontalError();
+        double rightX = x + view.getModel().getHorizontalError();
+        g.drawLine(g2cx(leftX), g2cy(y), g2cx(rightX), g2cy(y));
+        g.drawLine(g2cx(leftX), g2cy(y) + 1, g2cx(leftX), g2cy(y) - 1);
+        g.drawLine(g2cx(rightX), g2cy(y) + 1, g2cx(rightX), g2cy(y) - 1);
     }
     
     public void update(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {

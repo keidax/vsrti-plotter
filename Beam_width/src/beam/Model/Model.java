@@ -11,9 +11,9 @@ import common.View.InputFile;
 
 public class Model implements ModelInterface {
     
-    private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1, defaultDiameter = 5,
-            defaultPeakValue = 20;
-    private double peakValue = defaultPeakValue, diameter = defaultDiameter;
+    private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1,
+            defaultDiameter = 5, defaultPeakValue = 20, defaultHorizontalError = 0;
+    private double peakValue = defaultPeakValue, diameter = defaultDiameter, horizontalError = defaultHorizontalError;
     private final int defaultExponent = 5;
     
     private VisibilityGraph visibilityGraph;
@@ -109,6 +109,14 @@ public class Model implements ModelInterface {
         this.diameter = diameter;
     }
     
+    public void setHorizontalError(double horizontalError) {
+        this.horizontalError = horizontalError;
+    }
+    
+    public double getHorizontalError() {
+        return horizontalError;
+    }
+    
     @Override
     public void setRawPoints(List<InputFile> f) {
         visibilityGraph.emptyRawPoints();
@@ -177,6 +185,7 @@ public class Model implements ModelInterface {
         setNoise(defaultNoise);
         setDisplayFactor(defaultDisplayFactor);
         setDiameter(defaultDiameter);
+        setHorizontalError(defaultHorizontalError);
         findPeakValue();
     }
     

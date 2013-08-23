@@ -49,7 +49,7 @@ public class View extends BaseView implements ModelListener {
     private VCanvas vCanvas;
     private TableModel tableModel;
     private FileTable jTable;
-    private JTextField fD, fLambda, fSigma, fNoise;
+    private JTextField fD, fLambda, fSigma, fNoise, fHorizontalError;
     private JButton updateButton;
     private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
     private boolean showBeamPattern = false;
@@ -99,6 +99,8 @@ public class View extends BaseView implements ModelListener {
         fD.setToolTipText("<HTML><P>D = diameter of detector</P></HTML>");
         fD.setMaximumSize(new Dimension(50, 20));
         fLambda.setMaximumSize(new Dimension(50, 20));
+        fHorizontalError = new JTextField(model.getHorizontalError() + "");
+        fHorizontalError.setToolTipText(null); // TODO what should tooltip text for fHorizontalError be?
         // fThetaMax.setMaximumSize(new Dimension(50, 20));
         // fThetaMax.addActionListener(this);
         JScrollPane jScroll;
@@ -163,8 +165,8 @@ public class View extends BaseView implements ModelListener {
         jThetaMax.setLayout(new BoxLayout(jThetaMax, BoxLayout.X_AXIS));
         jButtons.setLayout(new BoxLayout(jButtons, BoxLayout.X_AXIS));
         jButtons2.setLayout(new BoxLayout(jButtons2, BoxLayout.X_AXIS));
-        jLabels.setLayout(new GridLayout(7, 2, 1, 1));
-        jFields.setLayout(new GridLayout(7, 2, 1, 1));
+        jLabels.setLayout(new GridLayout(8, 2, 1, 1));
+        jFields.setLayout(new GridLayout(8, 2, 1, 1));
         
         jRadioButtons.setLayout(new BoxLayout(jRadioButtons, BoxLayout.Y_AXIS));
         
@@ -178,7 +180,8 @@ public class View extends BaseView implements ModelListener {
         jButtons5.add(bExit);
         
         jLabels.add(new JLabel("display factor of σ:"));
-        jLabels.add(new JLabel("Model Paremeters:"));
+        jLabels.add(new JLabel("horizontal uncertainty"));
+        jLabels.add(new JLabel("Model Parameters:"));
         jLabels.add(new JLabel("D (ant. dia.):"));
         jLabels.add(new JLabel('\u03BB' + ":"));
         jLabels.add(new JLabel("Noise:"));
@@ -187,6 +190,7 @@ public class View extends BaseView implements ModelListener {
         jLabels.add(lblPeakValue);
         
         jFields.add(fSigma);
+        jFields.add(fHorizontalError);
         jFields.add(Box.createRigidArea(new Dimension(5, 20)));
         jFields.add(fD);
         jFields.add(fLambda);
@@ -328,7 +332,7 @@ public class View extends BaseView implements ModelListener {
         
         updateButton.addActionListener(updateListener);
         
-        for (JTextField jt : new JTextField[] {fD, fLambda, fSigma, fNoise}) {
+        for (JTextField jt : new JTextField[] {fD, fLambda, fSigma, fNoise, fHorizontalError}) {
             jt.addActionListener(updateListener);
         }
         
@@ -520,6 +524,7 @@ public class View extends BaseView implements ModelListener {
         fSigma.setText(model.getDisplayFactor() + "");
         fNoise.setText(model.getNoise() + "");
         fD.setText(model.getDiameter() + "");
+        fHorizontalError.setText(model.getHorizontalError() + "");
         vCanvas.setDisplayFactor(model.getDisplayFactor());
     }
     
@@ -548,6 +553,11 @@ public class View extends BaseView implements ModelListener {
         try {
             double tempPeakValue = Double.parseDouble(fPeakValue.getText());
             model.setPeakValue(tempPeakValue);
+        } catch (NumberFormatException e) {}
+        
+        try {
+            double tempHorizontalError = Double.parseDouble(fHorizontalError.getText());
+            model.setHorizontalError(tempHorizontalError);
         } catch (NumberFormatException e) {}
         
         model.update();
