@@ -45,7 +45,7 @@ public abstract class Canvas extends CommonVSRTICanvas {
      */
     protected int squareWidth = 60;
     protected int yLabelWidth = 10;
-    protected double defaultY = 25;
+    // protected double defaultY = 25;
     protected double defaultXLeft = -45;
     protected double defaultXRight = 45;
     protected int mCanx, mCany;
@@ -206,7 +206,7 @@ public abstract class Canvas extends CommonVSRTICanvas {
         this.points = points;
     }
     
-    public void drawDataSet(int count, Graphics2D g) {
+    public void drawDataSet(Graphics2D g) {
         if (points.size() == 0) {
             return;
         }
@@ -285,10 +285,10 @@ public abstract class Canvas extends CommonVSRTICanvas {
     @Override
     public double getMaxY() {
         if (points == null || points.size() == 0) {
-            if (view.isBeamPatternVisible()) {
+            if (view.getModel().getBeamPatternVisible()) {
                 return bessel(0.0) * view.getModel().getPeakValue() * 1.2;
             } else {
-                return defaultY;
+                return view.getModel().getPeakValue() * 1.2;
             }
         }
         
@@ -345,14 +345,6 @@ public abstract class Canvas extends CommonVSRTICanvas {
     
     public void setYLabelWidth(int labelWidth) {
         yLabelWidth = labelWidth;
-    }
-    
-    public double getDefaultY() {
-        return defaultY;
-    }
-    
-    public void setDefaultY(double defaultY) {
-        this.defaultY = defaultY;
     }
     
     public Double getCurrentPoint() {
@@ -465,20 +457,17 @@ public abstract class Canvas extends CommonVSRTICanvas {
         setBackground(Color.WHITE);
         drawXAxis(g2); // draw vertical lines
         g2.setColor(Color.BLACK);
-        int i = 0;
         drawYAxis(g2); // draw vertical axis
         // draw axes
         g2.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, titleSize));
         g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tPad + g2
                 .getFontMetrics().getHeight() / 2) / 2);
-        i = 0;
         g2.setColor(colors[0]);
-        drawDataSet(i, g2);
-        if (view.isBeamPatternVisible()) {
+        drawDataSet(g2);
+        if (view.getModel().getBeamPatternVisible()) {
             paintPattern(g2);
         }
-        i++;
         
     }
     

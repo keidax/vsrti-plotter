@@ -2,87 +2,66 @@ package beam.Model;
 
 import java.io.File;
 import java.util.List;
+import java.util.Observable;
 import java.util.TreeMap;
-import java.util.Vector;
 
-import common.Model.ModelInterface;
-import common.Model.ModelListener;
 import common.View.InputFile;
 
-public class Model implements ModelInterface {
+public class Model extends Observable {
     
     private final double defaultLambda = 2.5, defaultDeltaBaseline = 1, defaultNoise = 0, defaultDisplayFactor = 1,
             defaultDiameter = 5, defaultPeakValue = 20, defaultHorizontalError = 0;
     private double peakValue = defaultPeakValue, diameter = defaultDiameter, horizontalError = defaultHorizontalError;
     private final int defaultExponent = 5;
+    private boolean beamPatternVisible = false;
     
     private VisibilityGraph visibilityGraph;
-    private Vector<ModelListener> listeners;
     
     public Model() {
-        listeners = new Vector<ModelListener>();
         visibilityGraph = new VisibilityGraph(this);
     }
     
-    @Override
-    public void addListener(ModelListener listener) {
-        listeners.add(listener);
-    }
-    
-    @Override
-    public void update() {
-        System.out.println("called model.update()");
-        for (ModelListener ml : listeners) {
-            ml.updateView(visibilityGraph.getPoints(), visibilityGraph.getGridedRms());
-        }
-        // TODO update other things?
-    }
-    
-    @Override
     public TreeMap<Double, Double> getPoints() {
         return visibilityGraph.getPoints();
     }
     
-    @Override
     public TreeMap<Double, Double> getRms() {
         return visibilityGraph.getGridedRms();
     }
     
-    @Override
     public void setLambda(double l) {
         visibilityGraph.setLambda(l);
+        setChanged();
     }
     
-    @Override
     public void setDeltaBaseline(double d) {
         visibilityGraph.setDeltaBaseline(d);
+        setChanged();
     }
     
     public void setDisplayFactor(double d) {
         visibilityGraph.setDisplayFactor(d);
+        setChanged();
     }
     
-    @Override
     public void setExponent(int e) {
         visibilityGraph.setExponent(e);
+        setChanged();
     }
     
-    @Override
     public void setNoise(double noise) {
         visibilityGraph.setNoise(noise);
+        setChanged();
     }
     
-    @Override
     public String getSaveFilename() {
         return visibilityGraph.getSaveFile().getAbsolutePath();
     }
     
-    @Override
     public double getLambda() {
         return visibilityGraph.getLambda();
     }
     
-    @Override
     public double getDeltaBaseline() {
         return visibilityGraph.getDeltaBaseline();
     }
@@ -91,33 +70,35 @@ public class Model implements ModelInterface {
         return visibilityGraph.getDisplayFactor();
     }
     
-    @Override
     public void setSaveFile(File f) {
         visibilityGraph.setSaveFile(f);
+        setChanged();
+        notifyObservers();
     }
     
-    @Override
     public int getExponent() {
         return visibilityGraph.getExponent();
     }
     
     public void setPeakValue(double peakValue) {
         this.peakValue = peakValue;
+        setChanged();
     }
     
     public void setDiameter(double diameter) {
         this.diameter = diameter;
+        setChanged();
     }
     
     public void setHorizontalError(double horizontalError) {
         this.horizontalError = horizontalError;
+        setChanged();
     }
     
     public double getHorizontalError() {
         return horizontalError;
     }
     
-    @Override
     public void setRawPoints(List<InputFile> f) {
         visibilityGraph.emptyRawPoints();
         visibilityGraph.getInputFiles().clear();
@@ -127,6 +108,8 @@ public class Model implements ModelInterface {
             visibilityGraph.addRms(i.getBaseline(), i.getRms());
         }
         findPeakValue();
+        setChanged();
+        notifyObservers();
     }
     
     private void findPeakValue() {
@@ -137,43 +120,45 @@ public class Model implements ModelInterface {
         }
     }
     
-    @Override
     public void emptyRawPoints() {
         visibilityGraph.emptyRawPoints();
     }
     
-    @Override
     public void importPoints(TreeMap<Double, Double> parseFile) {
         visibilityGraph.importPoints(parseFile);
         findPeakValue();
+        setChanged();
+        notifyObservers();
     }
     
-    @Override
     public void importRms(TreeMap<Double, Double> parseData) {
         visibilityGraph.importRms(parseData);
+        setChanged();
+        notifyObservers();
     }
     
-    @Override
     public void removeRmsPoint(double x) {
         visibilityGraph.removeGridedRmsPoint(x);
+        setChanged();
+        notifyObservers();
     }
     
-    @Override
     public String exportPoints() {
         return visibilityGraph.toString();
     }
     
-    @Override
     public void movePoint(double currentPoint, double toy) {
         visibilityGraph.movePoint(currentPoint, toy);
+        setChanged();
+        notifyObservers();
     }
     
-    @Override
     public void reinitialize() {
         visibilityGraph.reinitializePoints();
+        setChanged();
+        notifyObservers();
     }
     
-    @Override
     public double getNoise() {
         return visibilityGraph.getNoise();
     }
@@ -187,6 +172,8 @@ public class Model implements ModelInterface {
         setDiameter(defaultDiameter);
         setHorizontalError(defaultHorizontalError);
         findPeakValue();
+        setChanged();
+        notifyObservers();
     }
     
     public double getPeakValue() {
@@ -195,5 +182,14 @@ public class Model implements ModelInterface {
     
     public double getDiameter() {
         return diameter;
+    }
+    
+    public boolean getBeamPatternVisible() {
+        return beamPatternVisible;
+    }
+    
+    public void setBeamPatternVisible(boolean isVisible) {
+        beamPatternVisible = isVisible;
+        setChanged();
     }
 }

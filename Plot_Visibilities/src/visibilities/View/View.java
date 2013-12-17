@@ -21,18 +21,10 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import common.View.ViewUtilities;
 import visibilities.Model.Adapter;
 import visibilities.Model.ModelListener;
 
@@ -245,6 +237,7 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                JFileChooser fileChooser = ViewUtilities.getFileChooser();
                 fileChooser.showOpenDialog(View.this);
                 File f = fileChooser.getSelectedFile();
                 if (f == null || !f.canRead()) {
@@ -253,7 +246,7 @@ public class View extends BaseView implements ModelListener {
                 TreeMap<Double, Double>[] tm = parseFile(f);
                 View.this.adapter.importVisibilityGraphPoints(tm[0]);
                 View.this.adapter.importVisibilityGraphRms(tm[1]);
-                vCanvas.setGraphTitle("Visibility (" + getShortFileName(f) + ")");
+                vCanvas.setGraphTitle("Visibility (" + ViewUtilities.getShortFileName(f) + ")");
                 update();
             }
         });
@@ -262,6 +255,7 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                JFileChooser fileChooser = ViewUtilities.getFileChooser();
                 fileChooser.showSaveDialog(View.this);
                 File f = fileChooser.getSelectedFile();
                 if (f == null) {
@@ -374,7 +368,7 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void filesDropped(java.io.File[] files) {
-                vCanvas.setGraphTitle("Visibility (" + getShortFileName(files[0]) + ")");
+                vCanvas.setGraphTitle("Visibility (" + ViewUtilities.getShortFileName(files[0]) + ")");
                 
                 for (int i = 0; i < files.length; i++) {
                     
@@ -557,13 +551,13 @@ public class View extends BaseView implements ModelListener {
         return false;
     }
     
-    @Override
+    //@Override
     public void updateValuesFromModel() {
         fLambda.setText(adapter.getLambda() + "");
         fSigma.setText(getVCanvas().getSigma() + "");
     }
     
-    @Override
+    //@Override
     public void updateModelFromValues() {
         try {
             double tempLambda = Double.parseDouble(fLambda.getText());

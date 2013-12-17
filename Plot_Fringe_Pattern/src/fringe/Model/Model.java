@@ -6,16 +6,14 @@ import java.util.Vector;
 public class Model {
     
     private VisibilityGraph visibilityGraph;
-    // private ImageGraph imageGraph;
     private Vector<ModelListener> listeners;
-    private double defaultDisplayFactor = 1, defaultLambda = 2.5, defaultBaseline = 10, defaultDiameter = 5, defaultT1 = 10,
-            defaultT2 = 10;
+    private double defaultDisplayFactor = 1, defaultLambda = 2.5, defaultBaseline = 10, defaultDiameter = 5,
+            defaultT1 = 10, defaultT2 = 10;
     private int defaultExponent = 5;
     private double displayFactor = defaultDisplayFactor, diameter = defaultDiameter, t1 = defaultT1, t2 = defaultT2;
     
     public Model() {
         listeners = new Vector<ModelListener>();
-        // imageGraph = new ImageGraph(this);
         visibilityGraph = new VisibilityGraph(this);
     }
     
@@ -27,16 +25,7 @@ public class Model {
         this.visibilityGraph = visibilityGraph;
     }
     
-    /*public ImageGraph getImageGraph() {
-        return imageGraph;
-    }*/
-    
-    /*public void setImageGraph(ImageGraph imageGraph) {
-        this.imageGraph = imageGraph;
-    }*/
-    
     public void updateListeners() {
-        // System.out.println("Model is updating all listeners");
         for (ModelListener ml : listeners) {
             ml.update();
         }

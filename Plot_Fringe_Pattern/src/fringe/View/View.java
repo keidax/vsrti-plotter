@@ -21,21 +21,14 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import common.View.BaseView;
 import common.View.FileDrop;
 import common.View.InputFile;
 
+import common.View.ViewUtilities;
 import fringe.Model.Adapter;
 import fringe.Model.Model;
 import fringe.Model.ModelListener;
@@ -233,6 +226,7 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                JFileChooser fileChooser = ViewUtilities.getFileChooser();
                 fileChooser.showOpenDialog(View.this);
                 File f = fileChooser.getSelectedFile();
                 if (f == null || !f.canRead()) {
@@ -242,7 +236,7 @@ public class View extends BaseView implements ModelListener {
                 View.this.adapter.importVisibilityGraphPoints(tm[0]);
                 View.this.adapter.importVisibilityGraphRms(tm[1]);
                 
-                vCanvas.setGraphTitle("Fringe Function (" + getShortFileName(f) + ")");
+                vCanvas.setGraphTitle("Fringe Function (" + ViewUtilities.getShortFileName(f) + ")");
                 
             }
         });
@@ -251,6 +245,7 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                JFileChooser fileChooser = ViewUtilities.getFileChooser();
                 fileChooser.showSaveDialog(View.this);
                 File f = fileChooser.getSelectedFile();
                 if (f == null) {
@@ -366,7 +361,7 @@ public class View extends BaseView implements ModelListener {
             
             @Override
             public void filesDropped(java.io.File[] files) {
-                vCanvas.setGraphTitle("Fringe Function (" + getShortFileName(files[0]) + ")");
+                vCanvas.setGraphTitle("Fringe Function (" + ViewUtilities.getShortFileName(files[0]) + ")");
                 for (int i = 0; i < files.length; i++) {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
@@ -561,7 +556,7 @@ public class View extends BaseView implements ModelListener {
         adapter.setRawPoints(((TableModel) jTable.getModel()).inputFiles);
     }
     
-    @Override
+//    @Override
     public void updateValuesFromModel() {
         fBaseline.setText(model.getBaseline() + "");
         fSigma.setText(model.getDisplayFactor() + "");
@@ -571,7 +566,7 @@ public class View extends BaseView implements ModelListener {
         fT2.setText(model.getT2() + "");
     }
     
-    @Override
+//    @Override
     public void updateModelFromValues() {
         System.out.println("lambda text is " + fLambda.getText());
         try {

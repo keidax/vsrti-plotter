@@ -14,7 +14,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,10 +33,10 @@ import javax.swing.border.EmptyBorder;
 
 import beam.Model.Model;
 
-import common.Model.ModelListener;
 import common.View.BaseView;
 import common.View.FileDrop;
 import common.View.InputFile;
+import common.View.ViewUtilities;
 
 /**
  * Main GUI class for Plot_Beam.
@@ -43,24 +44,22 @@ import common.View.InputFile;
  */
 
 @SuppressWarnings("serial")
-public class View extends BaseView implements ModelListener {
+public class View extends BaseView implements Observer {
     
-    private ViewListener listener;
     private VCanvas vCanvas;
     private TableModel tableModel;
     private FileTable jTable;
-    private JTextField fD, fLambda, fSigma, fNoise, fHorizontalError;
+    public JTextField fD, fLambda, fSigma, fNoise, fHorizontalError, fPeakValue;
     private JButton updateButton;
     private JButton bSave, bOpen, bExit, bReset, bInstruction, bAbout, bHide, bDelete;
-    private boolean showBeamPattern = false;
     private String link = "http://www1.union.edu/marrj/radioastro/Instructions_Plot_Beam.html";
     private Model model;
-    private JTextField fPeakValue;
     private JLabel lblPeakValue;
     
     public View(Model m, String title) {
         super(title);
         model = m;
+        model.addObserver(this);
         
         tableModel = new TableModel();
         jTable = new FileTable(tableModel, this);
@@ -88,7 +87,7 @@ public class View extends BaseView implements ModelListener {
         fLambda = new JTextField(model.getLambda() + "");
         fLambda.setToolTipText("\u03BB = wavelength of the radiation detected");
         // fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>\u0398 max = field of view which equals the X value of last point shown in the Image Graph.</P></HTML>");
-        fSigma = new JTextField(vCanvas.getDisplayFactor() + "");
+        fSigma = new JTextField(model.getDisplayFactor() + "");
         fSigma.setMaximumSize(new Dimension(50, 20));
         // fSigma.setMinimumSize(new Dimension(50,20));
         fSigma.setToolTipText("<HTML><P WIDTH='300px'>The displayed sizes of error bars = RMS * (display factor of \u03C3.  )"
@@ -118,7 +117,8 @@ public class View extends BaseView implements ModelListener {
         labels = new JPanel();
         labels.setLayout(new GridLayout());
         jScroll = new JScrollPane(jTable);
-        jScroll.setMaximumSize(new Dimension(200, 80));
+        jScroll.setMaximumSize(new Dimension(200, 400));
+        jScroll.setMinimumSize(new Dimension(200, 100));
         
         getContentPane().add(row1);
         row1.add(row1col1);
@@ -126,7 +126,7 @@ public class View extends BaseView implements ModelListener {
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
         row1col1.add(vCanvas);
-        row1col2.setMaximumSize(new Dimension(100, 450));
+        row1col2.setMaximumSize(new Dimension(200, 650));
         row1col2.add(jScroll);
         row1col2.add(Box.createRigidArea(new Dimension(5, 20)));
         row1col2.add(row1col2col2);
@@ -201,81 +201,11 @@ public class View extends BaseView implements ModelListener {
         fPeakValue.setColumns(10);
         jFields.add(updateButton);
         
-        // BUTTONS FUNCTIONS
-        bOpen.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                fileChooser.showOpenDialog(View.this);
-                File f = fileChooser.getSelectedFile();
-                if (f == null || !f.canRead()) {
-                    return;
-                }
-                TreeMap<Double, Double>[] tm = View.this.parseFile(f);
-                if (tm != null) {
-                    model.importPoints(tm[0]);
-                    model.importRms(tm[1]);
-                    
-                    vCanvas.setGraphTitle("Beam (" + getShortFileName(f) + ")");
-                }
-                
-                model.update();
-            }
-        });
-        
-        bSave.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                fileChooser.showSaveDialog(View.this);
-                File f = fileChooser.getSelectedFile();
-                if (f == null) {
-                    return;
-                } else if (!f.getName().endsWith(".dat")) {
-                    f = new File(f.getAbsolutePath() + ".dat");
-                }
-                listener.writeSaveFile(f);
-            }
-        });
-        
         bExit.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 dispose();
             }
-        });
-        
-        bReset.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                listener.reset();
-            }
-        });
-        
-        bDelete.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                tableModel.removeAllInputFiles();
-                listener.fullReset();
-                vCanvas.setGraphTitle("Beam");
-            }
-        });
-        
-        bHide.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isBeamPatternVisible()) {
-                    bHide.setText("Show Beam Pattern");
-                } else {
-                    bHide.setText("Hide Beam Pattern");
-                }
-                setBeamPatternVisible(!isBeamPatternVisible());
-                vCanvas.repaint();
-            }
-            
         });
         
         bAbout.addActionListener(new ActionListener() {
@@ -293,7 +223,6 @@ public class View extends BaseView implements ModelListener {
         });
         
         bInstruction.addActionListener(new ActionListener() {
-            
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 try {
@@ -306,11 +235,11 @@ public class View extends BaseView implements ModelListener {
             }
         });
         
+        @SuppressWarnings("unused")
         FileDrop fileDrop = new FileDrop(jTable, new FileDrop.Listener() {
-            
             @Override
             public void filesDropped(java.io.File[] files) {
-                vCanvas.setGraphTitle("Beam (" + getShortFileName(files[0]) + ")");
+                vCanvas.setGraphTitle("Beam (" + ViewUtilities.getShortFileName(files[0]) + ")");
                 for (int i = 0; i < files.length; i++) {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
@@ -323,19 +252,6 @@ public class View extends BaseView implements ModelListener {
             }
         });
         
-        ActionListener updateListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateModelFromValues();
-            }
-        };
-        
-        updateButton.addActionListener(updateListener);
-        
-        for (JTextField jt : new JTextField[] {fD, fLambda, fSigma, fNoise, fHorizontalError}) {
-            jt.addActionListener(updateListener);
-        }
-        
         // this.setSize(1200, 800);
         this.pack();
         setVisible(true);
@@ -343,10 +259,32 @@ public class View extends BaseView implements ModelListener {
         
     }
     
-    /*
-     * public void paintComponent() { fLambda.setText(this.adapter.getLambda() +
-     * ""); fD.setText(getD() + ""); }
-     */
+    public void addUpdateParametersActionListener(ActionListener listener) {
+        updateButton.addActionListener(listener);
+        for (JTextField jt : new JTextField[] {fD, fLambda, fSigma, fNoise, fHorizontalError, fPeakValue}) {
+            jt.addActionListener(listener);
+        }
+    }
+    
+    public void addOpenButtonActionListener(ActionListener listener) {
+        bOpen.addActionListener(listener);
+    }
+    
+    public void addSaveButtonActionListener(ActionListener listener) {
+        bSave.addActionListener(listener);
+    }
+    
+    public void addResetButtonActionListener(ActionListener listener) {
+        bReset.addActionListener(listener);
+    }
+    
+    public void addDeleteButtonActionListener(ActionListener listener) {
+        bDelete.addActionListener(listener);
+    }
+    
+    public void addHideButtonActionListener(ActionListener listener) {
+        bHide.addActionListener(listener);
+    }
     
     public TreeMap<Double, Double>[] parseFile(File f) {
         TreeMap<Double, Double> ret = new TreeMap<Double, Double>();
@@ -407,159 +345,114 @@ public class View extends BaseView implements ModelListener {
                             "Incorrect file format. Try to drag-and-drop files into drag-and-drop table area.",
                             "Incorrect format", JOptionPane.ERROR_MESSAGE);
                     in.close();
+                    br.close();
                     return null;
                 }
             }
             in.close();
+            br.close();
         } catch (Exception e) {// Catch exception if any
             System.err.println("Error: " + e.getMessage());
         }
-        TreeMap<Double, Double>[] back = new TreeMap[3];
+        TreeMap<Double, Double>[] back = (TreeMap<Double, Double>[]) new TreeMap[3];
         back[0] = ret;
         back[1] = rms;
         back[2] = retim;
         return back;
     }
     
-    @SuppressWarnings("unchecked")
-    public TreeMap<Double, Double>[] flatten(TreeMap<Double, ArrayList<Double>> data,
-            TreeMap<Double, ArrayList<Double>> rms) {
-        TreeMap<Double, Double> retData = new TreeMap<Double, Double>();
-        TreeMap<Double, Double> retRms = new TreeMap<Double, Double>();
-        Set<Double> dataKeys = data.keySet();
-        // Set<Double> rmsKeys = rms.keySet();
-        for (Double key : dataKeys) {
-            // x has 1 value, rms 0
-            if (data.get(key).size() == 1 && (rms.containsKey(key) ? rms.get(key).size() : 0) == 0) {
-                retData.put(key, data.get(key).get(0));
-            }
-            // x has 1 value, rms has 1 value
-            if (data.get(key).size() == 1 && (rms.containsKey(key) ? rms.get(key).size() : 0) == 1) {
-                retData.put(key, data.get(key).get(0));
-                retRms.put(key, rms.get(key).get(0));
-            }
-            // x has more then 1, but rms.size != x.size
-            if (data.get(key).size() != (rms.containsKey(key) ? rms.get(key).size() : 0)) {
-                retData.put(key, data.get(key).get(0));
-            }
-            // x.size == rms.size
-            else {
-                retData.put(key, countAverageValue(data.get(key), rms.containsKey(key) ? rms.get(key) : null));
-                retRms.put(key, countAverageRms(rms.containsKey(key) ? rms.get(key) : null));
-            }
-            System.out.println("Flatten: " + key + ", " + retData.get(key) + ", " + retRms.get(key));
-        }
-        TreeMap<Double, Double>[] back = new TreeMap[2];
-        back[0] = retData;
-        back[1] = retRms;
-        return back;
-    }
+    // @SuppressWarnings("unchecked")
+    // public TreeMap<Double, Double>[] flatten(TreeMap<Double, ArrayList<Double>> data,
+    // TreeMap<Double, ArrayList<Double>> rms) {
+    // TreeMap<Double, Double> retData = new TreeMap<Double, Double>();
+    // TreeMap<Double, Double> retRms = new TreeMap<Double, Double>();
+    // Set<Double> dataKeys = data.keySet();
+    // // Set<Double> rmsKeys = rms.keySet();
+    // for (Double key : dataKeys) {
+    // // x has 1 value, rms 0
+    // if (data.get(key).size() == 1 && (rms.containsKey(key) ? rms.get(key).size() : 0) == 0) {
+    // retData.put(key, data.get(key).get(0));
+    // }
+    // // x has 1 value, rms has 1 value
+    // if (data.get(key).size() == 1 && (rms.containsKey(key) ? rms.get(key).size() : 0) == 1) {
+    // retData.put(key, data.get(key).get(0));
+    // retRms.put(key, rms.get(key).get(0));
+    // }
+    // // x has more then 1, but rms.size != x.size
+    // if (data.get(key).size() != (rms.containsKey(key) ? rms.get(key).size() : 0)) {
+    // retData.put(key, data.get(key).get(0));
+    // }
+    // // x.size == rms.size
+    // else {
+    // retData.put(key, countAverageValue(data.get(key), rms.containsKey(key) ? rms.get(key) : null));
+    // retRms.put(key, countAverageRms(rms.containsKey(key) ? rms.get(key) : null));
+    // }
+    // System.out.println("Flatten: " + key + ", " + retData.get(key) + ", " + retRms.get(key));
+    // }
+    // TreeMap<Double, Double>[] back = new TreeMap[2];
+    // back[0] = retData;
+    // back[1] = retRms;
+    // return back;
+    // }
     
-    public double countAverageValue(ArrayList<Double> data, ArrayList<Double> rms) {
-        double num = 0;
-        double denom = 0;
-        for (int i = 0; i < data.size(); i++) {
-            num += data.get(i) / rms.get(i);
-            denom += 1 / rms.get(i);
-        }
-        return num / denom;
-    }
-    
-    public double countAverageRms(ArrayList<Double> rms) {
-        double sum = 0;
-        for (double r : rms) {
-            sum += r * r;
-        }
-        return Math.sqrt(sum / (rms.size() * (rms.size() - 1)));
-    }
-    
-    @Override
-    public void updateView(TreeMap<Double, Double> points, TreeMap<Double, Double> rmsPoints) {
-        System.out.println("called view.updateView(points, rmsPoints)");
-        updateValuesFromModel();
-        repaint();
-        vCanvas.update(points, rmsPoints);
-        // this.getIGraph().update();
-        System.out.println("updating with " + points.size() + " points:");
-        System.out.println(points);
-    }
-    
-    public boolean isBeamPatternVisible() {
-        return showBeamPattern;
-    }
-    
-    public void setBeamPatternVisible(boolean showPattern) {
-        showBeamPattern = showPattern;
-    }
+    // public double countAverageValue(ArrayList<Double> data, ArrayList<Double> rms) {
+    // double num = 0;
+    // double denom = 0;
+    // for (int i = 0; i < data.size(); i++) {
+    // num += data.get(i) / rms.get(i);
+    // denom += 1 / rms.get(i);
+    // }
+    // return num / denom;
+    // }
+    //
+    // public double countAverageRms(ArrayList<Double> rms) {
+    // double sum = 0;
+    // for (double r : rms) {
+    // sum += r * r;
+    // }
+    // return Math.sqrt(sum / (rms.size() * (rms.size() - 1)));
+    // }
     
     public void sendAdapterFiles() {
         ArrayList<InputFile> tempArray = ((TableModel) jTable.getModel()).getInputFiles();
         model.setRawPoints(tempArray);
-        
-        model.update();
     }
     
     public Model getModel() {
         return model;
     }
     
-    public void moveVisibilityPoint(double currentPoint, double toy) {
-        model.movePoint(currentPoint, toy);
-        model.update();
-    }
+    // public void moveVisibilityPoint(double currentPoint, double toy) {
+    // model.movePoint(currentPoint, toy);
+    // }
     
     public void removeRmsPoint(double x) {
         model.removeRmsPoint(x);
-        model.update();
     }
     
-    public void setListener(ViewListener listener) {
-        this.listener = listener;
-    }
-    
+    /*
+     * (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     * Main update method for the View class
+     */
     @Override
-    public void updateValuesFromModel() {
+    public void update(Observable o, Object arg) {
+        bHide.setText(model.getBeamPatternVisible() ? "Hide Beam Pattern" : "Show Beam Pattern");
         fLambda.setText(model.getLambda() + "");
         fPeakValue.setText(model.getPeakValue() + "");
         fSigma.setText(model.getDisplayFactor() + "");
         fNoise.setText(model.getNoise() + "");
         fD.setText(model.getDiameter() + "");
         fHorizontalError.setText(model.getHorizontalError() + "");
-        vCanvas.setDisplayFactor(model.getDisplayFactor());
+        vCanvas.repaint();
+        repaint();
     }
     
-    @Override
-    public void updateModelFromValues() {
-        try {
-            double tempNoise = Double.parseDouble(fNoise.getText());
-            model.setNoise(tempNoise);
-        } catch (NumberFormatException e) {}
-        
-        try {
-            double tempDiameter = Double.parseDouble(fD.getText());
-            model.setDiameter(tempDiameter);
-        } catch (NumberFormatException e) {}
-        
-        try {
-            double tempLambda = Double.parseDouble(fLambda.getText());
-            model.setLambda(tempLambda);
-        } catch (NumberFormatException e) {}
-        
-        try {
-            double tempSigma = Double.parseDouble(fSigma.getText());
-            model.setDisplayFactor(tempSigma);
-        } catch (NumberFormatException e) {}
-        
-        try {
-            double tempPeakValue = Double.parseDouble(fPeakValue.getText());
-            model.setPeakValue(tempPeakValue);
-        } catch (NumberFormatException e) {}
-        
-        try {
-            double tempHorizontalError = Double.parseDouble(fHorizontalError.getText());
-            model.setHorizontalError(tempHorizontalError);
-        } catch (NumberFormatException e) {}
-        
-        model.update();
+    public FileTable getFileTable() {
+        return jTable;
+    }
+    
+    public VCanvas getCanvas() {
+        return vCanvas;
     }
 }
