@@ -10,7 +10,7 @@
 
 	<target name="compile" depends="init" description="compile the source">
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="." destdir="${build}" includeantruntime="false" includes="Common/**,
+		<javac srcdir="." destdir="${build}" includeantruntime="false" source="1.6" target="1.6" includes="Common/**,
       TIFT_Chooser/src/**,
       TIFT/src/**,
       TIFT_1/src/**" />

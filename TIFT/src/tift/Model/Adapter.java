@@ -39,6 +39,7 @@ public class Adapter extends CommonTIFTAdapter {
     
     public void evaluate(String equation, String iEquation) {
         getModel().getVisibilityGraph().evaluate(equation, iEquation);
+        getModel().getVisibilityGraph().createImageGraph();
         model.updateListeners();
     }
     

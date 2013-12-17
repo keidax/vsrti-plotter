@@ -187,7 +187,8 @@ public class VisibilityGraph extends Graph {
         reinicializePoints();
         
     }
-    
+
+    /*
     private String[] breakEquation(String equation) {
         equation = equation.replace(" ", "");
         int start = 0, end = 0, index = 0, num = equation.length();
@@ -236,6 +237,7 @@ public class VisibilityGraph extends Graph {
         }
         return La;
     }
+    */
     
     /**
      * Takes an infix equation, breaks it up into an Array of type String by
@@ -379,8 +381,8 @@ public class VisibilityGraph extends Graph {
                 allPoints.put(Double.parseDouble(keys[i].toString()), compl[i].re());
                 getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
             }
-            createImageGraph();
-            model.updateListeners();
+            //createImageGraph();
+            //model.updateListeners();
         }
     }
     

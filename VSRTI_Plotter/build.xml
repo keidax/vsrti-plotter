@@ -10,7 +10,7 @@
 
 	<target name="compile" depends="init" description="compile the source">
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="." destdir="${build}" includeantruntime="false" source="1.7" target="1.7" includes="Beam_width/**,
+		<javac srcdir="." destdir="${build}" includeantruntime="false" source="1.6" target="1.6" includes="Beam_width/**,
       Common/**,
       Plot_Fringe_Pattern/**,
       Plot_Visibilities/**,

@@ -46,7 +46,8 @@ public class Form extends JFrame implements Runnable {
         JButton visButton = new JButton("Plot Visibilities");
         
         getContentPane().add(beamButton);
-        getContentPane().add(fringeButton);
+        // Hide for now
+        //getContentPane().add(fringeButton);
         getContentPane().add(visButton);
         
         beamButton.addActionListener(new ActionListener() {
