@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Beam_width/Beam_width.iml" filepath="$PROJECT_DIR$/Beam_width/Beam_width.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Common/Common.iml" filepath="$PROJECT_DIR$/Common/Common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Plot_Fringe_Pattern/Plot_Fringe_Pattern.iml" filepath="$PROJECT_DIR$/Plot_Fringe_Pattern/Plot_Fringe_Pattern.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Plot_Visibilities/Plot_Visibilities.iml" filepath="$PROJECT_DIR$/Plot_Visibilities/Plot_Visibilities.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SRT_Plotter/SRT_Plotter.iml" filepath="$PROJECT_DIR$/SRT_Plotter/SRT_Plotter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TIFT/TIFT.iml" filepath="$PROJECT_DIR$/TIFT/TIFT.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TIFT_1/TIFT_1.iml" filepath="$PROJECT_DIR$/TIFT_1/TIFT_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TIFT_Chooser/TIFT_Chooser.iml" filepath="$PROJECT_DIR$/TIFT_Chooser/TIFT_Chooser.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VSRT-sim/VSRT-sim.iml" filepath="$PROJECT_DIR$/VSRT-sim/VSRT-sim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VSRTI_Plotter/VSRTI_Plotter.iml" filepath="$PROJECT_DIR$/VSRTI_Plotter/VSRTI_Plotter.iml" />
+    </modules>
+  </component>
+</project>
+

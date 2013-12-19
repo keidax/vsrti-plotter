@@ -6,11 +6,21 @@
 *.ear
 
 # Eclipse files
+# Allow most, like .classpath and .settings
+# Ignore all in the .metadata folder, except launch configurations
+**/.metadata/*
+!**/.metadata/.plugins/
+**/.metadata/.plugins/*
+!**/.metadata/.plugins/org.eclipse.debug.core/
+**/.metadata/.plugins/org.eclipse.debug.core/*
+!**/.metadata/.plugins/org.eclipse.debug.core/.launches/
 
-.metadata
-*/.project
-*/.classpath
-*/.settings/
+# IntelliJ IDEA files
+# Allow .iml files and most of .idea/ directory, except user-specific
+
+.idea/workspace.xml
+.idea/tasks.xml
+*.eml
 
 # from the project
 old_stuff/

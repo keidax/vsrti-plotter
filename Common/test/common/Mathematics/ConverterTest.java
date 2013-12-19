@@ -25,6 +25,7 @@ public class ConverterTest {
     @Test
     public void testGetPostfix() throws Exception {
         String expected[] = {"1", "1", "+"};
+        converter.evaluate();
         String actual[] = converter.getPostfix();
         for (String i : actual) {
             System.out.println(i);
