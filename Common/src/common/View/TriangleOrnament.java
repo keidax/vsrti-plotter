@@ -1,13 +1,13 @@
 package common.View;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 
 public class TriangleOrnament extends AbstractOrnament {
-    
+
     public static int radius = 6;
-    
+
     @Override
     public void draw(Graphics2D g, int x, int y) {
         double[] xs = new double[3];
@@ -23,11 +23,10 @@ public class TriangleOrnament extends AbstractOrnament {
         for (int index = 1; index < xs.length; index++) {
             polygon.lineTo(xs[index], ys[index]);
         }
-        ;
         polygon.closePath();
         g.fill(polygon);
     }
-    
+
     @Override
     public boolean isInside(int x, int y, int cx, int cy) {
         // NOT CORRECT YET!!!

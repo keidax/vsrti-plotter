@@ -1,484 +1,221 @@
 package common.Mathematics;
 
+import java.util.ArrayList;
+import java.util.Stack;
+
 /**
  * Evaluates an infix expression (that is broken up into an Array of type String
  * by operator) by converting it to postfix and evaluating the postfix
  * expression. It can handle trig functions (sin, cos, tan), ln, log, and delta
  * functions.
- * 
+ *
  * @author Adam Pere
  * @version 06/30/2011
- * 
  */
 public class Converter {
-    
-    private Stack theStack;
-    private String[] equation, postEq;
-    private int nums; // Current index for postEq
-    
+    private ArrayList<Token> equation, postEq;
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    private double x;
+
     /**
      * Default constructor, initializes the variables.
-     * 
-     * @param eqn
-     *            - the equation broken up into an array of type String by
-     *            operators.
+     *
+     * @param eqn the equation as a String
      */
-    public Converter(String[] eqn) {
-        theStack = new Stack();
-        equation = eqn;
-        postEq = new String[equation.length];
-        nums = 0;
+    public Converter(String eqn) {
+        this(Tokenizer.tokenize(eqn));
     }
-    
+
+    private Converter(ArrayList<Token> tokens) {
+        equation = tokens;
+        postEq = new ArrayList<Token>(equation.size());
+        convertToPostFix();
+    }
+
+
     /**
      * Evaluate converts the equation from infix to postfix notation and then
      * evaluates the postfix equation.
-     * 
-     * @return answer - The mathematical answer of the equation.
+     *
+     * @return the mathematical answer of the equation.
      */
     public Double evaluate() {
-        convert();
-        Double[] stack = new Double[postEq.length + 1];
-        int top = 0;
-        Double answer = 0.0;
-        
-        for (int i = 0; i < postEq.length; i++) {
-            
-            if (postEq[i] != null) {
-                if (postEq[i].equals("*")) {
-                    
-                    answer = stack[top] * stack[top - 1];
-                    top = top - 1;
-                    stack[top] = answer;
-                    
-                } else if (postEq[i].equals("/")) {
-                    if (stack[top - 1] != 0) {
-                        answer = stack[top - 1] / stack[top];
-                        top = top - 1;
-                        stack[top] = answer;
+        Stack<Token> stack = new Stack<Token>();
+        System.out.println(postEq);
+        // main evaluation loop
+        for (Token t : postEq) {
+            switch (t.getType()) {
+                case NUMBER:
+                    stack.push(t);
+                    break;
+                case DELIMITER:
+                    //TODO shouldn't have any of these
+                    break;
+                case OPERATOR:
+                    Token temp = null;
+                    Double b = Double.parseDouble(stack.pop().toString());
+                    Double a = Double.parseDouble(stack.pop().toString());
+                    String s = t.toString();
+                    if (s.equals("+")) {
+                        temp = new NumberToken(a + b);
+                    } else if (s.equals("-")) {
+                        temp = new NumberToken(a - b);
+                    } else if (s.equals("*")) {
+                        temp = new NumberToken(a * b);
+                    } else if (s.equals("/")) {
+                        if (b == 0.0) {
+                            //TODO throw div by 0 error
+                        }
+                        temp = new NumberToken(a / b);
+                    } else if (s.equals("^")) {
+                        temp = new NumberToken(Math.pow(a, b));
+                    }
+
+                    if (temp == null) {
+                        //TODO error
+                    }
+                    stack.push(temp);
+                    break;
+                case STRING:
+                    Token val = null;
+                    if (t.toString().equalsIgnoreCase("pi")) {
+                        val = new NumberToken(Math.PI);
+                    } else if (t.toString().equalsIgnoreCase("e")) {
+                        val = new NumberToken(Math.E);
+                    } else if (t.toString().equals("x")) {
+                        //TODO insert real value of x, maybe using a map?
+                        val = new NumberToken((double) x);
                     } else {
-                        top = top - 1;
-                        stack[top] = 0.0;
-                        System.out.println("********* Tried to Divide by Zero ***********");
+                        if (stack.empty())
+                            System.out.println("empty stack, t = " + t);
+                        Double arg = Double.parseDouble(stack.pop().toString());
+                        if (t.toString().equals("sin")) {
+                            val = new NumberToken(Math.sin(arg));
+                        } else if (t.toString().equals("cos")) {
+                            val = new NumberToken(Math.cos(arg));
+                        } else if (t.toString().equals("tan")) {
+                            val = new NumberToken(Math.tan(arg));
+                        } else if (t.toString().equals("ln")) {
+                            val = new NumberToken(Math.log(arg));
+                        } else if (t.toString().equals("log")) {
+                            val = new NumberToken(Math.log10(arg));
+                        } else if (t.toString().equals("u")) {
+                            if (arg >= 0) {
+                                val = new NumberToken(1.0);
+                            } else {
+                                val = new NumberToken(0.0);
+                            }
+                        } else if (t.toString().equals("delta")) {
+                            if (arg == 0) {
+                                val = new NumberToken(1.0);
+                            } else {
+                                val = new NumberToken(0.0);
+                            }
+                        } else if (t.toString().equals("exp")) {
+                            val = new NumberToken(Math.exp(arg));
+                        }
                     }
-                    
-                } else if (postEq[i].equals("+")) {
-                    answer = stack[top] + stack[top - 1];
-                    top = top - 1;
-                    stack[top] = answer;
-                } else if (postEq[i].equals("-")) {
-                    answer = stack[top - 1] - stack[top];
-                    top = top - 1;
-                    stack[top] = answer;
-                } else if (postEq[i].equals("^")) {
-                    
-                    answer = Math.pow(stack[top - 1], stack[top]);
-                    top = top - 1;
-                    stack[top] = answer;
-                }
-                
-                else {
-                    if (postEq[i] != null && !postEq[i].equals("")) {
-                        top++;
-                        stack[top] = Double.parseDouble(postEq[i]);
+                    if (val == null) {
+                        //TODO error
                     }
-                    
-                }
+                    stack.push(val);
+                    break;
             }
         }
-        
-        if (stack[top] != null) {
-            return stack[top];
+        if (stack.size() != 1) {
+            //TODO error
         }
-        return answer;
+        return Double.parseDouble(stack.peek().toString());
     }
-    
+
     /**
      * Converts equation from infix to postfix. If it encounters any trig
      * functions, log, ln, or delta, it will evaluate that function and the
      * answer is used in the postfix notation instead of the trig function.
      */
-    private void convert() {
-        
-        int num = equation.length;
-        int i = 0;
-        int j = 0;
-        while (i < num && equation[i] != null) {
-            
-            if (equation[i].equals("sin")) {
-                j = sin(i);
-            } else if (equation[i].equals("cos")) {
-                j = cos(i);
-            } else if (equation[i].equals("tan")) {
-                j = tan(i);
-            } else if (equation[i].equals("ln")) {
-                j = ln(i);
-            } else if (equation[i].equals("log")) {
-                j = log(i);
-            } else if (equation[i].equals("delta")) {
-                j = delta(i);
-            } else if (equation[i].equals("u")) {
-                j = u(i);
+    private void convertToPostFix() {
+        Stack<Token> opStack = new Stack<Token>();
+        for (Token t : equation) {
+            switch (t.getType()) {
+                case NUMBER:
+                    postEq.add(t);
+                    break;
+                case DELIMITER:
+                    if (t.toString().equals("("))
+                        opStack.push(t);
+                    else if (t.toString().equals(")")) {
+                        while (!opStack.empty() && !opStack.peek().toString().equals("(")) {
+                            postEq.add(opStack.pop());
+                        }
+                        if (opStack.isEmpty()) {
+                            //TODO error mismatched parens
+                        }
+                        opStack.pop(); //pop the '('
+                        if (!opStack.empty() && opStack.peek().getType() == Token.TOKEN_TYPE.STRING) { //it's a function
+                            // pop and add the function
+                            postEq.add(opStack.pop());
+                        }
+                    } else {
+                        //TODO error unknown delimiter
+                    }
+                    break;
+                case OPERATOR:
+                    while (!opStack.empty() && ((!t.toString().equals("^") && t.getPrecedence() == opStack.peek().getPrecedence())
+                            || (t.getPrecedence() < opStack.peek().getPrecedence()))) {
+                        postEq.add(opStack.pop());
+                    }
+                    opStack.push(t);
+                    break;
+                case STRING:
+                    if (t.toString().equals("x")) { // it's a variable //TODO maybe we want a better way of detecting if it's a variable -- a map?
+                        postEq.add(t);
+                    } else { // it's a function
+                        opStack.push(t);
+                    }
+                    break;
             }
-            
-            if (!equation[i].equals("")) {
-                identify(equation[i]);
-            }
-            j++;
-            i = j;
         }
-        while (!theStack.isEmpty()) {
-            String temp = theStack.pop().toString();
-            if (!temp.contains("(")) {
-                postEq[nums] = temp;
-                nums++;
+        while (!opStack.isEmpty()) {
+            if (opStack.peek().toString().contains("(")) {
+                //TODO error mismatched parens
             }
-        }
-    }
-    
-    /**
-     * Identify takes a String and identifies the String. If the string is
-     * equivalent to one of the 8 Tokens, a Token of the identified type is
-     * initialized and it's handle method is called and added to the postfix
-     * equation. If it is not identified as a token, it must be an operand added
-     * to the postfix equation.
-     */
-    private void identify(String s) {
-        Token t;
-        if (s.equals("*")) {
-            t = new Multiply();
-            postEq[nums] = t.handle(theStack);
-            if (postEq[nums] != null && !postEq[nums].equals("")) {
-                nums++;
-            }
-        } else if (s.equals("(")) {
-            t = new OpenParenthesis();
-            postEq[nums] = t.handle(theStack);
-            nums++;
-        } else if (s.equals(")")) {
-            t = new ClosedParenthesis();
-            postEq[nums] = t.handle(theStack);
-            nums++;
-        } else if (s.equals("/")) {
-            t = new Divide();
-            postEq[nums] = t.handle(theStack);
-            if (postEq[nums] != null && !postEq[nums].equals("")) {
-                nums++;
-            }
-        } else if (s.equals("+")) {
-            t = new Plus();
-            postEq[nums] = t.handle(theStack);
-            if (postEq[nums] != null && !postEq[nums].equals("")) {
-                nums++;
-            }
-        } else if (s.equals("-")) {
-            t = new Subtract();
-            postEq[nums] = t.handle(theStack);
-            if (postEq[nums] != null && !postEq[nums].equals("")) {
-                nums++;
-            }
-        } else if (s.equals("^")) {
-            t = new Exponent();
-            postEq[nums] = t.handle(theStack);
-            if (postEq[nums] != null && !postEq[nums].equals("")) {
-                nums++;
-            }
-        } else if (s.equals(" ")) {
-        } else {
-            postEq[nums] = s;
-            if (postEq[nums] != null && !postEq[nums].equals("")) {
-                nums++;
-            }
+            postEq.add(opStack.pop());
         }
     }
-    
-    /**
-     * Handles the evaluation of a step function when found in the infix
-     * equation.
-     * 
-     * @param j
-     *            - the index of the string "u" in the infix equation
-     * @return the index, in the infix equation, of the correct closing
-     *         parenthesis.
-     */
-    private int u(int j) {
-        int L = equation.length;
-        String[] inside = new String[L];
-        int count = 0, k = j + 2, pCounter = 0;
-        boolean done = false;
-        while (k < equation.length && !done) {
-            inside[count] = equation[k];
-            
-            if (inside[count].equals("(")) {
-                pCounter++;
-            } else if (inside[count].equals(")")) {
-                pCounter--;
-            }
-            
-            equation[k] = "";
-            k++;
-            count++;
-            
-            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
-                equation[k] = "";
-                done = true;
-            }
-        }
-        Converter con = new Converter(inside);
-        Double x = con.evaluate();
-        if (x >= 0) {
-            equation[j] = 1.0 + "";
-        } else {
-            equation[j] = 0.0 + "";
-        }
-        return k;
-    }
-    
-    /**
-     * Handles the evaluation of a delta function when found in the infix
-     * equation.
-     * 
-     * @param j
-     *            - the index of the string "delta" in the infix equation
-     * @return the index, in the infix equation, of the correct closing
-     *         parenthesis.
-     */
-    private int delta(int j) {
-        int L = equation.length;
-        String[] inside = new String[L];
-        int count = 0, k = j + 2, pCounter = 0;
-        boolean done = false;
-        while (k < equation.length && !done) {
-            inside[count] = equation[k];
-            
-            if (inside[count].equals("(")) {
-                pCounter++;
-            } else if (inside[count].equals(")")) {
-                pCounter--;
-            }
-            
-            equation[k] = "";
-            k++;
-            count++;
-            
-            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
-                equation[k] = "";
-                done = true;
-            }
-        }
-        Converter con = new Converter(inside);
-        Double x = con.evaluate();
-        if (x == 0) {
-            equation[j] = 1.0 + "";
-        } else {
-            equation[j] = 0.0 + "";
-        }
-        return k;
-    }
-    
-    /**
-     * Handles the evaluation of a sin function when found in the infix
-     * equation.
-     * 
-     * @param j
-     *            - the index of the string "sin" in the infix equation
-     * @return the index, in the infix equation, of the correct closing
-     *         parenthesis.
-     */
-    private int sin(int j) {
-        int L = equation.length;
-        String[] inside = new String[L];
-        int count = 0, k = j + 2, pCounter = 0;
-        boolean done = false;
-        while (k < equation.length && !done) {
-            inside[count] = equation[k];
-            
-            if (inside[count].equals("(")) {
-                pCounter++;
-            } else if (inside[count].equals(")")) {
-                pCounter--;
-            }
-            
-            equation[k] = "";
-            k++;
-            count++;
-            
-            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
-                equation[k] = "";
-                done = true;
-            }
-        }
-        Converter con = new Converter(inside);
-        Double x = con.evaluate();
-        equation[j] = Math.sin(x) + "";
-        return k;
-    }
-    
-    /**
-     * Handles the evaluation of a tan function when found in the infix
-     * equation.
-     * 
-     * @param j
-     *            - the index of the string "tan" in the infix equation
-     * @return the index, in the infix equation, of the correct closing
-     *         parenthesis.
-     */
-    private int tan(int j) {
-        int L = equation.length;
-        String[] inside = new String[L];
-        int count = 0, k = j + 2, pCounter = 0;
-        boolean done = false;
-        while (k < equation.length && !done) {
-            inside[count] = equation[k];
-            
-            if (inside[count].equals("(")) {
-                pCounter++;
-            } else if (inside[count].equals(")")) {
-                pCounter--;
-            }
-            
-            equation[k] = "";
-            k++;
-            count++;
-            
-            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
-                equation[k] = "";
-                done = true;
-            }
-        }
-        Converter con = new Converter(inside);
-        Double x = con.evaluate();
-        equation[j] = Math.tan(x) + "";
-        return k;
-    }
-    
-    /**
-     * Handles the evaluation of a cos function when found in the infix
-     * equation.
-     * 
-     * @param j
-     *            - the index of the string "cos" in the infix equation
-     * @return the index, in the infix equation, of the correct closing
-     *         parenthesis.
-     */
-    private int cos(int j) {
-        int L = equation.length;
-        String[] inside = new String[L];
-        int count = 0, k = j + 2, pCounter = 0;
-        boolean done = false;
-        while (k < equation.length && !done) {
-            inside[count] = equation[k];
-            
-            if (inside[count].equals("(")) {
-                pCounter++;
-            } else if (inside[count].equals(")")) {
-                pCounter--;
-            }
-            
-            equation[k] = "";
-            k++;
-            count++;
-            
-            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
-                equation[k] = "";
-                done = true;
-            }
-        }
-        Converter con = new Converter(inside);
-        Double x = con.evaluate();
-        equation[j] = Math.cos(x) + "";
-        return k;
-    }
-    
-    /**
-     * Handles the evaluation of an ln function when found in the infix
-     * equation.
-     * 
-     * @param j
-     *            - the index of the string "ln" in the infix equation
-     * @return the index, in the infix equation, of the correct closing
-     *         parenthesis.
-     */
-    private int ln(int j) {
-        int L = equation.length;
-        String[] inside = new String[L];
-        int count = 0, k = j + 2, pCounter = 0;
-        boolean done = false;
-        while (k < equation.length && !done) {
-            inside[count] = equation[k];
-            
-            if (inside[count].equals("(")) {
-                pCounter++;
-            } else if (inside[count].equals(")")) {
-                pCounter--;
-            }
-            
-            equation[k] = "";
-            k++;
-            count++;
-            
-            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
-                equation[k] = "";
-                done = true;
-            }
-        }
-        Converter con = new Converter(inside);
-        Double x = con.evaluate();
-        if (x == 0) {
-            equation[j] = 0.0 + "";
-        } else {
-            equation[j] = Math.log(x) + "";
-        }
-        return k;
-    }
-    
-    /**
-     * Handles the evaluation of a log (base 10) function when found in the
-     * infix equation.
-     * 
-     * @param j
-     *            - the index of the string "log" in the infix equation
-     * @return the index, in the infix equation, of the correct closing
-     *         parenthesis.
-     */
-    private int log(int j) {
-        int L = equation.length;
-        String[] inside = new String[L];
-        int count = 0, k = j + 2, pCounter = 0;
-        boolean done = false;
-        while (k < equation.length && !done) {
-            inside[count] = equation[k];
-            
-            if (inside[count].equals("(")) {
-                pCounter++;
-            } else if (inside[count].equals(")")) {
-                pCounter--;
-            }
-            
-            equation[k] = "";
-            k++;
-            count++;
-            
-            if (equation[k] != null && equation[k].contains(")") && pCounter == 0) {
-                equation[k] = "";
-                done = true;
-            }
-        }
-        Converter con = new Converter(inside);
-        Double x = con.evaluate();
-        if (x == 0) {
-            equation[j] = 0.0 + "";
-        } else {
-            equation[j] = Math.log10(x) + "";
-        }
-        return k;
-    }
-    
+
     /**
      * @return The equation in postfix notation
      */
-    public String[] getPostfix() {
-        return postEq;
+    public String getPostfix() {
+        String ret = "";
+        for (Token t : postEq) {
+            ret += t.toString();
+        }
+        return ret;
     }
-    
+
+    private static ArrayList<Token> extract_inner(ArrayList<Token> eq, int start_index) {
+        ArrayList<Token> inner_eq = new ArrayList<Token>();
+        int count = 0, tracking_index = start_index + 2, pCounter = 1;
+        while (tracking_index < eq.size()) {
+            inner_eq.add(eq.get(tracking_index));
+            if (inner_eq.get(count).toString().equals("(")) {
+                pCounter++;
+            } else if (inner_eq.get(count).toString().equals(")")) {
+                pCounter--;
+                if (pCounter == 0)
+                    break;
+            }
+            tracking_index++;
+            count++;
+        }
+        if (pCounter != 0) {
+            //TODO throw error: mismatched parens
+        }
+        return inner_eq;
+    }
 }

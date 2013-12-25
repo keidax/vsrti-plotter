@@ -1,18 +1,14 @@
 package tift2.Model;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import common.Mathematics.Converter;
 import common.Model.Dct1d;
 import common.Model.Point;
 
+import java.io.File;
+import java.util.*;
+
 public class VisibilityGraph extends Graph {
-    
+
     public File saveFile;
     public double lambda = 1;
     public SortedSet<Point> rawPoints;
@@ -20,31 +16,31 @@ public class VisibilityGraph extends Graph {
     public TreeMap<Double, Double> rms = new TreeMap<Double, Double>(), gridedRms = new TreeMap<Double, Double>();
     // public ArrayList<InputFile> inputFiles;
     public int numberOfPoints = 150;
-    
+
     public VisibilityGraph(Model m) {
         super(m);
         rawPoints = new TreeSet<Point>();
         rms = new TreeMap<Double, Double>();
         reinicializePoints();
     }
-    
+
     public void setRms(TreeMap<Double, Double> rms) {
         this.rms = rms;
     }
-    
+
     public int getNumberOfPoints() {
         return numberOfPoints;
     }
-    
+
     public void setNumberOfPoints(int numberOfPoints) {
         this.numberOfPoints = numberOfPoints;
         reinicializePoints();
     }
-    
+
     public void setGridedRms(TreeMap<Double, Double> gridedRms) {
         this.gridedRms = gridedRms;
     }
-    
+
     /**
      * Set's all the points back to their original position. If a file was
      * opened, this sets all the points back to their position when the file was
@@ -93,7 +89,7 @@ public class VisibilityGraph extends Graph {
         createImageGraph();
         update();
     }
-    
+
     /**
      * Calls reinicialize points: Set's all the points back to their original
      * position. If a file was opened, this sets all the points back to their
@@ -103,114 +99,63 @@ public class VisibilityGraph extends Graph {
     public void reset() {
         reinicializePoints();
     }
-    
+
     /**
      * Sets the y-value of all points to 0.
      */
     public void fullReset() {
-        
+
         rawPoints = new TreeSet<Point>();
         rms = new TreeMap<Double, Double>();
         reinicializePoints();
-        
+
     }
-    
+
     /**
      * Takes an infix equation, breaks it up into an Array of type String by
      * operators, Evaluates the equation and plots the equation using the points
      * currently on the Time Domain graph.
-     * 
-     * @param equation
-     *            - The equation to be evaluated.
+     *
+     * @param equation - The equation to be evaluated.
      */
     public void evaluate(String equation) {
-        equation = equation.replace(" ", "");
-        int start = 0, end = 0, index = 0, num = equation.length();
-        String[] M = new String[num];
-        String[] La = new String[num];
+        Converter con = new Converter(equation);
         Object[] keys = getPoints().keySet().toArray();
-        TreeMap<Double, Double> allPoints = getPoints();
-        Converter con;
-        
-        for (int i = 0; i < num; i++) // This for loop breaks up the String
-                                      // equation. Might make more sense for
-                                      // this to be it's own method.
-        {
-            if (equation.charAt(i) == '*' || equation.charAt(i) == '/' || equation.charAt(i) == '(' || equation.charAt(i) == ')'
-                    || equation.charAt(i) == '+' || equation.charAt(i) == '-' || equation.charAt(i) == '^') {
-                end = i;
-                if (start == end) {
-                    La[index] = equation.charAt(i) + "";
-                    start++;
-                    index++;
-                } else {
-                    La[index] = equation.substring(start, end).replace('_', '-');
-                    
-                    if (La[index].equals("e")) {
-                        La[index] = Math.E + "";
-                    } else if (La[index].equals("-e")) {
-                        La[index] = "-" + Math.E + "";
-                    } else if (La[index].equals("pi")) {
-                        La[index] = Math.PI + "";
-                    } else if (La[index].equals("-pi")) {
-                        La[index] = "-" + Math.PI + "";
-                    }
-                    
-                    index++;
-                    La[index] = equation.charAt(i) + "";
-                    index++;
-                    start = end + 1;
-                }
-            }
-        }
-        
-        if (start < num) {
-            La[index] = equation.substring(start).replace('_', '-');
-        }
-        
+
         for (int i = 0; i < keys.length; i++) {
-            for (int j = 0; j < num; j++) {
-                M[j] = La[j];
-                if (La[j] != null && La[j].contains("-x")) {
-                    M[j] = "-" + keys[i] + "";
-                } else if (La[j] != null && La[j].contains("x")) {
-                    M[j] = keys[i] + "";
-                }
-            }
-            
-            con = new Converter(M);
+            con.setX((Double) keys[i]);
             Double ans = con.evaluate();
-            allPoints.put(Double.parseDouble(keys[i].toString()), ans);
-            createImageGraph();
-            update();
+            getPoints().put(Double.parseDouble(keys[i].toString()), ans);
+            //createImageGraph();
+            // update();
         }
     }
-    
+
     public void addPoint(double x, double y) {
         // System.out.println("Adding point " + x + " into grid(x)=" +
         // getGridX(x));
         getPoints().put(getGridX(x / getLambda()), y);// -this.halfBZero);
         // this.createImageGraph();
     }
-    
+
     public void removePoint(double x) {
         getPoints().put(getGridX(x), 0.0);
         createImageGraph();
     }
-    
+
     public void recountExponent() {
         if (rawPoints == null || rawPoints.size() < 2) {
             setExponent(5);
         }
         setExponent((int) Math.ceil(Math.log(rawPoints.size()) / Math.log(2)));
-        
+
         // if (Graph.exponent < (int) Math.ceil(Math.log(getMaxRawX() /
         // Graph.getDeltaBaseline()) / Math.log(2))) {
         // Graph.exponent = (int) Math.ceil(Math.log(getMaxRawX() /
         // Graph.getDeltaBaseline()) / Math.log(2));
         // }
     }
-    
+
     public double getMaxRawX() {
         if (getRawPoints().size() != 0) {
             return getRawPoints().last().getX();
@@ -218,7 +163,7 @@ public class VisibilityGraph extends Graph {
             return 0.0;
         }
     }
-    
+
     public double getMaxRawY() {
         if (getRawPoints() == null || getRawPoints().size() == 0) {
             return 0.0;
@@ -231,7 +176,7 @@ public class VisibilityGraph extends Graph {
         }
         return max.getY();
     }
-    
+
     public double getGridX(double x) {
         if (getPoints().floorKey(x) != null) {
             return getPoints().floorKey(x);
@@ -240,11 +185,11 @@ public class VisibilityGraph extends Graph {
         }
         // return Math.floor(new Double(x)/Graph.getDeltaBaseline());
     }
-    
+
     // ////////////////////////////////////////////////////////////////////////////////////
     // ////////////////////////////////////////////////////////////////////////////////////////
     public void createImageGraph() {
-        
+
         Object[] keys = getPoints().keySet().toArray();
         double[][] data = new double[3][keys.length];
         for (int i = 0; i < keys.length; i++) {
@@ -258,12 +203,12 @@ public class VisibilityGraph extends Graph {
             }
         }
         Dct1d dct = new Dct1d(data[0].length);
-        
+
         double[][] res = new double[3][];
         for (int i = 0; i < 3; i++) {
             res[i] = dct.DCT(data[0]);
         }
-        
+
         model.imageGraph.getPoints().clear();
         for (int i = 0; i < res[0].length; i++) {
             double a = 0;
@@ -275,14 +220,14 @@ public class VisibilityGraph extends Graph {
                     Math.signum(a) * Math.sqrt(Math.abs(a)));
         }
     }
-    
+
     // //////////////////////////////////////////////////////////////////////////////////////////
     // //////////////////////////////////////////////////////////////////////////////////////
-    
+
     // ////////////////////////////////////////////////////////////////////////////////////
     // ////////////////////////////////////////////////////////////////////////////////////////
     public void createImageGraphTEST() {
-        
+
         Object[] keys = getPoints().keySet().toArray();
         double[][] data = new double[3][keys.length];
         for (int i = 0; i < keys.length; i++) {
@@ -296,12 +241,12 @@ public class VisibilityGraph extends Graph {
             }
         }
         Dct1d dct = new Dct1d(data[0].length);
-        
+
         double[][] res = new double[3][];
         for (int i = 0; i < 3; i++) {
             res[i] = dct.DCT(data[0]);
         }
-        
+
         model.imageGraph.getPoints().clear();
         for (int i = 0; i < res[0].length; i++) {
             double a = 0;
@@ -313,14 +258,14 @@ public class VisibilityGraph extends Graph {
                     Math.signum(a) * Math.sqrt(Math.abs(a)));
         }
     }
-    
+
     // //////////////////////////////////////////////////////////////////////////////////////////
     // //////////////////////////////////////////////////////////////////////////////////////
-    
+
     public void emptyRawPoints() {
         rawPoints.clear();
     }
-    
+
     public void addRawPoint(double x, double y) {
         getRawPoints().add(new Point(x, y));
         recountExponent();
@@ -328,32 +273,32 @@ public class VisibilityGraph extends Graph {
         deltaBaseline = countDeltaBaseline();
         addPoint(x, y);
     }
-    
+
     public File getSaveFile() {
         return saveFile;
     }
-    
+
     public void setSaveFile(File saveFile) {
         this.saveFile = saveFile;
     }
-    
+
     public double getLambda() {
         return lambda;
     }
-    
+
     public void setLambda(double lambda) {
         this.lambda = lambda;
         reinicializePoints();
     }
-    
+
     public SortedSet<Point> getRawPoints() {
         return rawPoints;
     }
-    
+
     public void setRawPoints(SortedSet<Point> rawPoints) {
         this.rawPoints = rawPoints;
     }
-    
+
     public TreeMap<Double, Double> getGridedRms() {
         if (gridedRms != null && !gridedRms.isEmpty()) {
             return gridedRms;
@@ -372,36 +317,36 @@ public class VisibilityGraph extends Graph {
         // System.out.println("returning gridedrms size = "+gridedRms.size());
         return gridedRms;
     }
-    
+
     public void addRms(double x, double rms) {
         getRms().put(x, rms);
         gridedRms.clear();
     }
-    
+
     public void moveRawPoint(Point p, double x, double y) {
         p.setX(x);
         p.setY(y);
     }
-    
+
     public void update() {
         model.updateListeners();
     }
-    
+
     public void movePoint(double currentPoint, double toy) {
         getPoints().put(currentPoint, toy);
         createImageGraph();
         System.out.println("Point was moved and called updating");
         update();
     }
-    
+
     public void importPoints(TreeMap<Double, Double> parseFile) {
         getPoints().clear();
         getPoints().putAll(parseFile);
         getRawPoints().clear();
         Set<Double> keys = parseFile.keySet();
-        
+
         System.out.println("*************" + keys + "***************");
-        
+
         for (Double key : keys) {
             getRawPoints().add(new Point(key, parseFile.get(key)));
         }
@@ -413,7 +358,7 @@ public class VisibilityGraph extends Graph {
         update();
         // System.out.println("points imported "+getPoints().size());
     }
-    
+
     @Override
     public String toString() {
         String s = "";
@@ -433,7 +378,7 @@ public class VisibilityGraph extends Graph {
         // System.out.println(s);
         return s;
     }
-    
+
     public TreeMap<Double, Double> getDataPoints() {
         TreeMap<Double, Double> al = new TreeMap<Double, Double>();
         for (Point p : rawPoints) {
@@ -443,11 +388,11 @@ public class VisibilityGraph extends Graph {
         // System.out.println("DataPoints = "+al.size());
         return al;
     }
-    
+
     public TreeMap<Double, Double> getRms() {
         return rms;
     }
-    
+
     public void importRms(TreeMap<Double, Double> parseData) {
         getRms().clear();
         // gridedRms.clear();
@@ -455,15 +400,15 @@ public class VisibilityGraph extends Graph {
         gridedRms.putAll(parseData);
         update();
     }
-    
+
     public void removeGridedRmsPoint(double x) {
         getGridedRms().remove(x);
     }
-    
+
     void removeRms(double i) {
         getRms().remove(i);
     }
-    
+
     private double countDeltaBaseline() {
         if (getRawPoints().size() < 2) {
             return 1.0;
