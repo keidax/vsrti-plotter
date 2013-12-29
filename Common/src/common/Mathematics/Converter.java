@@ -1,6 +1,7 @@
 package common.Mathematics;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Stack;
 
 /**
@@ -10,16 +11,16 @@ import java.util.Stack;
  * functions.
  *
  * @author Adam Pere
+ * @author Gabriel Holodak
  * @version 06/30/2011
  */
 public class Converter {
     private ArrayList<Token> equation, postEq;
+    private double x;
 
     public void setX(double x) {
         this.x = x;
     }
-
-    private double x;
 
     /**
      * Default constructor, initializes the variables.
@@ -36,7 +37,6 @@ public class Converter {
         convertToPostFix();
     }
 
-
     /**
      * Evaluate converts the equation from infix to postfix notation and then
      * evaluates the postfix equation.
@@ -45,89 +45,96 @@ public class Converter {
      */
     public Double evaluate() {
         Stack<Token> stack = new Stack<Token>();
-        System.out.println(postEq);
         // main evaluation loop
         for (Token t : postEq) {
+            String s = t.toString();
             switch (t.getType()) {
                 case NUMBER:
                     stack.push(t);
                     break;
                 case DELIMITER:
-                    //TODO shouldn't have any of these
-                    break;
+                    throw new InputMismatchException("unexpected delimiter: " + t);
+//                    break;
                 case OPERATOR:
-                    Token temp = null;
-                    Double b = Double.parseDouble(stack.pop().toString());
-                    Double a = Double.parseDouble(stack.pop().toString());
-                    String s = t.toString();
-                    if (s.equals("+")) {
-                        temp = new NumberToken(a + b);
-                    } else if (s.equals("-")) {
-                        temp = new NumberToken(a - b);
-                    } else if (s.equals("*")) {
-                        temp = new NumberToken(a * b);
-                    } else if (s.equals("/")) {
-                        if (b == 0.0) {
-                            //TODO throw div by 0 error
-                        }
-                        temp = new NumberToken(a / b);
-                    } else if (s.equals("^")) {
-                        temp = new NumberToken(Math.pow(a, b));
-                    }
+                    Token temp;
 
-                    if (temp == null) {
-                        //TODO error
+                    if (((OperatorToken) t).isUnary()) {
+                        Double b = Double.parseDouble(stack.pop().toString());
+                        if (s.equals("-")) { //unary negation
+                            temp = new NumberToken(-b);
+                        } else {
+                            throw new UnsupportedOperationException("unknown unary operator " + t);
+                        }
+                    } else {
+                        Double b = Double.parseDouble(stack.pop().toString());
+                        Double a = Double.parseDouble(stack.pop().toString());
+
+                        if (s.equals("-")) {
+                            temp = new NumberToken(a - b);
+                        } else if (s.equals("+")) {
+                            temp = new NumberToken(a + b);
+                        } else if (s.equals("*")) {
+                            temp = new NumberToken(a * b);
+                        } else if (s.equals("/")) {
+                            if (b == 0.0) {
+                                //TODO throw div by 0 error
+                                //throw new ArithmeticException("division by zero");
+                                temp = new NumberToken(0.0);
+                            } else
+                                temp = new NumberToken(a / b);
+                        } else if (s.equals("^")) {
+                            temp = new NumberToken(Math.pow(a, b));
+                        } else {
+                            throw new UnsupportedOperationException("unknown binary operator " + t);
+                        }
                     }
                     stack.push(temp);
                     break;
                 case STRING:
                     Token val = null;
-                    if (t.toString().equalsIgnoreCase("pi")) {
+                    if (s.equalsIgnoreCase("pi")) {
                         val = new NumberToken(Math.PI);
-                    } else if (t.toString().equalsIgnoreCase("e")) {
+                    } else if (s.equalsIgnoreCase("e")) {
                         val = new NumberToken(Math.E);
-                    } else if (t.toString().equals("x")) {
+                    } else if (s.equals("x")) {
                         //TODO insert real value of x, maybe using a map?
                         val = new NumberToken((double) x);
                     } else {
-                        if (stack.empty())
-                            System.out.println("empty stack, t = " + t);
                         Double arg = Double.parseDouble(stack.pop().toString());
-                        if (t.toString().equals("sin")) {
+                        if (s.equals("sin")) {
                             val = new NumberToken(Math.sin(arg));
-                        } else if (t.toString().equals("cos")) {
+                        } else if (s.equals("cos")) {
                             val = new NumberToken(Math.cos(arg));
-                        } else if (t.toString().equals("tan")) {
+                        } else if (s.equals("tan")) {
                             val = new NumberToken(Math.tan(arg));
-                        } else if (t.toString().equals("ln")) {
+                        } else if (s.equals("ln")) {
                             val = new NumberToken(Math.log(arg));
-                        } else if (t.toString().equals("log")) {
+                        } else if (s.equals("log")) {
                             val = new NumberToken(Math.log10(arg));
-                        } else if (t.toString().equals("u")) {
+                        } else if (s.equals("u")) {
                             if (arg >= 0) {
                                 val = new NumberToken(1.0);
                             } else {
                                 val = new NumberToken(0.0);
                             }
-                        } else if (t.toString().equals("delta")) {
+                        } else if (s.equals("delta")) {
                             if (arg == 0) {
                                 val = new NumberToken(1.0);
                             } else {
                                 val = new NumberToken(0.0);
                             }
-                        } else if (t.toString().equals("exp")) {
+                        } else if (s.equals("exp")) {
                             val = new NumberToken(Math.exp(arg));
+                        } else {
+                            throw new RuntimeException("unknown variable or function " + s);
                         }
-                    }
-                    if (val == null) {
-                        //TODO error
                     }
                     stack.push(val);
                     break;
             }
         }
-        if (stack.size() != 1) {
-            //TODO error
+        if (stack.size() > 1) {
+            throw new RuntimeException("too many tokens; maybe an operator is missing?");
         }
         return Double.parseDouble(stack.peek().toString());
     }
@@ -140,19 +147,20 @@ public class Converter {
     private void convertToPostFix() {
         Stack<Token> opStack = new Stack<Token>();
         for (Token t : equation) {
+            String s = t.toString();
             switch (t.getType()) {
                 case NUMBER:
                     postEq.add(t);
                     break;
                 case DELIMITER:
-                    if (t.toString().equals("("))
+                    if (s.equals("("))
                         opStack.push(t);
-                    else if (t.toString().equals(")")) {
+                    else if (s.equals(")")) {
                         while (!opStack.empty() && !opStack.peek().toString().equals("(")) {
                             postEq.add(opStack.pop());
                         }
                         if (opStack.isEmpty()) {
-                            //TODO error mismatched parens
+                            throw new InputMismatchException("mismatched parentheses");
                         }
                         opStack.pop(); //pop the '('
                         if (!opStack.empty() && opStack.peek().getType() == Token.TOKEN_TYPE.STRING) { //it's a function
@@ -160,18 +168,22 @@ public class Converter {
                             postEq.add(opStack.pop());
                         }
                     } else {
-                        //TODO error unknown delimiter
+                        throw new RuntimeException("unknown delimiter: " + t);
                     }
                     break;
                 case OPERATOR:
-                    while (!opStack.empty() && ((!t.toString().equals("^") && t.getPrecedence() == opStack.peek().getPrecedence())
-                            || (t.getPrecedence() < opStack.peek().getPrecedence()))) {
-                        postEq.add(opStack.pop());
+                    if (!((OperatorToken) t).isUnary()) {
+                        while (!opStack.empty() && ((!s.equals("^") && t.getPrecedence() == opStack.peek().getPrecedence())
+                                || (t.getPrecedence() < opStack.peek().getPrecedence()))) {
+                            postEq.add(opStack.pop());
+                        }
                     }
                     opStack.push(t);
                     break;
                 case STRING:
-                    if (t.toString().equals("x")) { // it's a variable //TODO maybe we want a better way of detecting if it's a variable -- a map?
+                    if (s.equals("x") ||
+                            s.equalsIgnoreCase("e") ||
+                            s.equalsIgnoreCase("pi")) { // it's a variable //TODO maybe we want a better way of detecting if it's a variable -- a map?
                         postEq.add(t);
                     } else { // it's a function
                         opStack.push(t);
@@ -181,41 +193,9 @@ public class Converter {
         }
         while (!opStack.isEmpty()) {
             if (opStack.peek().toString().contains("(")) {
-                //TODO error mismatched parens
+                throw new InputMismatchException("mismatched parentheses");
             }
             postEq.add(opStack.pop());
         }
-    }
-
-    /**
-     * @return The equation in postfix notation
-     */
-    public String getPostfix() {
-        String ret = "";
-        for (Token t : postEq) {
-            ret += t.toString();
-        }
-        return ret;
-    }
-
-    private static ArrayList<Token> extract_inner(ArrayList<Token> eq, int start_index) {
-        ArrayList<Token> inner_eq = new ArrayList<Token>();
-        int count = 0, tracking_index = start_index + 2, pCounter = 1;
-        while (tracking_index < eq.size()) {
-            inner_eq.add(eq.get(tracking_index));
-            if (inner_eq.get(count).toString().equals("(")) {
-                pCounter++;
-            } else if (inner_eq.get(count).toString().equals(")")) {
-                pCounter--;
-                if (pCounter == 0)
-                    break;
-            }
-            tracking_index++;
-            count++;
-        }
-        if (pCounter != 0) {
-            //TODO throw error: mismatched parens
-        }
-        return inner_eq;
     }
 }

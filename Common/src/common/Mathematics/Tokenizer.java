@@ -3,7 +3,8 @@ package common.Mathematics;
 import java.util.ArrayList;
 
 /**
- * Created by gabriel on 12/25/13.
+ * @author Gabriel Holodak
+ * @version 12/28/13.
  */
 public class Tokenizer {
     public static ArrayList<Token> tokenize(String s) {
@@ -54,8 +55,17 @@ public class Tokenizer {
                 if (chars[i] == '(' || chars[i] == ')') {
                     tokens.add(new Parenthesis(Character.toString(chars[i])));
                 } else if (chars[i] == '-') {
-                    if (i == 0 || isOperator(chars[i - 1])) { // '-' is beginning of a negative number, not an operator
-                        temp = "-";
+                    if (i == 0 || isOperator(chars[i - 1]) || chars[i - 1] == '(') { // '-' is not the subtraction operator
+                        if (i + 1 == chars.length) {
+                            //TODO error
+                            throw new NullPointerException();
+                        }
+
+                        if (Character.isDigit(chars[i + 1]) || chars[i + 1] == '.') { // a number follows the '-'
+                            temp = "-";
+                        } else { // a variable or function follows the '-'
+                            tokens.add(new OperatorToken("-", true)); // unary negation
+                        }
                     } else {
                         tokens.add(new OperatorToken("-"));
                     }

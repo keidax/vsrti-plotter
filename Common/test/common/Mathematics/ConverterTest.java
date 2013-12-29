@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author Gabriel Holodak
- * @version 12/18/13.
+ * @version 12/28/13.
  */
 public class ConverterTest {
 
@@ -46,15 +46,37 @@ public class ConverterTest {
         assertEquals(expected, actual);
     }
 
-    /*@Test
-    public void testGetPostfix1() throws Exception {
-        String test = "1+1";
+    @Test
+    public void testEvaluate5() throws Exception {
+        String test = "e^-x";
         Converter converter = new Converter(test);
-        String expected = "11+";
-        converter.evaluate();
-        String actual = converter.getPostfix();
-        assertEquals(expected, actual);
-    }*/
+        converter.setX(1);
 
+        System.out.println(test + " = " + converter.evaluate());
+    }
+
+    @Test
+    public void testEvaluate6() throws Exception {
+        String test = "e^x^2";
+        Converter converter = new Converter(test);
+        converter.setX(1);
+        converter.evaluate();
+    }
+
+    @Test
+    public void testEvaluate7() throws Exception {
+        String test = "-2*-3+-x/-7";
+        Converter converter = new Converter(test);
+        converter.setX(1);
+        converter.evaluate();
+    }
+
+    @Test
+    public void testEvaluate8() throws Exception {
+        String test = "e^(x)";
+        Converter converter = new Converter(test);
+        converter.setX(1);
+        converter.evaluate();
+    }
 
 }

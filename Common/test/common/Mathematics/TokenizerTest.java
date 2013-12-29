@@ -143,7 +143,7 @@ public class TokenizerTest {
     }
 
     @Test
-    public void testTokenize() {
+    public void testTokenize1() {
         String input = "7+e^.3-(sin(pi) + -2.3471)/x^2.5";
         ArrayList<Token> expected = new ArrayList<Token>();
         expected.add(new NumberToken(7.0));

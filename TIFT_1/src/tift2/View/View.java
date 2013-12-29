@@ -383,14 +383,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
-                        try {
-                            adapter.evaluate(equation);
-                            view.lEquation.setText("Equation: " + equation);
+//                       try {
+                        adapter.evaluate(equation);
+                        view.lEquation.setText("Equation: " + equation);
                             jf.setVisible(false);
                             graphEquation();
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
-                        }
+//                        } catch (Exception e) {
+//                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
+//                            System.out.println(e.getMessage()+";"+e.getCause()+";"+e.toString());
+//                        }
                     }
 
                 });
@@ -400,14 +401,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
-                        try {
-                            adapter.evaluate(equation);
-                            view.lEquation.setText("Equation: " + equation);
+//                        try {
+                        adapter.evaluate(equation);
+                        view.lEquation.setText("Equation: " + equation);
                             jf.setVisible(false);
                             graphEquation();
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
-                        }
+//                        } catch (Exception e) {
+//                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
+//                            System.out.println(e.getMessage()+";"+e.getCause()+";"+e.toString());
+//                        }
                     }
 
                 });

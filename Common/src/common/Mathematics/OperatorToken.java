@@ -4,9 +4,15 @@ package common.Mathematics;
  * Created by gabriel on 12/23/13.
  */
 public class OperatorToken extends Token {
+    private boolean isUnary;
 
     public OperatorToken(String s) {
+        this(s, false);
+    }
+
+    public OperatorToken(String s, boolean isUnary) {
         super(TOKEN_TYPE.OPERATOR, s, getOperatorPrecedence(s));
+        this.isUnary = isUnary;
     }
 
     public static int getOperatorPrecedence(String s) {
@@ -27,5 +33,9 @@ public class OperatorToken extends Token {
         }
         //TODO error
         return 0;
+    }
+
+    public boolean isUnary() {
+        return isUnary;
     }
 }
