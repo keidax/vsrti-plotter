@@ -93,7 +93,7 @@ public class PostfixConverter {
             }
         }
         while (!opStack.isEmpty()) {
-            if (opStack.peek().toString().contains("(")) {
+            if (opStack.peek().toString().equals("(")) {
                 throw new InputMismatchException("mismatched parentheses");
             }
             postfixEquation.add(opStack.pop());

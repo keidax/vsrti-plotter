@@ -243,7 +243,7 @@ public class VisibilityGraph extends Graph {
 
         // Replaces the letter x with the x-value of the current point
         for (int i = 0; i < keys.length; i++) {
-            map.put("x", (Double) keys[i]);
+            map.put("t", (Double) keys[i]);
             Double ans = eval1.evaluate(); // evaluates the expression
             Double ans2 = eval2.evaluate();
             compl[i] = new Complex(ans, ans2); // creates the complex number then sets the points

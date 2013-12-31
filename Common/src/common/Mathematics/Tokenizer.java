@@ -30,7 +30,7 @@ public class Tokenizer {
         String temp = "";
         for (int i = 0; i < chars.length; i++) {
             if (isPartOfNumber(temp)) { // already building a number
-                if (Character.isDigit(chars[i]) || chars[i] == '.') {
+                if (Character.isDigit(chars[i]) || (chars[i] == '.' && !temp.contains("."))) {
                     // continue the number
                     temp += Character.toString(chars[i]);
                 } else {
@@ -38,6 +38,9 @@ public class Tokenizer {
                     tokens.add(new NumberToken(temp)); // ensures token string is e.g. 1.0 instead of 1
                     temp = "";
                     if (isOperator(chars[i])) {
+                        if (i + 1 == chars.length) {
+                            throw new RuntimeException("input cannot end with an operator");
+                        }
                         tokens.add(new OperatorToken(Character.toString(chars[i])));
                     } else if (chars[i] == ')') {
                         tokens.add(new Parenthesis(")"));
@@ -54,6 +57,9 @@ public class Tokenizer {
                     tokens.add(new StringToken(temp));
                     temp = "";
                     if (isOperator(chars[i])) {
+                        if (i + 1 == chars.length) {
+                            throw new RuntimeException("input cannot end with an operator");
+                        }
                         tokens.add(new OperatorToken(Character.toString(chars[i])));
                     } else if (chars[i] == '(' || chars[i] == ')') {
                         tokens.add(new Parenthesis(Character.toString(chars[i])));
@@ -64,17 +70,16 @@ public class Tokenizer {
             } else {
                 // temp should be empty
                 if (!temp.equals("")) {
-                    throw new RuntimeException("temporary string should be empty");
+                    throw new RuntimeException("");
                 }
 
                 if (chars[i] == '(' || chars[i] == ')') {
                     tokens.add(new Parenthesis(Character.toString(chars[i])));
                 } else if (chars[i] == '-') {
+                    if (i + 1 == chars.length) {
+                        throw new RuntimeException("input cannot end with an operator");
+                    }
                     if (i == 0 || isOperator(chars[i - 1]) || chars[i - 1] == '(') { // '-' is not the subtraction operator
-                        if (i + 1 == chars.length) {
-                            throw new RuntimeException("input cannot end with a minus sign");
-                        }
-
                         if (Character.isDigit(chars[i + 1]) || chars[i + 1] == '.') { // a number follows the '-'
                             temp = "-";
                         } else { // a variable or function follows the '-'
@@ -84,6 +89,10 @@ public class Tokenizer {
                         tokens.add(new OperatorToken("-"));
                     }
                 } else if (isOperator(chars[i])) {
+                    if (i + 1 == chars.length) {
+                        //TODO perhaps this check could be factored out so it is only done once
+                        throw new RuntimeException("input cannot end with an operator");
+                    }
                     tokens.add(new OperatorToken(Character.toString(chars[i])));
                 } else if (Character.isLetterOrDigit(chars[i]) || chars[i] == '.') {
                     temp = Character.toString(chars[i]);

@@ -505,14 +505,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     eqn2 = new JTextField();
                 }
                 // eqn.setMaximumSize(new Dimension(700,100));
-                JLabel jl =
-                        new JLabel(
-                                "<html>Acceptable Inputs:<br><br>"
-                                        + "Use 'x' as the independent variable, e as Euler's NumberToken, and pi as pi.<br>"
-                                        + "use _ to represent negative numbers.<br>"
-                                        + "*, ^, /, +, -, (, and ) are valid operators.<br>"
-                                        + "sin(_), cos(_), tan(_), log(_), ln(_), delta(_) and u(_) (unit step) are also valid.<br>"
-                                        + "Angles are in radians.<br><br>" + "</html>");
+                JLabel jl = new JLabel("<html>Acceptable Inputs:<br><br>"
+                        + "Use t as the independent variable, e as Euler's number, and pi as pi.<br>"
+                        + "*, ^, /, +, -, (, and ) are valid operators.<br>"
+                        + "sin(_), cos(_), tan(_), log(_), ln(_), exp(_), delta(_) and u(_) (unit step) are also valid.<br>"
+                        + "Angles are in radians.<br><br>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(row1);
                 row1.add(jl);
@@ -527,7 +524,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 jf.setLocationRelativeTo(null);
                 jf.setVisible(true);
 
-                enter.addActionListener(new ActionListener() {
+                ActionListener setEquationListener = new ActionListener() {
 
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
@@ -539,49 +536,16 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             jf.setVisible(false);
 
                         } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
+                            JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
                             System.out.println(e.getMessage());
                         }
                     }
 
-                });
+                };
 
-                eqn.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent arg0) {
-                        equation = eqn.getText().toLowerCase().replace(" ", "");
-                        iEquation = eqn2.getText().toLowerCase().replace(" ", "");
-                        try {
-                            adapter.evaluate(equation, iEquation);
-                            viewer.lEquation.setText("Equation: " + equation + " " + iEquation + "i");
-                            jf.setVisible(false);
-
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
-                            System.out.println(e.getMessage());
-                        }
-                    }
-
-                });
-                eqn2.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent arg0) {
-                        equation = eqn.getText().toLowerCase().replace(" ", "");
-                        iEquation = eqn2.getText().toLowerCase().replace(" ", "");
-                        try {
-                            adapter.evaluate(equation, iEquation);
-                            viewer.lEquation.setText("Equation: " + equation + " " + iEquation + "i");
-                            jf.setVisible(false);
-
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
-                            System.out.println(e.getMessage());
-                        }
-                    }
-
-                });
+                enter.addActionListener(setEquationListener);
+                eqn.addActionListener(setEquationListener);
+                eqn2.addActionListener(setEquationListener);
 
             }
         });

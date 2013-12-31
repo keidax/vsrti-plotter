@@ -363,9 +363,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 }
                 // eqn.setMaximumSize(new Dimension(700,100));
                 JLabel jl = new JLabel("<html>Acceptable Inputs:<br><br>"
-                        + "Use 'x' as the independent variable, e as Euler's NumberToken, and pi as pi.<br>"
-                        + "use _ to represent negative numbers.<br>" + "*, ^, /, +, -, (, and ) are valid operators.<br>"
-                        + "sin(_), cos(_), tan(_), log(_), ln(_), delta(_) and u(_) (unit step) are also valid.<br>"
+                        + "Use t as the independent variable, e as Euler's number, and pi as pi.<br>"
+                        + "*, ^, /, +, -, (, and ) are valid operators.<br>"
+                        + "sin(_), cos(_), tan(_), log(_), ln(_), exp(_), delta(_) and u(_) (unit step) are also valid.<br>"
                         + "Angles are in radians.<br><br>" + "</html>");
                 jf.getContentPane().setLayout(new FlowLayout());
                 jf.getContentPane().add(row1);
@@ -378,42 +378,25 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 jf.setLocationRelativeTo(null);
                 jf.setVisible(true);
 
-                enter.addActionListener(new ActionListener() {
-
+                ActionListener setEquationListener = new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent arg0) {
+                    public void actionPerformed(ActionEvent event) {
+                        System.out.println("parsing equation");
                         equation = eqn.getText().toLowerCase().replace(" ", "");
-//                       try {
-                        adapter.evaluate(equation);
-                        view.lEquation.setText("Equation: " + equation);
+                        try {
+                            adapter.evaluate(equation);
+                            view.lEquation.setText("Equation: " + equation);
                             jf.setVisible(false);
                             graphEquation();
-//                        } catch (Exception e) {
-//                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
-//                            System.out.println(e.getMessage()+";"+e.getCause()+";"+e.toString());
-//                        }
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
+                            System.out.println("toString = " + e.toString() + "\nmessage = " + e.getMessage() + "\ncause = " + e.getCause());
+                        }
                     }
+                };
 
-                });
-
-                eqn.addActionListener(new ActionListener() {
-
-                    @Override
-                    public void actionPerformed(ActionEvent arg0) {
-                        equation = eqn.getText().toLowerCase().replace(" ", "");
-//                        try {
-                        adapter.evaluate(equation);
-                        view.lEquation.setText("Equation: " + equation);
-                            jf.setVisible(false);
-                            graphEquation();
-//                        } catch (Exception e) {
-//                            JOptionPane.showMessageDialog(jf, "Equation Error. Try adding parentheses.");
-//                            System.out.println(e.getMessage()+";"+e.getCause()+";"+e.toString());
-//                        }
-                    }
-
-                });
-
+                enter.addActionListener(setEquationListener);
+                eqn.addActionListener(setEquationListener);
             }
         });
 
