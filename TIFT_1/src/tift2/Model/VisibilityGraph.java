@@ -1,6 +1,6 @@
 package tift2.Model;
 
-import common.Mathematics.Converter;
+import common.Mathematics.PostfixEvaluator;
 import common.Model.Dct1d;
 import common.Model.Point;
 
@@ -119,15 +119,16 @@ public class VisibilityGraph extends Graph {
      * @param equation - The equation to be evaluated.
      */
     public void evaluate(String equation) {
-        Converter con = new Converter(equation);
+        PostfixEvaluator evaluator = new PostfixEvaluator(equation);
+        Map<String, Double> map = new HashMap<String, Double>();
+        evaluator.setMap(map);
+
         Object[] keys = getPoints().keySet().toArray();
 
         for (int i = 0; i < keys.length; i++) {
-            con.setX((Double) keys[i]);
-            Double ans = con.evaluate();
+            map.put("x", (Double) keys[i]);
+            Double ans = evaluator.evaluate();
             getPoints().put(Double.parseDouble(keys[i].toString()), ans);
-            //createImageGraph();
-            // update();
         }
     }
 

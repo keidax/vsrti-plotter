@@ -1,6 +1,6 @@
 package tift.Model;
 
-import common.Mathematics.Converter;
+import common.Mathematics.PostfixEvaluator;
 import common.Model.Complex;
 import common.Model.FFT;
 import common.Model.Point;
@@ -237,18 +237,15 @@ public class VisibilityGraph extends Graph {
      * @param equation - The equation to be evaluated.
      */
     public void evaluate(String equation, String iEquation) {
-        Converter con = new Converter(equation), con2 = new Converter(iEquation);
+        Map<String, Double> map = new HashMap<String, Double>();
+        PostfixEvaluator eval1 = new PostfixEvaluator(equation, map), eval2 = new PostfixEvaluator(iEquation, map);
         Object[] keys = getPoints().keySet().toArray();
 
         // Replaces the letter x with the x-value of the current point
         for (int i = 0; i < keys.length; i++) {
-            System.out.println(keys[i].getClass());
-            con.setX((Double) keys[i]);
-            con2.setX((Double) keys[i]);
-            Double ans = con.evaluate(); // evaluates the expression
-            Double ans2 = con2.evaluate();
-            System.out.println(ans + ": " + ans2);
-
+            map.put("x", (Double) keys[i]);
+            Double ans = eval1.evaluate(); // evaluates the expression
+            Double ans2 = eval2.evaluate();
             compl[i] = new Complex(ans, ans2); // creates the complex number then sets the points
             if (polar) {
                 getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].abs());
@@ -258,8 +255,6 @@ public class VisibilityGraph extends Graph {
                 getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].re());
                 getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
             }
-            //createImageGraph();
-            //model.updateListeners();
         }
     }
 

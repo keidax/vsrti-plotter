@@ -1,52 +1,69 @@
 package common.Mathematics;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Stack;
+import java.util.*;
 
 /**
- * Evaluates an infix expression (that is broken up into an Array of type String
- * by operator) by converting it to postfix and evaluating the postfix
- * expression. It can handle trig functions (sin, cos, tan), ln, log, and delta
- * functions.
+ * This class can evaluate a mathematical equation given as a String. It automatically recognizes e and pi, and accepts
+ * a map with user-defined variables. It also recognizes a number of functions. These are:
+ * <table>
+ * <tr><td>sin</td><td>sine</td></tr>
+ * <tr><td>cos</td><td>cosine</td></tr>
+ * <tr><td>tan</td><td>tangent</td></tr>
+ * <tr><td>ln</td><td>natural logarithm</td></tr>
+ * <tr><td>log</td><td>base 10 logarithm</td></tr>
+ * <tr><td>exp</td><td>natural exponent, same as e^()</td></tr>
+ * <tr><td>u</td><td>the unit step function</td></tr>
+ * <tr><td>delta</td><td>the delta function</td></tr>
+ * </table>
  *
- * @author Adam Pere
  * @author Gabriel Holodak
- * @version 06/30/2011
+ * @version 12/31/13
  */
-public class Converter {
-    private ArrayList<Token> equation, postEq;
-    private double x;
+public class PostfixEvaluator {
 
-    public void setX(double x) {
-        this.x = x;
+    private ArrayList<Token> postfixEquation;
+    private Map<String, Double> map;
+
+    public PostfixEvaluator(String equation) {
+        this(PostfixConverter.convertToPostfix(Tokenizer.tokenize(equation)));
+    }
+
+    private PostfixEvaluator(ArrayList<Token> postfixEquation) {
+        this(postfixEquation, new HashMap<String, Double>());
+    }
+
+    public PostfixEvaluator(String equation, Map<String, Double> map) {
+        this(PostfixConverter.convertToPostfix(Tokenizer.tokenize(equation)), map);
+    }
+
+    private PostfixEvaluator(ArrayList<Token> postfixEquation, Map<String, Double> map) {
+        this.postfixEquation = postfixEquation;
+        this.map = map;
     }
 
     /**
-     * Default constructor, initializes the variables.
+     * Sets the map object used for variables in the equation
      *
-     * @param eqn the equation as a String
+     * @param map a map of variable name to variable value. Case-sensitive. The evaluator
+     *            automatically checks for e and pi, so you don't need to add them to the map.
      */
-    public Converter(String eqn) {
-        this(Tokenizer.tokenize(eqn));
+    public void setMap(Map<String, Double> map) {
+        this.map = map;
     }
 
-    private Converter(ArrayList<Token> tokens) {
-        equation = tokens;
-        postEq = new ArrayList<Token>(equation.size());
-        convertToPostFix();
-    }
 
     /**
-     * Evaluate converts the equation from infix to postfix notation and then
-     * evaluates the postfix equation.
+     * Evaluates the postfix equation, using any variables given in the map. Entries in the map will override the usual
+     * constant values for e and pi, and can turn functions the map recognizes, such as sin() or u(), into variables
+     * (in which case they will no longer work as functions).
      *
-     * @return the mathematical answer of the equation.
+     * @return the mathematical answer of the equation, with correct substitutions made for e, pi, and any variables set
+     * by the user in the map.
      */
     public Double evaluate() {
         Stack<Token> stack = new Stack<Token>();
         // main evaluation loop
-        for (Token t : postEq) {
+        for (Token t : postfixEquation) {
             String s = t.toString();
             switch (t.getType()) {
                 case NUMBER:
@@ -54,7 +71,6 @@ public class Converter {
                     break;
                 case DELIMITER:
                     throw new InputMismatchException("unexpected delimiter: " + t);
-//                    break;
                 case OPERATOR:
                     Token temp;
 
@@ -92,13 +108,12 @@ public class Converter {
                     break;
                 case STRING:
                     Token val = null;
-                    if (s.equalsIgnoreCase("pi")) {
+                    if (map.containsKey(s)) {
+                        val = new NumberToken(map.get(s));
+                    } else if (s.equalsIgnoreCase("pi")) {
                         val = new NumberToken(Math.PI);
                     } else if (s.equalsIgnoreCase("e")) {
                         val = new NumberToken(Math.E);
-                    } else if (s.equals("x")) {
-                        //TODO insert real value of x, maybe using a map?
-                        val = new NumberToken((double) x);
                     } else {
                         Double arg = Double.parseDouble(stack.pop().toString());
                         if (s.equals("sin")) {
@@ -137,65 +152,5 @@ public class Converter {
             throw new RuntimeException("too many tokens; maybe an operator is missing?");
         }
         return Double.parseDouble(stack.peek().toString());
-    }
-
-    /**
-     * Converts equation from infix to postfix. If it encounters any trig
-     * functions, log, ln, or delta, it will evaluate that function and the
-     * answer is used in the postfix notation instead of the trig function.
-     */
-    private void convertToPostFix() {
-        Stack<Token> opStack = new Stack<Token>();
-        for (Token t : equation) {
-            String s = t.toString();
-            switch (t.getType()) {
-                case NUMBER:
-                    postEq.add(t);
-                    break;
-                case DELIMITER:
-                    if (s.equals("("))
-                        opStack.push(t);
-                    else if (s.equals(")")) {
-                        while (!opStack.empty() && !opStack.peek().toString().equals("(")) {
-                            postEq.add(opStack.pop());
-                        }
-                        if (opStack.isEmpty()) {
-                            throw new InputMismatchException("mismatched parentheses");
-                        }
-                        opStack.pop(); //pop the '('
-                        if (!opStack.empty() && opStack.peek().getType() == Token.TOKEN_TYPE.STRING) { //it's a function
-                            // pop and add the function
-                            postEq.add(opStack.pop());
-                        }
-                    } else {
-                        throw new RuntimeException("unknown delimiter: " + t);
-                    }
-                    break;
-                case OPERATOR:
-                    if (!((OperatorToken) t).isUnary()) {
-                        while (!opStack.empty() && ((!s.equals("^") && t.getPrecedence() == opStack.peek().getPrecedence())
-                                || (t.getPrecedence() < opStack.peek().getPrecedence()))) {
-                            postEq.add(opStack.pop());
-                        }
-                    }
-                    opStack.push(t);
-                    break;
-                case STRING:
-                    if (s.equals("x") ||
-                            s.equalsIgnoreCase("e") ||
-                            s.equalsIgnoreCase("pi")) { // it's a variable //TODO maybe we want a better way of detecting if it's a variable -- a map?
-                        postEq.add(t);
-                    } else { // it's a function
-                        opStack.push(t);
-                    }
-                    break;
-            }
-        }
-        while (!opStack.isEmpty()) {
-            if (opStack.peek().toString().contains("(")) {
-                throw new InputMismatchException("mismatched parentheses");
-            }
-            postEq.add(opStack.pop());
-        }
     }
 }
