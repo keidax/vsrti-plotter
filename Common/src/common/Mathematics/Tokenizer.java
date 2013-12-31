@@ -63,7 +63,7 @@ public class Tokenizer {
                 }
             } else {
                 // temp should be empty
-                if (temp.equals("")) {
+                if (!temp.equals("")) {
                     throw new RuntimeException("temporary string should be empty");
                 }
 
