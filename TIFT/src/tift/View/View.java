@@ -532,7 +532,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         iEquation = eqn2.getText().toLowerCase().replace(" ", "");
                         try {
                             adapter.evaluate(equation, iEquation);
-                            viewer.lEquation.setText("Equation: " + equation + " " + iEquation + "i");
+                            viewer.lEquation.setText("Equation: " + equation + " + i*" + iEquation);
                             jf.setVisible(false);
 
                         } catch (Exception e) {
