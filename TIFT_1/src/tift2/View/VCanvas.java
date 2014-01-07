@@ -1,16 +1,12 @@
 package tift2.View;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.Set;
-import java.util.TreeMap;
-
-import tift2.Model.Adapter;
-
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
+import tift2.Model.Adapter;
+
+import java.awt.*;
+import java.util.Set;
+import java.util.TreeMap;
 
 @SuppressWarnings("serial")
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
@@ -39,7 +35,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
             previousKey = key;
             drawPoint(g, key, getPoints().get(key));
-            if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
+            if (key > adapter.getMaxTime()) {
+
                 break;
             }
         }
@@ -57,7 +54,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             if (getPoints().get(key) > max) {
                 max = getPoints().get(key);
             }
-            if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
+            if (key > adapter.getMaxTime()) {
                 break;
             }
         }
@@ -78,7 +75,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             if (getPoints().get(key) < min) {
                 min = getPoints().get(key);
             }
-            if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
+            if (key > adapter.getMaxTime()) {
                 break;
             }
         }
@@ -98,7 +95,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         }
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (key > Double.parseDouble(View.view.fMaxTime.getText())) {
+            if (key > adapter.getMaxTime()) {
                 return key;
             }
             

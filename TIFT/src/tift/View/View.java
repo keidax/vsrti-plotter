@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Karel Durktoa and Adam Pere
+ * @author Karel Durktoa
+ * @author Adam Pere
+ * @author Gabriel Holodak
  */
 public class View extends JFrame implements ModelListener, ActionListener {
 
@@ -41,17 +43,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
         View.viewer = this;
         setAdapter(a);
         jfc = new JFileChooser();
-        vGraph =
-                new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints(), "Magnitude",
-                        "f(t) - Magnitude", true);
-        vGraph2 =
-                new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints2(), "Phase", "f(t) - Phase", false);
-        iGraph =
-                new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints(), "Magnitude",
-                        "F(\ud835\udf08) - Magnitude", true); // unicode for mathematical italic small nu
-        iGraph2 =
-                new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints2(), "Phase",
-                        "F(\ud835\udf08) - Phase", false);
+        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints(), "Magnitude", "f(t) - Magnitude", true);
+        vGraph2 = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints2(), "Phase", "f(t) - Phase", false);
+        // "\ud835\udf08" is unicode for mathematical italic small nu
+        iGraph = new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints(), "Magnitude", "F(\ud835\udf08) - Magnitude", true);
+        iGraph2 = new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints2(), "Phase", "F(\ud835\udf08) - Phase", false);
         radio = true;
         vGraph.setSize(300, 100);
         vGraph2.setSize(300, 100);
@@ -534,19 +530,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             adapter.evaluate(equation, iEquation);
                             viewer.lEquation.setText("Equation: " + equation + " + i*" + iEquation);
                             jf.setVisible(false);
-
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
                             System.out.println(e.getMessage());
                         }
                     }
-
                 };
-
                 enter.addActionListener(setEquationListener);
                 eqn.addActionListener(setEquationListener);
                 eqn2.addActionListener(setEquationListener);
-
             }
         });
 
