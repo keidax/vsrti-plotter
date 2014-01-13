@@ -1,16 +1,12 @@
 package tift.View;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.Set;
-import java.util.TreeMap;
-
-import tift.Model.Adapter;
-
 import common.View.CircleOrnament;
 import common.View.SquareOrnament;
+import tift.Model.Adapter;
+
+import java.awt.*;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * 
@@ -71,8 +67,8 @@ public class VCanvas extends Canvas {
                 g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
                 previousKey = key;
             }
-            
-            if (key > Double.parseDouble(View.viewer.fMaxTime.getText())) {
+
+            if (key > adapter.getMaxTime()) {
                 break;
             }
         }
@@ -89,7 +85,7 @@ public class VCanvas extends Canvas {
             if (getPoints().get(key) > max) {
                 max = getPoints().get(key);
             }
-            if (key > Double.parseDouble(View.viewer.fMaxTime.getText())) {
+            if (key > adapter.getMaxTime()) {
                 break;
             }
         }
@@ -110,7 +106,7 @@ public class VCanvas extends Canvas {
             if (getPoints().get(key) < min) {
                 min = getPoints().get(key);
             }
-            if (key > Double.parseDouble(View.viewer.fMaxTime.getText())) {
+            if (key > adapter.getMaxTime()) {
                 break;
             }
         }
@@ -129,7 +125,7 @@ public class VCanvas extends Canvas {
         }
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (key > Double.parseDouble(View.viewer.fMaxTime.getText())) {
+            if (key > adapter.getMaxTime()) {
                 return key;
             }
             

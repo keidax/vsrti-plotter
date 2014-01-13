@@ -1,16 +1,12 @@
 package tift.View;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import common.View.SquareOrnament;
+import tift.Model.Adapter;
+
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 import java.util.TreeMap;
-
-import tift.Model.Adapter;
-
-import common.View.SquareOrnament;
 
 /**
  * 
@@ -47,7 +43,7 @@ public class FFTCanvas extends Canvas {
         Set<Double> keys = getPoints().keySet();
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
-            if (key >= Double.parseDouble(View.viewer.fThetaMin.getText())) {
+            if (key >= adapter.getMinFrequency()) {
                 g.setColor(Color.RED);
                 int ornamentSize;
                 new SquareOrnament(getOrnamentSize(key)).draw(g, g2cx(key - getMinX()), g2cy(getPoints().get(key)));
@@ -55,8 +51,8 @@ public class FFTCanvas extends Canvas {
                 g.drawLine(g2cx(previousKey - getMinX()), g2cy(getPoints().get(previousKey)), g2cx(key - getMinX()),
                         g2cy(getPoints().get(key)));
                 previousKey = key;
-                if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
+                if (key > adapter.getMaxFrequency()
+                        || key > 1 / (2 * adapter.getDelta())) {
                     break;
                 }
             }
@@ -71,12 +67,12 @@ public class FFTCanvas extends Canvas {
         double max = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (key > Double.parseDouble(View.viewer.fThetaMin.getText())) {
+            if (key > adapter.getMinFrequency()) {
                 if (getPoints().get(key) > max) {
                     max = getPoints().get(key);
                 }
-                if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
+                if (key > adapter.getMaxFrequency()
+                        || key > 1 / (2 * adapter.getDelta())) {
                     break;
                 }
             }
@@ -96,12 +92,12 @@ public class FFTCanvas extends Canvas {
         double min = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (key > Double.parseDouble(View.viewer.fThetaMin.getText())) {
+            if (key > adapter.getMinFrequency()) {
                 if (getPoints().get(key) < min) {
                     min = getPoints().get(key);
                 }
-                if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
+                if (key > adapter.getMaxFrequency()
+                        || key > 1 / (2 * adapter.getDelta())) {
                     break;
                 }
             }
@@ -121,9 +117,9 @@ public class FFTCanvas extends Canvas {
         }
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (key > Double.parseDouble(View.viewer.fThetaMin.getText())) {
-                if (key > Double.parseDouble(View.viewer.fThetaMax.getText())
-                        || key > 1 / (2 * Double.parseDouble(View.viewer.fDelta.getText()))) {
+            if (key > adapter.getMinFrequency()) {
+                if (key > adapter.getMaxFrequency()
+                        || key > 1 / (2 * adapter.getDelta())) {
                     return key;
                 }
             }

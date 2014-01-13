@@ -16,7 +16,7 @@ import java.util.TreeMap;
 public class Adapter extends CommonTIFTAdapter {
 
     private Model model;
-    private double defaultMaxTime = 1.5, defaultMaxFrequency = 100;
+    private final double defaultMaxTime = 1.5, defaultMaxFrequency = 100;
     private double maxTime = defaultMaxTime, maxFrequency = defaultMaxFrequency;
 
     public double getMaxTime() {

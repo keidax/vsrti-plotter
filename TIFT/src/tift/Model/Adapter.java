@@ -1,10 +1,10 @@
 package tift.Model;
 
+import common.Model.CommonTIFTAdapter;
+
 import java.io.File;
 import java.util.Set;
 import java.util.TreeMap;
-
-import common.Model.CommonTIFTAdapter;
 
 /**
  * Adapter is a interface between View and Model. Viewers can use only methods
@@ -16,13 +16,49 @@ import common.Model.CommonTIFTAdapter;
 public class Adapter extends CommonTIFTAdapter {
     
     private Model model;
-    
+
+    private final double defaultMaxTime = 1.28, defaultMaxFrequency = 50, defaultMinFrequency = 0, defaultDelta = 0.01;
+    private double maxTime = defaultMaxTime;
+    private double maxFrequency = defaultMaxFrequency;
+    private double minFrequency = defaultMinFrequency;
+    private double delta = defaultDelta;
+
+    public double getDelta() {
+        return delta;
+    }
+
+    public void setDelta(double delta) {
+        this.delta = delta;
+    }
+
+
+    public double getMinFrequency() {
+        return minFrequency;
+    }
+
+    public void setMinFrequency(double minFrequency) {
+        this.minFrequency = minFrequency;
+    }
+
+    public double getMaxFrequency() {
+        return maxFrequency;
+    }
+
+    public void setMaxFrequency(double maxFrequency) {
+        this.maxFrequency = maxFrequency;
+    }
+
+    public double getMaxTime() {
+        return maxTime;
+    }
+
+    public void setMaxTime(double maxTime) {
+        this.maxTime = maxTime;
+    }
+
+
     public Adapter(Model m) {
         model = m;
-    }
-    
-    public void graphEquation(String eqn) {
-        int num = getNumberOfPoints();
     }
     
     public void setPolar(boolean radio) {

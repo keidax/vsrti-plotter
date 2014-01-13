@@ -42,13 +42,22 @@ public class View extends JFrame implements ModelListener {
         // BUTTONS
 
         final JButton bSave, bOpen, bExit, bReset, bAbout, bFullReset, bInstruction, bEquation;
+        bOpen = new JButton("Open file");
+        bSave = new JButton("Save file");
+        bExit = new JButton("Exit");
+        bReset = new JButton("Reset");
+        bFullReset = new JButton("Full Reset");
+        bAbout = new JButton("About");
+        bInstruction = new JButton("Instructions");
+        bEquation = new JButton("Enter Equation");
+
+
         final JLabel lEquation = new JLabel("Equation: ");
 
         // FIELDS
 
         final JTextField fDelta, fThetaMax, fNumber, fMaxTime;
 
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
         mainPanel = new JPanel();
         mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -69,14 +78,7 @@ public class View extends JFrame implements ModelListener {
         sidePanel.setMaximumSize(new Dimension(100, 400));
         sidePanel.setLayout(new GridBagLayout());
 
-        bOpen = new JButton("Open file");
-        bSave = new JButton("Save file");
-        bExit = new JButton("Exit");
-        bReset = new JButton("Reset");
-        bFullReset = new JButton("Full Reset");
-        bAbout = new JButton("About");
-        bInstruction = new JButton("Instructions");
-        bEquation = new JButton("Enter Equation");
+
         fDelta = new JTextField(adapter.getDeltaBaseline() + "");
         fNumber = new JTextField(adapter.getNumberOfPoints() + "");
         fMaxTime = new JTextField(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + ""); // Max Time to be

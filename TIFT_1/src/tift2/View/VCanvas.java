@@ -10,18 +10,17 @@ import java.util.TreeMap;
 
 @SuppressWarnings("serial")
 public class VCanvas extends Canvas {// JPanel implements MouseListener,
-                                     // MouseMotionListener {
-    
-    protected static Color[] colors = {Color.BLUE, Color.BLACK};
+    // MouseMotionListener {
+
     protected int sigma = 1;
-    
+
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         super(v, a, g);
         xAxisTitle = "time (s)";
         yAxisTitle = "Amplitude";
         graphTitle = "f(t)";
     }
-    
+
     @Override
     public void drawDataSet(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize / 2));
@@ -40,9 +39,8 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                 break;
             }
         }
-        
     }
-    
+
     @Override
     public double getMaxYPoint() {
         if (getPoints().size() == 0) {
@@ -63,7 +61,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         }
         return max * 1.1;
     }
-    
+
     @Override
     public double getMinYPoint() {
         if (getPoints().size() == 0) {
@@ -79,13 +77,12 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
                 break;
             }
         }
-        
         if (min > -defaultY) {
             return -defaultY;
         }
         return min * 1.1;
     }
-    
+
     @Override
     public double getMaxX() {
         // show only half of the points because any points after nyquist
@@ -98,14 +95,13 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             if (key > adapter.getMaxTime()) {
                 return key;
             }
-            
         }
         return getPoints().lastKey();
     }
-    
+
     @Override
     public void drawPoint(Graphics2D g, double x, double y) {
-        
+
         // System.out.println("RMS = "+adapter.getRms().size());
         if (adapter.getVisibilityGraphDataPoints().containsKey(x) && adapter.getVisibilityGraphDataPoints().get(x) == y) {
             g.setColor(Color.RED);
@@ -122,7 +118,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
             new CircleOrnament(getOrnamentSize(x)).draw(g, g2cx(x), g2cy(y));
         }
     }
-    
+
     public void drawRms(Graphics2D g, int x, int y1, int y2) {
         // height*=10;
         // System.out.println("draw:["+x+","+y1+"-"+y2+"]");
@@ -130,30 +126,31 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         g.drawLine(x - 1, y1, x + 1, y1);
         g.drawLine(x - 1, y2, x + 1, y2);
     }
-    
+
     public void update() {
         setPoints(adapter.getVisiblityGraphPoints());
     }
-    
+
     @Override
     public void update(Graphics g) {
         setPoints(adapter.getVisiblityGraphPoints());
         paint(g);
     }
-    
+
     public int getSigma() {
         return sigma;
     }
-    
+
     public void setSigma(int i) {
         sigma = i;
     }
-    
+
     @Override
     public void setCurrentPoint(Double currentPoint) {
         try {
             adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+        }
         this.currentPoint = currentPoint;
     }
 }
