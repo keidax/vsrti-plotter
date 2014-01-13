@@ -164,7 +164,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
                         EpsGraphics2D g = new EpsGraphics2D("Title", f, 0, 0, getWidth(), getHeight());
                         CommonTIFTCanvas.this.paint(g);
                         g.flush();
-                        System.out.println(g.toString());
+                        System.out.println("g = " + g.toString());
                         g.close();
                         // f.close();
 
@@ -585,7 +585,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
             xSpacing = 15;
         }
 
-        System.out.println(pixelsPerNumber);
+        System.out.println("pixels per number = " + pixelsPerNumber);
 
         // draw axis title
         g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,

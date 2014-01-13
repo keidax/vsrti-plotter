@@ -351,17 +351,15 @@ public class View extends JFrame implements ModelListener {
                 ActionListener setEquationListener = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent event) {
-                        System.out.println("parsing equation");
                         equation = eqn.getText().toLowerCase().replace(" ", "");
                         try {
                             adapter.evaluate(equation);
                             lEquation.setText("Equation: " + equation);
                             jf.setVisible(false);
-                            graphEquation();
+//                            graphEquation();
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
-                            System.out.println("toString = " + e.toString() + "\nmessage = " + e.getMessage()
-                                    + "\ncause = " + e.getCause());
+                            //System.out.println("toString = " + e.toString() + "\nmessage = " + e.getMessage() + "\ncause = " + e.getCause());
                         }
                     }
                 };
@@ -509,9 +507,9 @@ public class View extends JFrame implements ModelListener {
         repaint();
     }
 
-    public void graphEquation() {
-        adapter.graphEquation(equation);
-    }
+//    public void graphEquation() {
+//        adapter.graphEquation(equation);
+//    }
 
     public void go() {
         getAdapter().getModel().getListeners().add(this);

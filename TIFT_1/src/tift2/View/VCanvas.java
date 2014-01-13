@@ -91,7 +91,7 @@ public class VCanvas extends Canvas {// JPanel implements MouseListener,
         // show only half of the points because any points after nyquist
         // frequency/2 are useless
         if (getPoints() == null || getPoints().size() == 0) {
-            return defaultY;
+            return defaultX;
         }
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {

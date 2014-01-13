@@ -16,7 +16,8 @@ import java.util.TreeMap;
 public class Adapter extends CommonTIFTAdapter {
 
     private Model model;
-    private double maxTime;
+    private double defaultMaxTime = 1.5, defaultMaxFrequency = 100;
+    private double maxTime = defaultMaxTime, maxFrequency = defaultMaxFrequency;
 
     public double getMaxTime() {
         return maxTime;
@@ -34,15 +35,13 @@ public class Adapter extends CommonTIFTAdapter {
         this.maxFrequency = maxFrequency;
     }
 
-    private double maxFrequency;
-
     public Adapter(Model m) {
         model = m;
     }
 
-    public void graphEquation(String eqn) {
-        int num = getNumberOfPoints();
-    }
+//    public void graphEquation(String eqn) {
+//        int num = getNumberOfPoints();
+//    }
 
     public TreeMap<Double, Double> getVisiblityGraphPoints() {
         return getModel().getVisibilityGraph().getPoints();
@@ -174,4 +173,6 @@ public class Adapter extends CommonTIFTAdapter {
         getModel().getVisibilityGraph().getRawPoints().clear();
         getModel().getVisibilityGraph().removeRms(i);
     }
+
+
 }
