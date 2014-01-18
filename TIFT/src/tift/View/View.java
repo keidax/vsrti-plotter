@@ -34,6 +34,9 @@ public class View extends JFrame implements ModelListener {
     public File f;
     private JFileChooser jfc;
 
+    private final JTextField fDelta, fNumber, fMinFrequency, fMaxFrequency, fMinTime, fMaxTime;
+
+
     public View(final Adapter adapter, String title) {
         super(title);
         this.adapter = adapter;
@@ -48,24 +51,23 @@ public class View extends JFrame implements ModelListener {
 
         JPanel mainPanel, sidePanel;
 
-        final JTextField fDelta, fNumber, fMinFrequency, fMaxFrequency, fMinTime, fMaxTime;
 
         equation = "";
         iEquation = "";
 
         // BUTTONS
 
-        final JButton bSave, bOpen, bExit, bImage, bReset, bAbout, bFullReset, bInstruction, bEquation, bRadio;
+        final JButton bSave, bOpen, bExit, bReset, bAbout, bFullReset, bInstruction, bEquation, bRadio, bUpdate;
         bOpen = new JButton("Open file");
         bSave = new JButton("Save file");
         bExit = new JButton("Exit");
-        bImage = new JButton("Show grayscale image");
         bReset = new JButton("Reset");
         bFullReset = new JButton("Full Reset");
         bAbout = new JButton("About");
         bInstruction = new JButton("Instructions");
         bEquation = new JButton("Enter Equation");
         bRadio = new JButton("Show Rectangular");
+        bUpdate = new JButton("Update");
 
         lEquation = new JLabel("Equation: ");
 
@@ -85,88 +87,144 @@ public class View extends JFrame implements ModelListener {
         fNumber.setToolTipText("<HTML><P WIDTH = '300px'>number of points graphed.</P></HTML>");
 
         fDelta.setMaximumSize(new Dimension(50, 20));
-        fDelta.addActionListener(new ActionListener() {
+        ActionListener fDeltaActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double delta = Double.parseDouble(fDelta.getText());
-                    lEquation.setText("Equation: ");
-                    adapter.setDeltaBaseline(delta);
-                    //fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
-                    update();
+                    if (delta != adapter.getDeltaBaseline()) {
+                        lEquation.setText("Equation: ");
+                        adapter.setDeltaBaseline(delta);
+                        adapter.resetFrequencyRange();
+                        adapter.resetTimeRange();
+                        update();
+                    }
+
                 } catch (NumberFormatException e1) {
                 }
             }
-        });
+        };
+        fDelta.addActionListener(fDeltaActionListener);
+
         fNumber.setMaximumSize(new Dimension(50, 20));
-        fNumber.addActionListener(new ActionListener() {
+        ActionListener fNumberActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     lEquation.setText("Equation: ");
                     int x = Integer.parseInt(fNumber.getText().trim());
-                    //TODO why casting to a power of 2?
-                    x = (int) (Math.log(x) / Math.log(2));
-                    adapter.setNumberOfPoints((int) Math.pow(2, x));
-                    // TODO maybe resize to view new data set?
-                    //fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
-                    update();
+                    if (x != adapter.getNumberOfPoints()) {
+                        //TODO why casting to a power of 2?
+                        x = (int) (Math.log(x) / Math.log(2));
+                        adapter.setNumberOfPoints((int) Math.pow(2, x));
+                        adapter.resetFrequencyRange();
+                        adapter.resetTimeRange();
+                        update();
+                    }
                 } catch (NumberFormatException e1) {
                 }
             }
-        });
+        };
+        fNumber.addActionListener(fNumberActionListener);
+
         fMaxFrequency.setMaximumSize(new Dimension(50, 20));
         fMaxFrequency.setMinimumSize(new Dimension(50, 20));
-        fMaxFrequency.addActionListener(new ActionListener() {
+        ActionListener fMaxFrequencyActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double maxFrequency = Double.parseDouble(fMaxFrequency.getText());
-                    adapter.setMaxFrequency(maxFrequency);
-                    update();
+                    if (maxFrequency != adapter.getMaxFrequency()) {
+                        adapter.setMaxFrequency(maxFrequency);
+                        update();
+                    }
                 } catch (NumberFormatException e1) {
                 }
             }
-        });
+        };
+        fMaxFrequency.addActionListener(fMaxFrequencyActionListener);
+
         fMinFrequency.setMaximumSize(new Dimension(50, 20));
         fMinFrequency.setMinimumSize(new Dimension(50, 20));
-        fMinFrequency.addActionListener(new ActionListener() {
+        ActionListener fMinFrequencyActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double minFrequency = Double.parseDouble(fMinFrequency.getText());
-                    adapter.setMinFrequency(minFrequency);
-                    update();
+                    if (minFrequency != adapter.getMinFrequency()) {
+                        adapter.setMinFrequency(minFrequency);
+                        update();
+                    }
                 } catch (NumberFormatException e1) {
                 }
             }
-        });
+        };
+        fMinFrequency.addActionListener(fMinFrequencyActionListener);
+
         fMaxTime.setMaximumSize(new Dimension(50, 20));
         fMaxTime.setMinimumSize(new Dimension(50, 20));
-        fMaxTime.addActionListener(new ActionListener() {
+        ActionListener fMaxTimeActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double maxTime = Double.parseDouble(fMaxTime.getText());
-                    adapter.setMaxTime(maxTime);
-                    update();
+                    if (maxTime != adapter.getMaxTime()) {
+                        adapter.setMaxTime(maxTime);
+                        update();
+                    }
                 } catch (NumberFormatException e1) {
                 }
             }
-        });
+        };
+        fMaxTime.addActionListener(fMaxTimeActionListener);
+
         fMinTime.setMaximumSize(new Dimension(50, 20));
         fMinTime.setMinimumSize(new Dimension(50, 20));
-        fMinTime.addActionListener(new ActionListener() {
+        ActionListener fMinTimeActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double minTime = Double.parseDouble(fMinTime.getText());
-                    adapter.setMinTime(minTime);
-                    update();
+                    if (minTime != adapter.getMinTime()) {
+                        adapter.setMinTime(minTime);
+                        update();
+                    }
+                } catch (NumberFormatException e1) {
+                }
+            }
+        };
+        fMinTime.addActionListener(fMinTimeActionListener);
+
+        bUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double delta = Double.parseDouble(fDelta.getText());
+                    int x = Integer.parseInt(fNumber.getText().trim());
+                    if (delta != adapter.getDeltaBaseline() || x != adapter.getNumberOfPoints()) {
+                        x = (int) (Math.log(x) / Math.log(2));
+                        adapter.setNumberOfPoints((int) Math.pow(2, x));
+                        adapter.setDeltaBaseline(delta);
+                        adapter.resetFrequencyRange();
+                        adapter.resetTimeRange();
+                        update();
+                        //TODO do something with equation here?
+                    } else {
+                        double minTime = Double.parseDouble(fMinTime.getText());
+                        double maxTime = Double.parseDouble(fMaxTime.getText());
+                        double minFrequency = Double.parseDouble(fMinFrequency.getText());
+                        double maxFrequency = Double.parseDouble(fMaxFrequency.getText());
+                        adapter.setMinTime(minTime);
+                        adapter.setMaxTime(maxTime);
+                        adapter.setMinFrequency(minFrequency);
+                        adapter.setMaxFrequency(maxFrequency);
+                        update();
+                    }
                 } catch (NumberFormatException e1) {
                 }
             }
         });
+
 
         // Setting up the GUI layout
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
@@ -248,10 +306,16 @@ public class View extends JFrame implements ModelListener {
         sidePanel.add(fMaxFrequency, c);
 
         c.gridy++;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        sidePanel.add(bUpdate, c);
+
+        c.gridy++;
         sidePanel.add(Box.createRigidArea(new Dimension(0, 10)), c);
 
         c.gridy++;
         c.gridx = 0;
+        c.gridwidth = 1;
         sidePanel.add(bOpen, c);
         c.gridx = 1;
         sidePanel.add(bSave, c);
@@ -346,36 +410,6 @@ public class View extends JFrame implements ModelListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 dispose();
-            }
-        });
-
-        bImage.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                double a = 255 / getIGraph().getMaxY();
-                double b = 0;
-                ImageFrame frame;
-                if (getIGraph().getPoints().ceilingKey(Double.parseDouble(fMaxFrequency.getText())) == null) {
-                    frame =
-                            new ImageFrame("Grayscale image", a, b, getIGraph().getPoints().subMap(
-                                    0.0,
-                                    true,
-                                    getIGraph().getPoints().floorKey(
-                                            Double.parseDouble(fMaxFrequency.getText())), true));
-                } else {
-                    frame =
-                            new ImageFrame("Grayscale image", a, b, getIGraph().getPoints().subMap(
-                                    0.0,
-                                    true,
-                                    getIGraph().getPoints().ceilingKey(
-                                            Double.parseDouble(fMaxFrequency.getText())), true));
-                }
-                // frame.displayData();
-                frame.setVisible(true);
-                // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setSize(getIGraph().getWidth(), getIGraph().getHeight());
-                // frame.pack();
             }
         });
 
@@ -607,14 +641,12 @@ public class View extends JFrame implements ModelListener {
 
     @Override
     public void update() {
-        //fDelta.setText(adapter.getDeltaBaseline() + "");
-        //fLambda.setText(adapter.getLambda() + "");
-        //fNumber.setText(adapter.getNumberOfPoints() + "");
-        // fMaxA.setText(this.adapter.getMaxAmp() + "");
-        // fThetaMax.setText(adapter.getLambda()/this.adapter.getDeltaBaseline()+
-        // "");
-        //fSigma.setText(getVGraph().getSigma() + "");
-
+        fDelta.setText(adapter.getDeltaBaseline() + "");
+        fNumber.setText(adapter.getNumberOfPoints() + "");
+        fMaxFrequency.setText(adapter.getMaxFrequency() + "");
+        fMinFrequency.setText(adapter.getMinFrequency() + "");
+        fMaxTime.setText(adapter.getMaxTime() + "");
+        fMinTime.setText(adapter.getMinTime() + "");
         repaint();
     }
 

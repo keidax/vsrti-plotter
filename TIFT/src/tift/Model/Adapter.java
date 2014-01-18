@@ -17,29 +17,13 @@ public class Adapter extends CommonTIFTAdapter {
 
     private Model model;
 
-    private final double defaultDelta = 0.01, defaultSigma = 1;
+    private final double defaultDelta = 0.01;
     private final int defaultNumberOfPoints = 512;
-    private double maxTime, minTime, maxFrequency, minFrequency, delta, sigma;
+    private double maxTime, minTime, maxFrequency, minFrequency;
 
     public Adapter(Model m) {
         model = m;
         resetValues();
-    }
-
-    public double getSigma() {
-        return sigma;
-    }
-
-    public void setSigma(double sigma) {
-        this.sigma = sigma;
-    }
-
-    public double getDelta() {
-        return delta;
-    }
-
-    public void setDelta(double delta) {
-        this.delta = delta;
     }
 
     public double getMinFrequency() {
@@ -190,12 +174,19 @@ public class Adapter extends CommonTIFTAdapter {
     }
 
     private void resetValues() {
-        sigma = defaultSigma;
-        delta = defaultDelta;
+        setDeltaBaseline(defaultDelta);
         setNumberOfPoints(defaultNumberOfPoints);
+        resetTimeRange();
+        resetFrequencyRange();
+    }
+
+    public void resetTimeRange() {
         minTime = 0;
-        maxTime = delta * getNumberOfPoints();
-        maxFrequency = 1 / delta;
+        maxTime = getDeltaBaseline() * getNumberOfPoints();
+    }
+
+    public void resetFrequencyRange() {
+        maxFrequency = 0.5 / getDeltaBaseline();
         minFrequency = -maxFrequency;
     }
 
@@ -205,6 +196,8 @@ public class Adapter extends CommonTIFTAdapter {
 
     public void setNumberOfPoints(int n) {
         getModel().getVisibilityGraph().setNumberOfPoints(n);
+        model.getVisibilityGraph().reinicializePoints();
+        model.getVisibilityGraph().createImageGraph();
     }
 
     public void removeRms(double i) {

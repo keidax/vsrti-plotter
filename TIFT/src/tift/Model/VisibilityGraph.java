@@ -104,7 +104,6 @@ public class VisibilityGraph extends Graph {
      * 0.
      */
     public void reinicializePoints() {
-        System.out.println("VisGraph reinitialize points");
         getPoints().clear();
         getPoints2().clear();
         gridedRms.clear();
@@ -149,11 +148,8 @@ public class VisibilityGraph extends Graph {
      */
     public void evaluate(String equation, String iEquation) {
         Map<String, Double> map = new HashMap<String, Double>();
-        System.out.println("creating PostfixEvaluators");
         PostfixEvaluator eval1 = new PostfixEvaluator(equation, map), eval2 = new PostfixEvaluator(iEquation, map);
         Object[] keys = getPoints().keySet().toArray();
-
-        System.out.println("entering for loop");
         // Replaces the letter t with the x-value of the current point
         for (int i = 0; i < keys.length; i++) {
 
@@ -161,24 +157,16 @@ public class VisibilityGraph extends Graph {
             double lowerKey = getPoints().floorKey(intendedKey), higherKey = getPoints().ceilingKey(intendedKey);
             intendedKey = (intendedKey - lowerKey < higherKey - intendedKey ? lowerKey : higherKey);
 
-            System.out.println("val into map = " + intendedKey);
-
             map.put("t", intendedKey);
             Double ans = eval1.evaluate();
             Double ans2 = eval2.evaluate();
             compl[i] = new Complex(ans, ans2);
-            double ret, ret2;
             if (polar) {
-                ret = getPoints().put(intendedKey, compl[i].abs());
-                ret2 = getPoints2().put(intendedKey, compl[i].phase());
-
+                getPoints().put(intendedKey, compl[i].abs());
+                getPoints2().put(intendedKey, compl[i].phase());
             } else {
-                ret = getPoints().put(intendedKey, compl[i].re());
-                ret2 = getPoints2().put(intendedKey, compl[i].im());
-            }
-
-            if (i < 10) {
-                System.out.println("ret = " + ret + " , ret2 = " + ret2);
+                getPoints().put(intendedKey, compl[i].re());
+                getPoints2().put(intendedKey, compl[i].im());
             }
         }
         System.out.println(getPoints());
@@ -242,7 +230,6 @@ public class VisibilityGraph extends Graph {
      * the image graph (the graphs in the Frequency Domain).
      */
     public void createImageGraph() {
-        System.out.println("creating image graph");
         // check();
         Complex[] res = FFT.fft(compl);
         model.imageGraph.setComplex(res);

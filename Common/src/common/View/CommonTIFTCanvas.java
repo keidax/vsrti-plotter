@@ -561,6 +561,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
 
         // determine spacing for marks on x-axis
         double xSpacing = 1;
+        //TODO make this able to scale arbitrarily
         double pixelsPerNumber = this.getPlotWidth() * 1.0 / (getMaxX() - getMinX());
         if (pixelsPerNumber > 350) {
             xSpacing = 0.1;
@@ -579,8 +580,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         } else {
             xSpacing = 15;
         }
-
-        System.out.println("pixels per number = " + pixelsPerNumber);
 
         // draw axis title
         g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,

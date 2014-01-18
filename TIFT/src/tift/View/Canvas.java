@@ -11,40 +11,38 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * 
  * @author Karel Durktoa and Adam Pere
- * 
  */
 @SuppressWarnings("serial")
 public abstract class Canvas extends CommonTIFTCanvas {
-    
+
     public View view;
     public Adapter adapter;
     final boolean amp;
     Canvas canvas;
-    
+
     public Canvas(View v, Adapter a, TreeMap<Double, Double> g, boolean amplitude) {
         super(a, g);
         setAdapter(a);
         setView(v);
-        
+
         amp = amplitude;
-        
+
     }
-    
+
     // GETTERS AND SETTERS
     public Adapter getAdapter() {
         return adapter;
     }
-    
+
     public void setAdapter(Adapter adapter) {
         this.adapter = adapter;
     }
-    
+
     public View getView() {
         return view;
     }
-    
+
     public void setView(View view) {
         this.view = view;
     }
@@ -83,7 +81,6 @@ public abstract class Canvas extends CommonTIFTCanvas {
 
     @Override
     public void drawDataSet(Graphics2D g) {
-        //System.out.println("call to drawDataSet");
         if (getPoints() == null || getPoints().size() == 0) {
             return;
         }
@@ -93,7 +90,6 @@ public abstract class Canvas extends CommonTIFTCanvas {
         Double previousKey = getPoints().firstKey();
         for (Double key : keys) {
             if (key >= getMinX() && key <= getMaxX()) {
-                System.out.println("drawing key: " + key + ", " + getPoints().get(key));
                 new SquareOrnament(getOrnamentSize(key)).draw(g, g2cx(key), g2cy(getPoints().get(key)));
                 g.drawLine(g2cx(previousKey), g2cy(getPoints().get(previousKey)), g2cx(key), g2cy(getPoints().get(key)));
             }
