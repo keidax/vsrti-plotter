@@ -8,8 +8,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,11 +21,10 @@ import java.util.logging.Logger;
  */
 public class View extends JFrame implements ModelListener {
 
-    public Adapter adapter;
+    public final Adapter adapter;
     public VCanvas vGraph, vGraph2; // real/magnitude graph and imaginary/phase graph in time domain
     public FFTCanvas iGraph, iGraph2; // real/magnitude graph and imaginary/phase graph in frequency
     // domain
-    public JButton exit;
     final JPopupMenu menu = new JPopupMenu();
     public String link = "http://www1.union.edu/marrj/radioastro/ToolforInteractiveFourierTransforms.html";
     public String equation;
@@ -37,24 +34,21 @@ public class View extends JFrame implements ModelListener {
     public File f;
     private JFileChooser jfc;
 
-    public View(Adapter a, String title) {
+    public View(final Adapter adapter, String title) {
         super(title);
-        setAdapter(a);
+        this.adapter = adapter;
         jfc = new JFileChooser();
-        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints(), "Magnitude", "f(t) - Magnitude", true);
-        vGraph2 = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints2(), "Phase", "f(t) - Phase", false);
+        vGraph = new VCanvas(this, adapter, adapter.getVisiblityGraphPoints(), "Magnitude", "f(t) - Magnitude", true);
+        vGraph2 = new VCanvas(this, adapter, adapter.getVisiblityGraphPoints2(), "Phase", "f(t) - Phase", false);
         // "\ud835\udf08" is unicode for mathematical italic small nu
-        iGraph = new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints(), "Magnitude", "F(\ud835\udf08) - Magnitude", true);
-        iGraph2 = new FFTCanvas(this, getAdapter(), getAdapter().getImageGraphPoints2(), "Phase", "F(\ud835\udf08) - Phase", false);
+        iGraph = new FFTCanvas(this, adapter, adapter.getImageGraphPoints(), "Magnitude", "F(\ud835\udf08) - Magnitude", true);
+        iGraph2 = new FFTCanvas(this, adapter, adapter.getImageGraphPoints2(), "Phase", "F(\ud835\udf08) - Phase", false);
         radio = true;
-        //vGraph.setSize(300, 100);
-        //vGraph2.setSize(300, 100);
         f = null;
 
         JPanel mainPanel, sidePanel;
-        JLabel lDelta, lMaxF, lBlank;
 
-        final JTextField fDelta, fLambda, fThetaMax, fSigma, fNumber, fThetaMin, fMinTime, fMaxTime;
+        final JTextField fDelta, fNumber, fMinFrequency, fMaxFrequency, fMinTime, fMaxTime;
 
         equation = "";
         iEquation = "";
@@ -72,50 +66,24 @@ public class View extends JFrame implements ModelListener {
         bInstruction = new JButton("Instructions");
         bEquation = new JButton("Enter Equation");
         bRadio = new JButton("Show Rectangular");
-        lDelta = new JLabel("<HTML><P><b>f(t) Input Paremeters:</b></P><P></P><P>" + '\u0394'
-                + "t: </P><P></P><P># of points:</P></HTML>");
-        lMaxF = new JLabel("<HTML><P><b>Display Options:</b></P><P></P><P>max time:</P><P></P><P>max frequency:</P></HTML>");
-        lBlank = new JLabel("<HTML><P>  </P> <P> </P><P>  </P> <P> </P><P>  </P> </HTML>");
-        lBlank.setMaximumSize(new Dimension(110, 100));
-        lMaxF.setMaximumSize(new Dimension(110, 160));
-        lDelta.setMaximumSize(new Dimension(110, 100));
 
         lEquation = new JLabel("Equation: ");
 
         // Text Boxes
-        fDelta = new JTextField(adapter.getDeltaBaseline() + ""); // Delta t
-        fNumber = new JTextField(adapter.getNumberOfPoints() + ""); // NumberToken of
-        // Points
-        fLambda = new JTextField(adapter.getLambda() + ""); // Lambda
-        fThetaMax = new JTextField(adapter.getLambda() / adapter.getDeltaBaseline() / 2 + ""); // Max
-        // Frequency to be displayed
-        fThetaMin = new JTextField("0.00"); // Min Frequency to be displayed
-        fMinTime = new JTextField("0.00"); // Min Frequency to be displayed
-        fMaxTime = new JTextField(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + ""); // Max
-        // Time to be displayed
-        fSigma = new JTextField(getVGraph().getSigma() + "");
-        fDelta.setToolTipText("<HTML><P WIDTH='300px'>\u0394t =  x-axis step-size. (Numbers only, do not include "
-                + "units)<BR/>");
-        fThetaMax.setToolTipText("<HTML><P WIDTH='300px'>max frequency = largest frequency displayed in frequency domain.</P></HTML>");
-        fThetaMin.setToolTipText("<HTML><P WIDTH='300px'>min frequency = smallest frequency displayed in frequency domain.</P></HTML>");
+        fDelta = new JTextField(adapter.getDeltaBaseline() + "");
+        fNumber = new JTextField(adapter.getNumberOfPoints() + "");
+        fMaxFrequency = new JTextField(adapter.getMaxFrequency() + "");
+        fMinFrequency = new JTextField(adapter.getMinFrequency() + "");
+        fMinTime = new JTextField(adapter.getMinTime() + "");
+        fMaxTime = new JTextField(adapter.getMaxTime() + "");
+
+        fDelta.setToolTipText("<HTML><P WIDTH='300px'>\u0394t =  x-axis step-size. (Numbers only, do not include units)<BR/>");
+        fMaxFrequency.setToolTipText("<HTML><P WIDTH='300px'>max frequency = largest frequency displayed in frequency domain.</P></HTML>");
+        fMinFrequency.setToolTipText("<HTML><P WIDTH='300px'>min frequency = smallest frequency displayed in frequency domain.</P></HTML>");
         fMaxTime.setToolTipText("<HTML><P WIDTH='300px'>max time = largest time displayed in time domain.</P></HTML>");
         fMinTime.setToolTipText("<HTML><P WIDTH='300px'>min time = smallest time displayed in time domain.</P></HTML>");
         fNumber.setToolTipText("<HTML><P WIDTH = '300px'>number of points graphed.</P></HTML>");
 
-        // Setting size of text boxes
-        fSigma.setMaximumSize(new Dimension(50, 20));
-        fSigma.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int sigma = Integer.parseInt(fSigma.getText());
-                    getVGraph().setSigma(sigma);
-                    getVGraph().update();
-                    update();
-                } catch (NumberFormatException e1) {
-                }
-            }
-        });
         fDelta.setMaximumSize(new Dimension(50, 20));
         fDelta.addActionListener(new ActionListener() {
             @Override
@@ -124,42 +92,50 @@ public class View extends JFrame implements ModelListener {
                     double delta = Double.parseDouble(fDelta.getText());
                     lEquation.setText("Equation: ");
                     adapter.setDeltaBaseline(delta);
-                    fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
-                } catch (NumberFormatException e1) {
-                }
-            }
-        });
-        fLambda.setMaximumSize(new Dimension(50, 20));
-        fLambda.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    double lambda = Double.parseDouble(fLambda.getText());
-                    adapter.setLambda(lambda);
-                    fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
-                } catch (NumberFormatException e1) {
-                }
-            }
-        });
-        fThetaMax.setMaximumSize(new Dimension(50, 20));
-        fThetaMax.setMinimumSize(new Dimension(50, 20));
-        fThetaMax.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    double thetaMax = Double.parseDouble(fThetaMax.getText());
+                    //fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
                     update();
                 } catch (NumberFormatException e1) {
                 }
             }
         });
-        fThetaMin.setMaximumSize(new Dimension(50, 20));
-        fThetaMin.setMinimumSize(new Dimension(50, 20));
-        fThetaMin.addActionListener(new ActionListener() {
+        fNumber.setMaximumSize(new Dimension(50, 20));
+        fNumber.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    double thetaMin = Double.parseDouble(fThetaMin.getText());
+                    lEquation.setText("Equation: ");
+                    int x = Integer.parseInt(fNumber.getText().trim());
+                    //TODO why casting to a power of 2?
+                    x = (int) (Math.log(x) / Math.log(2));
+                    adapter.setNumberOfPoints((int) Math.pow(2, x));
+                    // TODO maybe resize to view new data set?
+                    //fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
+                    update();
+                } catch (NumberFormatException e1) {
+                }
+            }
+        });
+        fMaxFrequency.setMaximumSize(new Dimension(50, 20));
+        fMaxFrequency.setMinimumSize(new Dimension(50, 20));
+        fMaxFrequency.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double maxFrequency = Double.parseDouble(fMaxFrequency.getText());
+                    adapter.setMaxFrequency(maxFrequency);
+                    update();
+                } catch (NumberFormatException e1) {
+                }
+            }
+        });
+        fMinFrequency.setMaximumSize(new Dimension(50, 20));
+        fMinFrequency.setMinimumSize(new Dimension(50, 20));
+        fMinFrequency.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double minFrequency = Double.parseDouble(fMinFrequency.getText());
+                    adapter.setMinFrequency(minFrequency);
                     update();
                 } catch (NumberFormatException e1) {
                 }
@@ -172,6 +148,7 @@ public class View extends JFrame implements ModelListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     double maxTime = Double.parseDouble(fMaxTime.getText());
+                    adapter.setMaxTime(maxTime);
                     update();
                 } catch (NumberFormatException e1) {
                 }
@@ -184,22 +161,8 @@ public class View extends JFrame implements ModelListener {
             public void actionPerformed(ActionEvent e) {
                 try {
                     double minTime = Double.parseDouble(fMinTime.getText());
+                    adapter.setMinTime(minTime);
                     update();
-                } catch (NumberFormatException e1) {
-                }
-            }
-        });
-        fNumber.setMaximumSize(new Dimension(50, 20));
-        fNumber.setMinimumSize(new Dimension(50, 20));
-        fNumber.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    lEquation.setText("Equation: ");
-                    int x = Integer.parseInt(fNumber.getText().trim());
-                    x = (int) (Math.log(x) / Math.log(2));
-                    adapter.setNumberOfPoints((int) Math.pow(2, x));
-                    fMaxTime.setText(adapter.getDeltaBaseline() * adapter.getNumberOfPoints() + "");
                 } catch (NumberFormatException e1) {
                 }
             }
@@ -261,15 +224,28 @@ public class View extends JFrame implements ModelListener {
         c.gridy++;
         c.gridx = 0;
         c.gridwidth = 1;
+        sidePanel.add(new Label("Min time:"), c);
+        c.gridx = 1;
+        sidePanel.add(fMinTime, c);
+
+        c.gridy++;
+        c.gridx = 0;
+        c.gridwidth = 1;
         sidePanel.add(new Label("Max time:"), c);
         c.gridx = 1;
         sidePanel.add(fMaxTime, c);
 
         c.gridy++;
         c.gridx = 0;
+        sidePanel.add(new Label("Min frequency:"), c);
+        c.gridx = 1;
+        sidePanel.add(fMinFrequency, c);
+
+        c.gridy++;
+        c.gridx = 0;
         sidePanel.add(new Label("Max frequency:"), c);
         c.gridx = 1;
-        sidePanel.add(fThetaMax, c);
+        sidePanel.add(fMaxFrequency, c);
 
         c.gridy++;
         sidePanel.add(Box.createRigidArea(new Dimension(0, 10)), c);
@@ -380,20 +356,20 @@ public class View extends JFrame implements ModelListener {
                 double a = 255 / getIGraph().getMaxY();
                 double b = 0;
                 ImageFrame frame;
-                if (getIGraph().getPoints().ceilingKey(Double.parseDouble(fThetaMax.getText())) == null) {
+                if (getIGraph().getPoints().ceilingKey(Double.parseDouble(fMaxFrequency.getText())) == null) {
                     frame =
                             new ImageFrame("Grayscale image", a, b, getIGraph().getPoints().subMap(
                                     0.0,
                                     true,
                                     getIGraph().getPoints().floorKey(
-                                            Double.parseDouble(fThetaMax.getText())), true));
+                                            Double.parseDouble(fMaxFrequency.getText())), true));
                 } else {
                     frame =
                             new ImageFrame("Grayscale image", a, b, getIGraph().getPoints().subMap(
                                     0.0,
                                     true,
                                     getIGraph().getPoints().ceilingKey(
-                                            Double.parseDouble(fThetaMax.getText())), true));
+                                            Double.parseDouble(fMaxFrequency.getText())), true));
                 }
                 // frame.displayData();
                 frame.setVisible(true);
@@ -523,14 +499,14 @@ public class View extends JFrame implements ModelListener {
                     public void actionPerformed(ActionEvent arg0) {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
                         iEquation = eqn2.getText().toLowerCase().replace(" ", "");
-                        try {
-                            adapter.evaluate(equation, iEquation);
-                            lEquation.setText("Equation: " + equation + " + i*" + iEquation);
-                            jf.setVisible(false);
-                        } catch (Exception e) {
-                            JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
-                            System.out.println(e.getMessage());
-                        }
+//                        try {
+                        adapter.evaluate(equation, iEquation);
+                        lEquation.setText("Equation: " + equation + " + i*" + iEquation);
+                        jf.setVisible(false);
+//                        } catch (Exception e) {
+//                            JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
+//                            System.out.println(e.getMessage());
+//                        }
                     }
                 };
                 enter.addActionListener(setEquationListener);
@@ -567,29 +543,6 @@ public class View extends JFrame implements ModelListener {
             }
         });
 
-        getVGraph().addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-
         this.setSize(800, 600);
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -601,7 +554,6 @@ public class View extends JFrame implements ModelListener {
         Double real[] = new Double[128];
         Double imag[] = new Double[128];
         try {
-
             FileInputStream fstream = new FileInputStream(f);
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -612,9 +564,7 @@ public class View extends JFrame implements ModelListener {
                 if (strLine.trim().startsWith(";")) {
                     continue;
                 }
-                if (strLine.trim().startsWith("*lambda")) {
-                    adapter.setLambda(Double.parseDouble(strLine.split(" ")[1]));
-                } else if (strLine.trim().startsWith("*deltaBaseline")) {
+                if (strLine.trim().startsWith("*deltaBaseline")) {
                     adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
                 } else if (strLine.trim().startsWith("*numberOfPoints")) {
                     adapter.setNumberOfPoints(Integer.parseInt(strLine.split(" ")[1]));
@@ -633,10 +583,7 @@ public class View extends JFrame implements ModelListener {
                         count++;
                     } catch (NumberFormatException e) {
                     }
-                } else {
-                    continue;
                 }
-
             }
             in.close();
         } catch (Exception e) {// Catch exception if any
@@ -654,48 +601,8 @@ public class View extends JFrame implements ModelListener {
         return adapter;
     }
 
-    public void setAdapter(Adapter adapter) {
-        this.adapter = adapter;
-    }
-
-    public VCanvas getVGraph() {
-        return vGraph;
-    }
-
-    public VCanvas getVGraph2() {
-        return vGraph2;
-    }
-
-    public void setVGraph(VCanvas graph) {
-        vGraph = graph;
-    }
-
-    public void setVGraph2(VCanvas graph) {
-        vGraph2 = graph;
-    }
-
     public FFTCanvas getIGraph() {
         return iGraph;
-    }
-
-    public void setIGraph(FFTCanvas graph) {
-        iGraph = graph;
-    }
-
-    public FFTCanvas getIGraph2() {
-        return iGraph2;
-    }
-
-    public void setIGraph2(FFTCanvas graph) {
-        iGraph2 = graph;
-    }
-
-    public JButton getExit() {
-        return exit;
-    }
-
-    public void setExit(JButton exit) {
-        this.exit = exit;
     }
 
     @Override

@@ -23,6 +23,7 @@ public class PostfixEvaluator {
 
     private ArrayList<Token> postfixEquation;
     private Map<String, Double> map;
+    private final double epsilon = 0.00001; // acceptable range of error for delta function
 
     public PostfixEvaluator(String equation) {
         this(PostfixConverter.convertToPostfix(Tokenizer.tokenize(equation)));
@@ -87,6 +88,7 @@ public class PostfixEvaluator {
 
                         if (s.equals("-")) {
                             temp = new NumberToken(a - b);
+                            System.out.println(a + " - " + b + " = " + temp.toString());
                         } else if (s.equals("+")) {
                             temp = new NumberToken(a + b);
                         } else if (s.equals("*")) {
@@ -133,7 +135,7 @@ public class PostfixEvaluator {
                                 val = new NumberToken(0.0);
                             }
                         } else if (s.equals("delta")) {
-                            if (arg == 0) {
+                            if (Math.abs(arg) < epsilon) {
                                 val = new NumberToken(1.0);
                             } else {
                                 val = new NumberToken(0.0);

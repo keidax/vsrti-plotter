@@ -454,11 +454,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     }
 
     @Override
-    public void update(Graphics g) {
-        paint(g);
-    }
-
-    @Override
     public void paint(Graphics g) {
         // create the hardware accelerated image.
         createBackBuffer();

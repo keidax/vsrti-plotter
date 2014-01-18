@@ -1,12 +1,9 @@
 package tiftchooser;
 
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 /**
  * Displays a window with buttons to launch the TIFT subprograms.
@@ -37,10 +34,10 @@ public class Form extends JFrame implements Runnable {
     public Form(final String str) {
         super(str);
         getContentPane().setLayout(new FlowLayout());
-        
-        JButton fullButton = new JButton("Full Complex TIFT");
-        JButton cosButton = new JButton("Cosine TIFT");
-        
+
+        JButton fullButton = new JButton("Full Complex FT");
+        JButton cosButton = new JButton("Cosine Transform");
+
         getContentPane().add(fullButton);
         getContentPane().add(cosButton);
         

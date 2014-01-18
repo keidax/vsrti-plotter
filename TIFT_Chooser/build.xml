@@ -1,4 +1,4 @@
-<project name="TIFT_Chooser" default="dist" basedir="..">
+<project name="TIFT" default="dist" basedir="..">
     <property name="src" location="${ant.project.name}/src"/>
     <property name="build" location="${ant.project.name}/bin"/>
     <property name="dist" location="${ant.project.name}/dist"/>
