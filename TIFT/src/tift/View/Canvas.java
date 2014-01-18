@@ -5,7 +5,6 @@ import common.View.SquareOrnament;
 import tift.Model.Adapter;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -96,52 +95,11 @@ public abstract class Canvas extends CommonTIFTCanvas {
             previousKey = key;
         }
     }
-
-    /**
-     * records where mouse was pressed and whether there is any point in less
-     * distance then MyCanvas.r
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        mouseButton = e.getButton();
-        if (e.getButton() != MouseEvent.BUTTON1) {
-            return;
-        }
-
-        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
-            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
-        } else {
-            setCurrentPoint(null);
-        }
-
-        if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
-            if (amp) {
-                adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
-            } else {
-                adapter.moveVisibilityPoint2(getCurrentPoint(), c2gy(toy));
-            }
-        }
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        if (mouseButton != MouseEvent.BUTTON1) {
-            return;
-        }
-        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
-            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
-        } else {
-            setCurrentPoint(null);
-        }
-
-        if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
-            if (amp) {
-                adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
-            } else {
-                adapter.moveVisibilityPoint2(getCurrentPoint(), c2gy(toy));
-            }
-        }
-    }
 }
+
+
+
+
+
+
+

@@ -2,6 +2,7 @@ package tift.View;
 
 import tift.Model.Adapter;
 
+import java.awt.event.MouseEvent;
 import java.util.TreeMap;
 
 /**
@@ -42,11 +43,41 @@ public class VCanvas extends Canvas {
 
     @Override
     public void setCurrentPoint(Double currentPoint) {
-        try {
-            adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {
-            System.out.println("NullPointerException in VCanvas.setCurrentPoint");
-        }
         this.currentPoint = currentPoint;
+    }
+
+
+    /**
+     * records where mouse was pressed and whether there is any point in less
+     * distance then MyCanvas.r
+     */
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            handleMouseMoveEvent(e);
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        handleMouseMoveEvent(e);
+    }
+
+    private void handleMouseMoveEvent(MouseEvent e) {
+        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
+            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
+        } else {
+            setCurrentPoint(null);
+        }
+
+        if (getCurrentPoint() != null) {
+            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            System.out.println("ypoint = " + c2gy(toy));
+            if (amp) {
+                adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
+            } else {
+                adapter.moveVisibilityPoint2(getCurrentPoint(), c2gy(toy));
+            }
+        }
     }
 }

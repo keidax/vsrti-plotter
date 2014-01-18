@@ -1,11 +1,10 @@
 package tift2.View;
 
-import java.awt.event.MouseEvent;
-import java.util.TreeMap;
-
+import common.View.CommonTIFTCanvas;
 import tift2.Model.Adapter;
 
-import common.View.CommonTIFTCanvas;
+import java.awt.event.MouseEvent;
+import java.util.TreeMap;
 
 /**
  * 
@@ -49,7 +48,6 @@ public abstract class Canvas extends CommonTIFTCanvas {
      */
     @Override
     public void mousePressed(MouseEvent e) {
-        mouseButton = e.getButton();
         if (e.getButton() != MouseEvent.BUTTON1) {
             return;
         }
@@ -74,10 +72,7 @@ public abstract class Canvas extends CommonTIFTCanvas {
     
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (mouseButton != MouseEvent.BUTTON1) {
-            return;
-        }
-        
+
         if (e.getButton() != MouseEvent.BUTTON2) {
             if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
                 setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));

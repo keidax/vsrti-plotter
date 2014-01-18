@@ -158,12 +158,7 @@ public class Adapter extends CommonTIFTAdapter {
         return getModel().getVisibilityGraph().toString();
     }
 
-    public void removeRmsPoint(double x) {
-        getModel().getVisibilityGraph().removeGridedRmsPoint(x);
-    }
-
     public void reset() {
-        resetValues();
         getModel().getVisibilityGraph().reinicializePoints();
     }
 

@@ -27,8 +27,8 @@ public class View extends JFrame implements ModelListener {
     // domain
     final JPopupMenu menu = new JPopupMenu();
     public String link = "http://www1.union.edu/marrj/radioastro/ToolforInteractiveFourierTransforms.html";
-    public String equation;
-    public String iEquation;
+    public String equation = "0";
+    public String iEquation = "0";
     public JLabel lEquation;
     public boolean radio;
     public File f;
@@ -99,7 +99,6 @@ public class View extends JFrame implements ModelListener {
                         adapter.resetTimeRange();
                         update();
                     }
-
                 } catch (NumberFormatException e1) {
                 }
             }
@@ -420,7 +419,6 @@ public class View extends JFrame implements ModelListener {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-
                 if (f != null && f.canRead()) {
                     Double tm[][] = parseFile(f);
                     adapter.fullReset();
@@ -430,22 +428,26 @@ public class View extends JFrame implements ModelListener {
                     }
                     lEquation.setText("Equation: ");
                 } else {
-                    if (!equation.equals("")) {
-                        adapter.evaluate(equation, iEquation);
-                        lEquation.setText("Equation: " + equation + " " + iEquation + "i");
+                    if (!(equation.equals("") || iEquation.equals(""))) {
+                        try {
+                            adapter.evaluate(equation, iEquation);
+                            lEquation.setText("Equation: " + equation + " " + iEquation + "i");
+                        } catch (Exception e1) {
+                            adapter.reset();
+                        }
                     } else {
-                        adapter.fullReset();
+                        adapter.reset();
                     }
-
                 }
 
             }
         });
         bFullReset.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 adapter.fullReset();
+                equation = "0";
+                iEquation = "0";
                 lEquation.setText("Equation: ");
             }
         });
@@ -484,7 +486,6 @@ public class View extends JFrame implements ModelListener {
                 }
                 radio = !radio;
                 adapter.setPolar(radio);
-
             }
         });
 

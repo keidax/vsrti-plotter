@@ -59,8 +59,9 @@ public class VisibilityGraph extends Graph {
                 getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
             }
         }
+        createImageGraph();
         model.updateListeners();
-        model.imageGraph.setPolar(radio);
+        //model.imageGraph.setPolar(radio);
     }
 
     public void setRms(TreeMap<Double, Double> rms) {
@@ -230,7 +231,6 @@ public class VisibilityGraph extends Graph {
      * the image graph (the graphs in the Frequency Domain).
      */
     public void createImageGraph() {
-        // check();
         Complex[] res = FFT.fft(compl);
         model.imageGraph.setComplex(res);
 
@@ -238,32 +238,21 @@ public class VisibilityGraph extends Graph {
         model.imageGraph.getPoints2().clear();
 
         for (int i = 0; i < res.length / 2; i++) {
-            //System.out.println("i * delta = " + i*getDeltaBaseline());
             if (polar) {
                 model.imageGraph.getPoints().put(i / (getDeltaBaseline() * getPoints().size()), res[i].abs());
                 model.imageGraph.getPoints2().put(i / (getDeltaBaseline() * getPoints().size()), res[i].phase());
-//                model.imageGraph.getPoints().put(i * getDeltaBaseline(), res[i].abs());
-//                model.imageGraph.getPoints2().put(i * getDeltaBaseline(), res[i].phase());
             } else {
                 model.imageGraph.getPoints().put(i / (getDeltaBaseline() * getPoints().size()), res[i].re());
                 model.imageGraph.getPoints2().put(i / (getDeltaBaseline() * getPoints().size()), res[i].im());
-//                model.imageGraph.getPoints().put(i * getDeltaBaseline(), res[i].re());
-//                model.imageGraph.getPoints2().put(i * getDeltaBaseline(), res[i].im());
             }
         }
-
         for (int i = res.length / 2 + 1; i < res.length; i++) {
-            //System.out.println("i * delta = " + i*getDeltaBaseline());
             if (polar) {
                 model.imageGraph.getPoints().put((i - res.length) / (getDeltaBaseline() * getPoints().size()), res[i].abs());
                 model.imageGraph.getPoints2().put((i - res.length) / (getDeltaBaseline() * getPoints().size()), res[i].phase());
-//                model.imageGraph.getPoints().put(i * getDeltaBaseline(), res[i].abs());
-//                model.imageGraph.getPoints2().put(i * getDeltaBaseline(), res[i].phase());
             } else {
                 model.imageGraph.getPoints().put((i - res.length) / (getDeltaBaseline() * getPoints().size()), res[i].re());
                 model.imageGraph.getPoints2().put((i - res.length) / (getDeltaBaseline() * getPoints().size()), res[i].im());
-//                model.imageGraph.getPoints().put(i * getDeltaBaseline(), res[i].re());
-//                model.imageGraph.getPoints2().put(i * getDeltaBaseline(), res[i].im());
             }
         }
     }
@@ -372,7 +361,6 @@ public class VisibilityGraph extends Graph {
                 getPoints().put(currentPoint, compl[n].re());
             }
         }
-
         createImageGraph();
         model.updateListeners();
     }
@@ -395,7 +383,7 @@ public class VisibilityGraph extends Graph {
             }
 
         } else {
-            if (toy != compl[n].re()) {
+            if (toy != compl[n].im()) {
                 compl[n] = new Complex(compl[n].re(), toy);
                 getPoints2().put(currentPoint, compl[n].im());
                 getPoints().put(currentPoint, compl[n].re());

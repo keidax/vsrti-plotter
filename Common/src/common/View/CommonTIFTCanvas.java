@@ -33,7 +33,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     protected VolatileImage volatileImg;
 
     protected final JPopupMenu menu = new JPopupMenu();
-    protected int mouseButton = 0;
     protected JFileChooser fileChooser;
 
     protected int strokeSize = 4;
@@ -188,7 +187,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     /**
      * Draw the points
      *
-     * @param g
+     * @param g the Graphics2D object to use
      */
     public void drawDataSet(Graphics2D g) {
         if (getPoints().size() == 0) {
@@ -217,7 +216,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     /**
      * Draw a single point
      *
-     * @param g
+     * @param g the Graphics2D object to use
      * @param x
      * @param y
      */
@@ -441,16 +440,25 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         this.currentPoint = currentPoint;
     }
 
-    protected Double getVerticallyPointOnGraph(int x, int y) {
-
-        Set<Double> keys = getPoints().keySet();
-        for (Double key : keys) {
-            if (new SquareOrnament(getOrnamentSize(key))
-                    .isInsideVertically(x, y, g2cx(key), g2cy(getPoints().get(key)))) {
-                return key;
-            }
+    protected Double getVerticallyPointOnGraph(int cx, int cy) {
+        double x = c2gx(cx);
+        // don't allow points outside of graph area
+        if (x < getMinX() || x > getMaxX() || cy < tPad || cy > getHeight() - bPad) {
+            return null;
         }
-        return null;
+        double floorX, ceilX;
+        // catch if x is less than least key or greater than largest key
+        try {
+            floorX = getPoints().floorKey(x);
+        } catch (NullPointerException e) {
+            floorX = getPoints().firstKey();
+        }
+        try {
+            ceilX = getPoints().ceilingKey(x);
+        } catch (NullPointerException e) {
+            ceilX = getPoints().lastKey();
+        }
+        return (x - floorX < ceilX - x) ? floorX : ceilX;
     }
 
     @Override
@@ -507,7 +515,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
-        mouseButton = 0;
         // NOT FINISHED (just redo getCurrentDataSet to
         // getViewer().getCurrentDataSet
 
@@ -551,7 +558,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     /**
      * Draws the x-axis
      *
-     * @param g
+     * @param g the Graphics2D object to use
      */
     public void drawXAxis(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize));
@@ -607,7 +614,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
      * Draws the y-axis
      *
      * @param count
-     * @param g
+     * @param g the Graphics2D object to use
      */
     public void drawYAxis(int count, Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize));
@@ -674,7 +681,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
      * Draws vertical metric
      *
      * @param plotStep
-     * @param g
+     * @param g the Graphics2D object to use
      */
     public void drawVerticalMetric(double plotStep, Graphics2D g) {
         FontMetrics fm = g.getFontMetrics();
@@ -702,11 +709,9 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
                 titleFont = Font.createFont(Font.TRUETYPE_FONT, CommonTIFTCanvas.class.getClassLoader().getResourceAsStream("FreeSerif-min.ttf"));
                 titleFont = titleFont.deriveFont((float) (fontSize * 1.2));
             } catch (FontFormatException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                System.err.println("Unable to load font, reverting to default. Some characters may not display correctly.");
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                System.err.println("Unable to load font, reverting to default. Some characters may not display correctly.");
             }
         }
         return titleFont;

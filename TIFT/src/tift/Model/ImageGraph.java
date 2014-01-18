@@ -33,30 +33,30 @@ public class ImageGraph extends Graph {
         compl = numbers;
     }
 
-    /**
-     * Set the instance variable polar to true or false. Polar determines
-     * whether or not the graph is plotting magnitude/phase (polar form of
-     * complex numbers) or real and imaginary numbers (rectangular form of
-     * complex numbers)
-     *
-     * @param radio - Plot polar or rectangular form of complex numbers
-     */
-    public void setPolar(boolean radio) {
-        polar = radio;
-        Object[] keys = getPoints().keySet().toArray();
-
-        for (int i = 0; i < keys.length; i++) {
-            if (polar) {
-                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].abs());
-                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].phase());
-            } else {
-
-                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].re());
-                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
-            }
-        }
-        model.updateListeners();
-    }
+//    /**
+//     * Set the instance variable polar to true or false. Polar determines
+//     * whether or not the graph is plotting magnitude/phase (polar form of
+//     * complex numbers) or real and imaginary numbers (rectangular form of
+//     * complex numbers)
+//     *
+//     * @param radio - Plot polar or rectangular form of complex numbers
+//     */
+//    public void setPolar(boolean radio) {
+//        polar = radio;
+//        Object[] keys = getPoints().keySet().toArray();
+//
+//        for (int i = 0; i < keys.length; i++) {
+//            if (polar) {
+//                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].abs());
+//                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].phase());
+//            } else {
+//
+//                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].re());
+//                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
+//            }
+//        }
+//        model.updateListeners();
+//    }
 
     /**
      * This handles the creating of the Visibility Graph (Time Domain Graphs).

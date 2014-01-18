@@ -2,6 +2,7 @@ package tift.View;
 
 import tift.Model.Adapter;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.TreeMap;
 
@@ -41,32 +42,33 @@ public class FFTCanvas extends Canvas {
         return adapter.getMaxFrequency();
     }
 
+
+    @Override
+    public void drawDataSet(Graphics2D g) {
+        if (getMinX() < 0 && getMaxX() > 0) {
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(g2cx(0), tPad, g2cx(0), getHeight() - bPad);
+        }
+        super.drawDataSet(g);
+    }
+
     /**
      * records where mouse was pressed and weather there is any point in less
      * distance then MyCanvas.r
      */
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() != MouseEvent.BUTTON1) {
-            return;
-        }
-        if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
-            setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
-        } else {
-            setCurrentPoint(null);
-        }
-        if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
-            if (amp) {
-                adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
-            } else {
-                adapter.moveImagePoint2(getCurrentPoint(), c2gy(toy));
-            }
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            handleMouseMoveEvent(e);
         }
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        handleMouseMoveEvent(e);
+    }
+
+    private void handleMouseMoveEvent(MouseEvent e) {
         if (getVerticallyPointOnGraph(e.getX(), e.getY()) != null) {
             setCurrentPoint(getVerticallyPointOnGraph(e.getX(), e.getY()));
         } else {
@@ -75,6 +77,7 @@ public class FFTCanvas extends Canvas {
 
         if (getCurrentPoint() != null) {
             double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            System.out.println("ypoint = " + c2gy(toy));
             if (amp) {
                 adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
             } else {
