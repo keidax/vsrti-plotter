@@ -70,6 +70,8 @@ public class View extends JFrame implements ModelListener {
         bUpdate = new JButton("Update");
 
         lEquation = new JLabel("Equation: ");
+        final JCheckBox cbAntialiasing = new JCheckBox();
+        cbAntialiasing.setSelected(vGraph.getAntialiasing());
 
         // Text Boxes
         fDelta = new JTextField(adapter.getDeltaBaseline() + "");
@@ -303,6 +305,18 @@ public class View extends JFrame implements ModelListener {
         sidePanel.add(new Label("Max frequency:"), c);
         c.gridx = 1;
         sidePanel.add(fMaxFrequency, c);
+
+        c.gridy++;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        sidePanel.add(new Label("Testing options"), c);
+
+        c.gridy++;
+        c.gridx = 0;
+        c.gridwidth = 1;
+        sidePanel.add(new Label("Antialiasing:"), c);
+        c.gridx = 1;
+        sidePanel.add(cbAntialiasing, c);
 
         c.gridy++;
         c.gridx = 0;
@@ -575,6 +589,17 @@ public class View extends JFrame implements ModelListener {
                 } catch (URISyntaxException ex) {
                     Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
+        });
+
+        cbAntialiasing.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean checked = cbAntialiasing.isSelected();
+                vGraph.setAntialiasing(checked);
+                vGraph2.setAntialiasing(checked);
+                iGraph.setAntialiasing(checked);
+                iGraph2.setAntialiasing(checked);
             }
         });
 

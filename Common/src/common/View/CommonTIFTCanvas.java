@@ -41,6 +41,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     protected CommonTIFTAdapter commonAdapter;
 
     private Font titleFont, normalFont;
+    private boolean antialiasing = true;
 
     public CommonTIFTCanvas(CommonTIFTAdapter a, TreeMap<Double, Double> g) {
         lPad = 80;
@@ -204,6 +205,14 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
 
     }
 
+    public boolean getAntialiasing() {
+        return antialiasing;
+    }
+
+    public void setAntialiasing(boolean antialiasing) {
+        this.antialiasing = antialiasing;
+    }
+
     @Override
     protected int getOrnamentSize(double x) {
         if (x <= getMinX()) {
@@ -227,8 +236,20 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         if (getPoints() == null || getPoints().isEmpty()) {
             return defaultY;
         }
-        Double maxy = getMaxYPoint();
-        return maxy;
+
+        System.out.print('+');
+
+        double max = getPoints().firstEntry().getValue();
+        Set<Double> keys = getPoints().keySet();
+        for (Double key : keys) {
+            if (getPoints().get(key) > max) {
+                max = getPoints().get(key);
+            }
+        }
+        if (max < 1) {
+            return 1.0;
+        }
+        return max * 1.1;
     }
 
     public double getMaxX() {
@@ -244,82 +265,12 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     }
 
     public double getMinY() {
-        if (getPoints().isEmpty() || getPoints().size() == 0) {
-            return -defaultY;
-        } else {
-            return getMinYPoint();
-        }
-    }
-
-    /**
-     * Horizontal label step
-     *
-     * @return
-     */
-    public double countHorizontalLabelStep() {
-        int count = getPlotWidth() / squareWidth + 1;
-        double max = getMaxX() - getMinX();
-        return max / count;
-    }
-
-    /**
-     * Counts the horizontal step
-     *
-     * @return
-     */
-    public double countHorizontalStep() {
-        int count = getPlotWidth() / squareWidth + 1;
-        return (double) getPlotWidth() / count;
-    }
-
-    public double countVerticalStep() {// NOT FINISHED
-        int count = getPlotHeight() / squareWidth + 1;
-        if (count % 2 == 1) {
-            count++;
-        }
-        return (double) getPlotHeight() / count;
-    }
-
-    public double countVerticalLabelStep() {// NOT FINISHED
-        int count = getPlotHeight() / squareWidth + 1;// 30
-        int max;
-        if (getPoints() == null || getPoints().size() == 0) {
-            max = countMax(defaultY);// 50
-        } else {
-            max = countMaxVertical(Math.max(Math.abs(getMaxYPoint()), Math.abs(getMinYPoint())));// 50
-        }
-        return (double) max / (double) count;
-    }
-
-    public double getMaxYRange() {
-        if (getMaxYPoint() - getMinYPoint() < 2) {
-            return 2.0;
-        } else {
-            return getMaxYPoint() - getMinYPoint();
-        }
-    }
-
-    public double getMaxYPoint() {
-        if (getPoints().size() == 0) {
-            return 0;
-        }
-        double max = getPoints().firstEntry().getValue();
-        Set<Double> keys = getPoints().keySet();
-        for (Double key : keys) {
-            if (getPoints().get(key) > max) {
-                max = getPoints().get(key);
-            }
-        }
-        if (max < 1) {
-            return 1.0;
-        }
-        return max * 1.1;
-    }
-
-    public double getMinYPoint() {
-        if (getPoints().isEmpty()) {
+        if (getPoints() == null || getPoints().isEmpty()) {
             return -defaultY;
         }
+
+        System.out.print('-');
+
         double min = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
@@ -540,19 +491,22 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     }
 
     protected void doPaint(Graphics g) {
+        long start = System.currentTimeMillis();
+
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                antialiasing ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
         setBackground(Color.WHITE);
 
-        int i = 0;
-        drawYAxis(i++, g2);
+        drawYAxis(g2);
         drawXAxis(g2);
         g2.setColor(Color.BLACK);
         g2.setFont(getTitleFont());
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tPad + g2
-                .getFontMetrics().getHeight() / 2) / 2);
+        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tPad + g2.getFontMetrics().getHeight() / 2) / 2);
         g2.setColor(colors[0]);
         drawDataSet(g2);
+        long end = System.currentTimeMillis();
+        System.out.println("drawing time: " + (end - start));
     }
 
     /**
@@ -613,10 +567,9 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     /**
      * Draws the y-axis
      *
-     * @param count
      * @param g the Graphics2D object to use
      */
-    public void drawYAxis(int count, Graphics2D g) {
+    public void drawYAxis(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize));
         g.setFont(getNormalFont());
         g.setColor(Color.BLACK);

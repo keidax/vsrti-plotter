@@ -77,7 +77,6 @@ public class FFTCanvas extends Canvas {
 
         if (getCurrentPoint() != null) {
             double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
-            System.out.println("ypoint = " + c2gy(toy));
             if (amp) {
                 adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
             } else {
