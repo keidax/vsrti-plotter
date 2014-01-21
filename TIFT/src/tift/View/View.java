@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +27,6 @@ public class View extends JFrame implements ModelListener {
     public VCanvas vGraph, vGraph2; // real/magnitude graph and imaginary/phase graph in time domain
     public FFTCanvas iGraph, iGraph2; // real/magnitude graph and imaginary/phase graph in frequency
     // domain
-    final JPopupMenu menu = new JPopupMenu();
     public String link = "http://www1.union.edu/marrj/radioastro/ToolforInteractiveFourierTransforms.html";
     public String equation = "0";
     public String iEquation = "0";
@@ -83,11 +84,12 @@ public class View extends JFrame implements ModelListener {
         fNumber.setToolTipText("<HTML><P WIDTH = '300px'>number of points graphed.</P></HTML>");
 
         fDelta.setMaximumSize(new Dimension(50, 20));
-        ActionListener fDeltaActionListener = new ActionListener() {
+        fDelta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double delta = Double.parseDouble(fDelta.getText());
+                    clearWarnings(fDelta);
                     if (delta != adapter.getDeltaBaseline()) {
                         lEquation.setText("Equation: ");
                         adapter.setDeltaBaseline(delta);
@@ -96,20 +98,20 @@ public class View extends JFrame implements ModelListener {
                         update();
                     }
                 } catch (NumberFormatException e1) {
+                    showInputWarningMessage(fDelta);
                 }
             }
-        };
-        fDelta.addActionListener(fDeltaActionListener);
+        });
 
         fNumber.setMaximumSize(new Dimension(50, 20));
-        ActionListener fNumberActionListener = new ActionListener() {
+        fNumber.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     lEquation.setText("Equation: ");
                     int x = Integer.parseInt(fNumber.getText().trim());
+                    clearWarnings(fNumber);
                     if (x != adapter.getNumberOfPoints()) {
-                        //TODO why casting to a power of 2?
                         x = (int) (Math.log(x) / Math.log(2));
                         adapter.setNumberOfPoints((int) Math.pow(2, x));
                         adapter.resetFrequencyRange();
@@ -117,78 +119,82 @@ public class View extends JFrame implements ModelListener {
                         update();
                     }
                 } catch (NumberFormatException e1) {
+                    showInputWarningMessage(fNumber);
                 }
             }
-        };
-        fNumber.addActionListener(fNumberActionListener);
+        });
 
         fMaxFrequency.setMaximumSize(new Dimension(50, 20));
         fMaxFrequency.setMinimumSize(new Dimension(50, 20));
-        ActionListener fMaxFrequencyActionListener = new ActionListener() {
+        fMaxFrequency.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double maxFrequency = Double.parseDouble(fMaxFrequency.getText());
+                    clearWarnings(fMaxFrequency);
                     if (maxFrequency != adapter.getMaxFrequency()) {
                         adapter.setMaxFrequency(maxFrequency);
                         update();
                     }
                 } catch (NumberFormatException e1) {
+                    showInputWarningMessage(fMaxFrequency);
                 }
             }
-        };
-        fMaxFrequency.addActionListener(fMaxFrequencyActionListener);
+        });
 
         fMinFrequency.setMaximumSize(new Dimension(50, 20));
         fMinFrequency.setMinimumSize(new Dimension(50, 20));
-        ActionListener fMinFrequencyActionListener = new ActionListener() {
+        fMinFrequency.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double minFrequency = Double.parseDouble(fMinFrequency.getText());
+                    clearWarnings(fMinFrequency);
                     if (minFrequency != adapter.getMinFrequency()) {
                         adapter.setMinFrequency(minFrequency);
                         update();
                     }
                 } catch (NumberFormatException e1) {
+                    showInputWarningMessage(fMinFrequency);
                 }
             }
-        };
-        fMinFrequency.addActionListener(fMinFrequencyActionListener);
+        });
 
         fMaxTime.setMaximumSize(new Dimension(50, 20));
         fMaxTime.setMinimumSize(new Dimension(50, 20));
-        ActionListener fMaxTimeActionListener = new ActionListener() {
+        fMaxTime.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double maxTime = Double.parseDouble(fMaxTime.getText());
+                    clearWarnings(fMaxTime);
                     if (maxTime != adapter.getMaxTime()) {
                         adapter.setMaxTime(maxTime);
                         update();
                     }
                 } catch (NumberFormatException e1) {
+                    showInputWarningMessage(fMaxTime);
                 }
             }
-        };
-        fMaxTime.addActionListener(fMaxTimeActionListener);
+        });
 
         fMinTime.setMaximumSize(new Dimension(50, 20));
         fMinTime.setMinimumSize(new Dimension(50, 20));
-        ActionListener fMinTimeActionListener = new ActionListener() {
+        fMinTime.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     double minTime = Double.parseDouble(fMinTime.getText());
+                    clearWarnings(fMinTime);
                     if (minTime != adapter.getMinTime()) {
                         adapter.setMinTime(minTime);
                         update();
                     }
                 } catch (NumberFormatException e1) {
+                    showInputWarningMessage(fMinTime);
                 }
             }
-        };
-        fMinTime.addActionListener(fMinTimeActionListener);
+        });
 
         bUpdate.addActionListener(new ActionListener() {
             @Override
@@ -215,7 +221,41 @@ public class View extends JFrame implements ModelListener {
                         adapter.setMaxFrequency(maxFrequency);
                         update();
                     }
+                    clearWarnings(fDelta, fNumber, fMinTime, fMaxTime, fMinFrequency, fMaxFrequency);
                 } catch (NumberFormatException e1) {
+                    // find exactly which fields are throwing errors
+                    ArrayList<JTextField> incorrectFields = new ArrayList<JTextField>();
+                    try {
+                        Integer.parseInt(fNumber.getText());
+                    } catch (NumberFormatException e2) {
+                        incorrectFields.add(fNumber);
+                    }
+                    try {
+                        Double.parseDouble(fDelta.getText());
+                    } catch (NumberFormatException e2) {
+                        incorrectFields.add(fDelta);
+                    }
+                    try {
+                        Double.parseDouble(fMinFrequency.getText());
+                    } catch (NumberFormatException e2) {
+                        incorrectFields.add(fMinFrequency);
+                    }
+                    try {
+                        Double.parseDouble(fMaxFrequency.getText());
+                    } catch (NumberFormatException e2) {
+                        incorrectFields.add(fMaxFrequency);
+                    }
+                    try {
+                        Double.parseDouble(fMinTime.getText());
+                    } catch (NumberFormatException e2) {
+                        incorrectFields.add(fMinTime);
+                    }
+                    try {
+                        Double.parseDouble(fMaxTime.getText());
+                    } catch (NumberFormatException e2) {
+                        incorrectFields.add(fMaxTime);
+                    }
+                    showInputWarningMessage(Arrays.copyOf(incorrectFields.toArray(), incorrectFields.size(), JTextField[].class));
                 }
             }
         });
@@ -475,14 +515,14 @@ public class View extends JFrame implements ModelListener {
                     public void actionPerformed(ActionEvent arg0) {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
                         iEquation = eqn2.getText().toLowerCase().replace(" ", "");
-//                        try {
-                        adapter.evaluate(equation, iEquation);
+                        try {
+                            adapter.evaluate(equation, iEquation);
                         lEquation.setText("Equation: " + equation + " + i*" + iEquation);
                         jf.setVisible(false);
-//                        } catch (Exception e) {
-//                            JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
-//                            System.out.println(e.getMessage());
-//                        }
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
+                            System.out.println(e.getMessage());
+                        }
                     }
                 };
                 enter.addActionListener(setEquationListener);
@@ -542,6 +582,19 @@ public class View extends JFrame implements ModelListener {
 
     public FFTCanvas getIGraph() {
         return iGraph;
+    }
+
+    private void showInputWarningMessage(JComponent... fields) {
+        for (JComponent field : fields) {
+            field.setBackground(Color.PINK);
+        }
+        JOptionPane.showMessageDialog(this, "Invalid input");
+    }
+
+    private void clearWarnings(JComponent... fields) {
+        for (JComponent field : fields) {
+            field.setBackground(Color.WHITE);
+        }
     }
 
     @Override
