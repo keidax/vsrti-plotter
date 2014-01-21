@@ -59,6 +59,7 @@ public class Adapter extends CommonTIFTAdapter {
     }
 
     public void setPolar(boolean radio) {
+        model.imageGraph.setPolar(radio);
         model.visibilityGraph.setPolar(radio);
     }
 

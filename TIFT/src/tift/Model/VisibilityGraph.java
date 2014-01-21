@@ -61,7 +61,6 @@ public class VisibilityGraph extends Graph {
         }
         createImageGraph();
         model.updateListeners();
-        //model.imageGraph.setPolar(radio);
     }
 
     public void setRms(TreeMap<Double, Double> rms) {
@@ -170,7 +169,6 @@ public class VisibilityGraph extends Graph {
                 getPoints2().put(intendedKey, compl[i].im());
             }
         }
-        System.out.println(getPoints());
     }
 
     /**

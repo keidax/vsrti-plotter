@@ -88,7 +88,6 @@ public class PostfixEvaluator {
 
                         if (s.equals("-")) {
                             temp = new NumberToken(a - b);
-                            System.out.println(a + " - " + b + " = " + temp.toString());
                         } else if (s.equals("+")) {
                             temp = new NumberToken(a + b);
                         } else if (s.equals("*")) {

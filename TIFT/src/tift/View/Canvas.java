@@ -55,16 +55,20 @@ public abstract class Canvas extends CommonTIFTCanvas {
         g.setStroke(new BasicStroke(strokeSize / 2));
         g.setColor(Color.RED);
         Set<Double> keys = getPoints().keySet();
+        Double previousKey = getPoints().firstKey();
         int a = g2cx(getPoints().firstKey()), b = g2cy(getPoints().firstEntry().getValue()), c, d;
         for (Double key : keys) {
             if (key >= getMinX() && key <= getMaxX()) {
                 new SquareOrnament(getOrnamentSize(key)).draw(g, g2cx(key), g2cy(getPoints().get(key)));
                 c = g2cx(key);
                 d = g2cy(getPoints().get(key));
-                g.drawLine(a, b, c, d);
+                if (previousKey >= getMinX()) {
+                    g.drawLine(a, b, c, d);
+                }
                 // remember these values, so we don't need to do the calculations twice
                 a = c;
                 b = d;
+                previousKey = key;
             }
         }
     }

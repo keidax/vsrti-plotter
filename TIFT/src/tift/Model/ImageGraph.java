@@ -33,30 +33,17 @@ public class ImageGraph extends Graph {
         compl = numbers;
     }
 
-//    /**
-//     * Set the instance variable polar to true or false. Polar determines
-//     * whether or not the graph is plotting magnitude/phase (polar form of
-//     * complex numbers) or real and imaginary numbers (rectangular form of
-//     * complex numbers)
-//     *
-//     * @param radio - Plot polar or rectangular form of complex numbers
-//     */
-//    public void setPolar(boolean radio) {
-//        polar = radio;
-//        Object[] keys = getPoints().keySet().toArray();
-//
-//        for (int i = 0; i < keys.length; i++) {
-//            if (polar) {
-//                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].abs());
-//                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].phase());
-//            } else {
-//
-//                getPoints().put(Double.parseDouble(keys[i].toString()), compl[i].re());
-//                getPoints2().put(Double.parseDouble(keys[i].toString()), compl[i].im());
-//            }
-//        }
-//        model.updateListeners();
-//    }
+    /**
+     * Set the instance variable polar to true or false. Polar determines
+     * whether or not the graph is plotting magnitude/phase (polar form of
+     * complex numbers) or real and imaginary numbers (rectangular form of
+     * complex numbers)
+     *
+     * @param radio - Plot polar or rectangular form of complex numbers
+     */
+    public void setPolar(boolean radio) {
+        polar = radio;
+    }
 
     /**
      * This handles the creating of the Visibility Graph (Time Domain Graphs).
@@ -148,7 +135,6 @@ public class ImageGraph extends Graph {
      * @return the corresponding index in the array of FFT values, as a positive
      */
     private int convertXPointToIndex(double point) {
-        System.out.println("movePoint: currentPoint = " + point);
         int n = 0; //= (int) (currentPoint * getDeltaBaseline() * getPoints().size());
         if (point > 0) {
             n = (int) Math.ceil(point * getDeltaBaseline() * getPoints().size());
@@ -156,9 +142,6 @@ public class ImageGraph extends Graph {
             n = (int) Math.floor(point * getDeltaBaseline() * getPoints().size()) + getPoints().size() + 1;
 
         }
-
-        System.out.println("n as double = " + point * getDeltaBaseline() * getPoints().size());
-        System.out.println("n = " + n);
         return n;
     }
 }
