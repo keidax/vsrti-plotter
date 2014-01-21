@@ -256,7 +256,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
             }
         }
         if (max < 1) {
-            return 1.0;
+            return defaultY;
         }
         return max * 1.1;
     }
