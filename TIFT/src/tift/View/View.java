@@ -48,10 +48,6 @@ public class View extends JFrame implements ModelListener {
 
         JPanel mainPanel, sidePanel;
 
-
-        equation = "";
-        iEquation = "";
-
         // BUTTONS
 
         final JButton bExit, bReset, bAbout, bFullReset, bInstruction, bEquation, bRadio, bUpdate;
@@ -64,7 +60,7 @@ public class View extends JFrame implements ModelListener {
         bRadio = new JButton("Show Rectangular");
         bUpdate = new JButton("Update");
 
-        lEquation = new JLabel("Equation: ");
+        lEquation = new JLabel(getEquationText());
         final JCheckBox cbAntialiasing = new JCheckBox();
         cbAntialiasing.setSelected(vGraph.getAntialiasing());
 
@@ -83,7 +79,6 @@ public class View extends JFrame implements ModelListener {
         fMinTime.setToolTipText("<HTML><P WIDTH='300px'>min time = smallest time displayed in time domain.</P></HTML>");
         fNumber.setToolTipText("<HTML><P WIDTH = '300px'>number of points graphed.</P></HTML>");
 
-        fDelta.setMaximumSize(new Dimension(50, 20));
         fDelta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -91,11 +86,11 @@ public class View extends JFrame implements ModelListener {
                     double delta = Double.parseDouble(fDelta.getText());
                     clearWarnings(fDelta);
                     if (delta != adapter.getDeltaBaseline()) {
-                        lEquation.setText("Equation: ");
                         adapter.setDeltaBaseline(delta);
                         adapter.resetFrequencyRange();
                         adapter.resetTimeRange();
                         update();
+                        evaluateEquations();
                     }
                 } catch (NumberFormatException e1) {
                     showInputWarningMessage(fDelta);
@@ -103,12 +98,11 @@ public class View extends JFrame implements ModelListener {
             }
         });
 
-        fNumber.setMaximumSize(new Dimension(50, 20));
         fNumber.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    lEquation.setText("Equation: ");
+                    lEquation.setText(getEquationText());
                     int x = Integer.parseInt(fNumber.getText().trim());
                     clearWarnings(fNumber);
                     if (x != adapter.getNumberOfPoints()) {
@@ -117,6 +111,7 @@ public class View extends JFrame implements ModelListener {
                         adapter.resetFrequencyRange();
                         adapter.resetTimeRange();
                         update();
+                        evaluateEquations();
                     }
                 } catch (NumberFormatException e1) {
                     showInputWarningMessage(fNumber);
@@ -124,8 +119,6 @@ public class View extends JFrame implements ModelListener {
             }
         });
 
-        fMaxFrequency.setMaximumSize(new Dimension(50, 20));
-        fMaxFrequency.setMinimumSize(new Dimension(50, 20));
         fMaxFrequency.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,8 +135,6 @@ public class View extends JFrame implements ModelListener {
             }
         });
 
-        fMinFrequency.setMaximumSize(new Dimension(50, 20));
-        fMinFrequency.setMinimumSize(new Dimension(50, 20));
         fMinFrequency.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -160,8 +151,6 @@ public class View extends JFrame implements ModelListener {
             }
         });
 
-        fMaxTime.setMaximumSize(new Dimension(50, 20));
-        fMaxTime.setMinimumSize(new Dimension(50, 20));
         fMaxTime.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -178,8 +167,6 @@ public class View extends JFrame implements ModelListener {
             }
         });
 
-        fMinTime.setMaximumSize(new Dimension(50, 20));
-        fMinTime.setMinimumSize(new Dimension(50, 20));
         fMinTime.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -411,16 +398,7 @@ public class View extends JFrame implements ModelListener {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                    if (!(equation.equals("") || iEquation.equals(""))) {
-                        try {
-                            adapter.evaluate(equation, iEquation);
-                            lEquation.setText("Equation: " + equation + " " + iEquation + "i");
-                        } catch (Exception e1) {
-                            adapter.reset();
-                        }
-                    } else {
-                        adapter.reset();
-                    }
+                evaluateEquations();
             }
         });
         bFullReset.addActionListener(new ActionListener() {
@@ -429,7 +407,7 @@ public class View extends JFrame implements ModelListener {
                 adapter.fullReset();
                 equation = "0";
                 iEquation = "0";
-                lEquation.setText("Equation: ");
+                evaluateEquations();
             }
         });
 
@@ -516,9 +494,8 @@ public class View extends JFrame implements ModelListener {
                         equation = eqn.getText().toLowerCase().replace(" ", "");
                         iEquation = eqn2.getText().toLowerCase().replace(" ", "");
                         try {
-                            adapter.evaluate(equation, iEquation);
-                        lEquation.setText("Equation: " + equation + " + i*" + iEquation);
-                        jf.setVisible(false);
+                            evaluateEquations();
+                            jf.setVisible(false);
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(jf, "Error evaluating equation: " + e.getMessage());
                             System.out.println(e.getMessage());
@@ -595,6 +572,15 @@ public class View extends JFrame implements ModelListener {
         for (JComponent field : fields) {
             field.setBackground(Color.WHITE);
         }
+    }
+
+    private String getEquationText() {
+        return "Equation: " + equation + " + i*" + iEquation;
+    }
+
+    private void evaluateEquations() {
+        adapter.evaluate(equation, iEquation);
+        lEquation.setText(getEquationText());
     }
 
     @Override
