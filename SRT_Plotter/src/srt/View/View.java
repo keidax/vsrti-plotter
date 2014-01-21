@@ -1,39 +1,20 @@
 package srt.View;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import srt.Model.Adapter;
+import srt.Model.ModelListener;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-
-import srt.Model.Adapter;
-import srt.Model.ModelListener;
 
 public class View extends JFrame implements ModelListener, ActionListener {
     
@@ -468,6 +449,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                                 if (temp[i].equals("azoff")) {
                                     table.changeSelection(count, 0, true, false);
                                     node.angle = Double.parseDouble(temp[i + 1]);
+                                    // convert to true angle in sku
+                                    node.angle *= Math.cos(node.elevation / 360 * 2 * Math.PI);
                                     if (node.angle < min) {
                                         min = node.angle;
                                     }
@@ -519,89 +502,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         
                         if (table.plotBeam()) {
                             View.viewer.lDelta.setText("");
-                            viewer.vGraph.xAxis = "Angle (�)";
+                            viewer.vGraph.xAxis = "Angle (degrees)";
                             viewer.vGraph.graphTitle = "Beam Width: Average Antenna Temperature vs. Angle";
-                            
-                            // final JFrame jFr = new
-                            // JFrame("Beam Model Parameters");
-                            // jFr.setMinimumSize(new Dimension(300,150));
-                            // jFr.setMaximumSize(new Dimension(300,150));
-                            // jFr.setPreferredSize(new Dimension(300,150));
-                            // JButton enter = new JButton("Cancel");
-                            // JButton select = new JButton("Plot Beam Model");
-                            // fD = new JTextField(getD()+"");
-                            // fLambda = new
-                            // JTextField(viewer.adapter.getLambda() + "");
-                            // fD.setSize(new Dimension(40,20));
-                            // fLambda.setSize(new Dimension(50,20));
-                            // JPanel row1 = new JPanel();
-                            // JPanel row2 = new JPanel();
-                            // JPanel row3 = new JPanel();
-                            // JPanel row4 = new JPanel();
-                            // JPanel row5 = new JPanel();
-                            // JPanel row6 = new JPanel();
-                            // row6.setLayout(new BoxLayout(row6,
-                            // BoxLayout.Y_AXIS));
-                            // row5.setLayout(new BoxLayout(row5,
-                            // BoxLayout.Y_AXIS));
-                            // row1.setLayout(new BoxLayout(row1,
-                            // BoxLayout.X_AXIS));
-                            // row4.setLayout(new BoxLayout(row4,
-                            // BoxLayout.X_AXIS));
-                            // row1.add(Box.createRigidArea(new Dimension(10,
-                            // 5)));
-                            // row3.setLayout(new BoxLayout(row3,
-                            // BoxLayout.Y_AXIS));
-                            // row2.setLayout(new BoxLayout(row2,
-                            // BoxLayout.Y_AXIS));
-                            // JLabel jl = new JLabel("D:");
-                            // JLabel jl2 = new JLabel("Lambda:");
-                            // jFr.getContentPane().setLayout(new FlowLayout());
-                            // jFr.add(row5);
-                            // row5.add(row1);
-                            // row5.add(row4);
-                            // row1.add(row6);
-                            // row6.add(jl);
-                            // row6.add(Box.createRigidArea(new Dimension(20,
-                            // 5)));
-                            // row6.add(jl2);
-                            // row1.add(Box.createRigidArea(new Dimension(20,
-                            // 5)));
-                            // row1.add(row2);
-                            // row1.add(row3);
-                            // row4.add(select);
-                            // row4.add(enter);
-                            // row3.add(fD);
-                            // row3.add(fLambda);
-                            //
-                            //
-                            // jFr.pack();
-                            // jFr.setLocationRelativeTo(null);
-                            // jFr.setVisible(true);
                             jf.setVisible(false);
                             canDelete = true;
-                            
-                            //
-                            // enter.addActionListener(new ActionListener() {
-                            //
-                            // @Override
-                            // public void actionPerformed(ActionEvent arg0) {
-                            // jFr.setVisible(false);
-                            // canDelete = true;
-                            // }
-                            //
-                            // });
-                            //
-                            // select.addActionListener(new ActionListener() {
-                            //
-                            // @Override
-                            // public void actionPerformed(ActionEvent arg0) {
-                            //
-                            // viewer.adapter.setLambda(Double.parseDouble(fD.getText()));
-                            // viewer.vGraph.paintSinc((Graphics2D)viewer.vGraph.getGraphics());
-                            // }
-                            //
-                            // });
+
                         }
                     }
                     
@@ -1057,6 +962,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
             double[] deleted = new double[156];
             double[] endChannels = new double[156];
             double freqStart = 0, freqStep = 0;
+            double azumith = 0, elevation = 0;
             int numChannels = 156;
             
             FileInputStream fstream = new FileInputStream(f);
@@ -1080,6 +986,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         }
                         
                         ListNode n = new ListNode(title, data, freqStart, freqStep, deleted, endChannels);
+                        n.azumith = azumith;
+                        n.elevation = elevation;
                         list.insertAtTail(n);
                         
                     }
@@ -1098,6 +1006,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     
                     temp = strLine.split(" ");
                     if (first) {
+                        azumith = Double.parseDouble(temp[1]);
+                        elevation = Double.parseDouble(temp[2]);
                         freqStart = Double.parseDouble(temp[5]);
                         freqStep = Double.parseDouble(temp[6]);
                         numChannels = Integer.parseInt(temp[8]);
@@ -1164,8 +1074,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
     }
     
     /**
-     * 
-     * @param VCanvas
+     *
+     * @param graph
      */
     public void setVGraph(VCanvas graph) {
         vGraph = graph;

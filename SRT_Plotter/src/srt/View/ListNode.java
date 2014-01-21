@@ -6,12 +6,11 @@ package srt.View;
  * @author Adam Pere
  */
 public class ListNode {
-    public double[] data, deleted, endChannels; // actual data points, deleted
-    // data points, deleted end
-    // channels
+    public double[] data, deleted, endChannels; // actual data points, deleted data points, deleted end channels
     public String title;
     public double fStart, fStep; // Start Frequency and Frequency Step
     public double angle;
+    public double azumith, elevation;
     public ListNode next;
 
     public ListNode(String t, double[] d, double startFreq, double stepFreq) {
