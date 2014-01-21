@@ -38,8 +38,8 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
             }
         }
     }
-    
-    @Override
+
+    //@Override
     public double getMaxYPoint() {
         if (getPoints().size() == 0) {
             return 0;
@@ -59,8 +59,8 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
         }
         return max * 1.1;
     }
-    
-    @Override
+
+    //@Override
     public double getMinYPoint() {
         if (getPoints().size() == 0) {
             return (double) -defaultY;

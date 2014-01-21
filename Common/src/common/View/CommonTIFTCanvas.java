@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -42,6 +43,11 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
 
     private Font titleFont, normalFont;
     private boolean antialiasing = true;
+
+    //experimental speed optimizations
+    private double cachedMinY, cachedMaxY;
+    private boolean needsRecaching = true;
+    private HashMap<Double, Integer> mapG2CY = new HashMap<Double, Integer>();
 
     public CommonTIFTCanvas(CommonTIFTAdapter a, TreeMap<Double, Double> g) {
         lPad = 80;
@@ -233,11 +239,14 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     }
 
     public double getMaxY() {
+        if (!needsRecaching) {
+            //System.out.print('+');
+            return cachedMaxY;
+        }
+
         if (getPoints() == null || getPoints().isEmpty()) {
             return defaultY;
         }
-
-        System.out.print('+');
 
         double max = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
@@ -264,12 +273,27 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
 
     }
 
+    @Override
+    public int g2cy(double y) {
+        if (mapG2CY.containsKey(y)) {
+            return mapG2CY.get(y);
+        }
+        int val = super.g2cy(y);
+        mapG2CY.put(y, val);
+        return val;
+    }
+
     public double getMinY() {
+
+        if (!needsRecaching) {
+            //System.out.print('-');
+            return cachedMinY;
+        }
+
         if (getPoints() == null || getPoints().isEmpty()) {
             return -defaultY;
         }
 
-        System.out.print('-');
 
         double min = getPoints().firstEntry().getValue();
         Set<Double> keys = getPoints().keySet();
@@ -419,18 +443,20 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
 
         // Main rendering loop. Volatile images may lose their contents.
         // This loop will continually render to (and produce if necessary)
-        // volatile images
-        // until the rendering was completed successfully.
+        // volatile images until the rendering was completed successfully.
         do {
 
-            // Validate the volatile image for the graphics configuration of
-            // this
-            // component. If the volatile image doesn't apply for this graphics
-            // configuration
-            // (in other words, the hardware acceleration doesn't apply for the
-            // new device)
+            // Validate the volatile image for the graphics configuration of this
+            // component. If the volatile image doesn't apply for this graphics configuration
+            // (in other words, the hardware acceleration doesn't apply for the new device)
             // then we need to re-create it.
             GraphicsConfiguration gc = getGraphicsConfiguration();
+
+//            System.out.println("page flipping: " + gc.getBufferCapabilities().isPageFlipping()
+//            + "\nmulti buffer: " + gc.getBufferCapabilities().isMultiBufferAvailable()
+//            + "\naccelerated: " + gc.getImageCapabilities().isAccelerated()
+//            + "\ntrue volatile: "+ gc.getImageCapabilities().isTrueVolatile());
+
             int valCode = volatileImg.validate(gc);
 
             // This means the device doesn't match up to this hardware
@@ -491,6 +517,12 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     }
 
     protected void doPaint(Graphics g) {
+        mapG2CY.clear();
+        needsRecaching = true;
+        cachedMinY = getMinY();
+        cachedMaxY = getMaxY();
+        needsRecaching = false;
+
         long start = System.currentTimeMillis();
 
         Graphics2D g2 = (Graphics2D) g;
