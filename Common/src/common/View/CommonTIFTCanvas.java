@@ -662,32 +662,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         g.translate(-yLabelWidth, -translateDown);
     }
 
-    /**
-     * Draws vertical metric
-     *
-     * @param plotStep
-     * @param g the Graphics2D object to use
-     */
-    public void drawVerticalMetric(double plotStep, Graphics2D g) {
-        FontMetrics fm = g.getFontMetrics();
-        int x = 0;
-        int y = 0;
-        String label = "";
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
-        for (int i = 0; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {// horizontal
-            label = "" + Math.round(c2gy(getPlotHeight() / 2 + tPad - i * plotStep) * 10) / 10.0;
-            x = lPad - fm.stringWidth(label) - 5;
-            y = (int) (getPlotHeight() / 2 + tPad - i * plotStep) + fm.getAscent() / 2;
-            g.drawString(label, x, y);
-        }
-        for (int i = 1; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {// horizontal
-            label = "" + Math.round(c2gy(getPlotHeight() / 2 + tPad + i * plotStep) * 10) / 10.0;
-            x = lPad - fm.stringWidth(label) - 5;
-            y = (int) (getPlotHeight() / 2 + tPad + i * plotStep) + fm.getAscent() / 2;
-            g.drawString(label, x, y);
-        }
-    }
-
     private Font getTitleFont() {
         if (titleFont == null) {
             try {
