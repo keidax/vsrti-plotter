@@ -2,7 +2,6 @@ package tift.Model;
 
 import common.Model.CommonTIFTAdapter;
 
-import java.io.File;
 import java.util.TreeMap;
 
 /**
@@ -63,11 +62,11 @@ public class Adapter extends CommonTIFTAdapter {
         model.visibilityGraph.setPolar(radio);
     }
 
-    public TreeMap<Double, Double> getVisiblityGraphPoints() {
+    public TreeMap<Double, Double> getVisibilityGraphPoints() {
         return getModel().getVisibilityGraph().getPoints();
     }
 
-    public TreeMap<Double, Double> getVisiblityGraphPoints2() {
+    public TreeMap<Double, Double> getVisibilityGraphPoints2() {
         return getModel().getVisibilityGraph().getPoints2();
     }
 
@@ -86,24 +85,8 @@ public class Adapter extends CommonTIFTAdapter {
         //TODO this should check equation too, before reinitializing points
         getModel().getVisibilityGraph().setDeltaBaseline(d);
         getModel().getImageGraph().setDeltaBaseline(d);
-        model.getVisibilityGraph().reinicializePoints();
+        model.getVisibilityGraph().reinitializePoints();
         model.getVisibilityGraph().createImageGraph();
-    }
-
-    public void setSaveFile(File f) {
-        getModel().getVisibilityGraph().setSaveFile(f);
-    }
-
-    public int getExponent() {
-        return model.getVisibilityGraph().getExponent();
-    }
-
-    public void setExponent(int a) {
-        model.getVisibilityGraph().setExponent(a);
-    }
-
-    public TreeMap<Double, Double> getVisiblityGraphRms() {
-        return getModel().getVisibilityGraph().getRms();
     }
 
     public TreeMap<Double, Double> getImageGraphPoints() {
@@ -122,10 +105,6 @@ public class Adapter extends CommonTIFTAdapter {
         this.model = model;
     }
 
-    public TreeMap<Double, Double> getRms() {
-        return getModel().getVisibilityGraph().getGridedRms();
-    }
-
     public void moveVisibilityPoint(double currentPoint, double toy) {
         getModel().getVisibilityGraph().movePoint(currentPoint, toy);
     }
@@ -142,25 +121,8 @@ public class Adapter extends CommonTIFTAdapter {
         getModel().getImageGraph().movePoint2(currentPoint, toy);
     }
 
-    public void importVisibilityGraphPoints(Double[][] parseFile) {
-        getModel().getVisibilityGraph().importPoints(parseFile);
-    }
-
-    public void importVisibilityGraphRms(TreeMap<Double, Double> parseData) {
-        getModel().getVisibilityGraph().importRms(parseData);
-    }
-
-    public void importImageGraphPoints(TreeMap<Double, Double> parseFile) {
-        getModel().getImageGraph().getPoints().putAll(parseFile);
-        getModel().getImageGraph().createVisibilityGraph();
-    }
-
-    public String exportVisibilityGraphPoints() {
-        return getModel().getVisibilityGraph().toString();
-    }
-
     public void reset() {
-        getModel().getVisibilityGraph().reinicializePoints();
+        getModel().getVisibilityGraph().reinitializePoints();
     }
 
     public void fullReset() {
@@ -187,17 +149,12 @@ public class Adapter extends CommonTIFTAdapter {
     }
 
     public int getNumberOfPoints() {
-        return getModel().getVisibilityGraph().numberOfPoints;
+        return getModel().getVisibilityGraph().getNumberOfPoints();
     }
 
     public void setNumberOfPoints(int n) {
         getModel().getVisibilityGraph().setNumberOfPoints(n);
-        model.getVisibilityGraph().reinicializePoints();
+        model.getVisibilityGraph().reinitializePoints();
         model.getVisibilityGraph().createImageGraph();
-    }
-
-    public void removeRms(double i) {
-        getModel().getVisibilityGraph().getPoints().clear();
-        getModel().getVisibilityGraph().removeRms(i);
     }
 }

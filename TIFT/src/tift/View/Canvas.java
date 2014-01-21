@@ -19,7 +19,6 @@ public abstract class Canvas extends CommonTIFTCanvas {
     public View view;
     public Adapter adapter;
     final boolean amp;
-    Canvas canvas;
 
     public Canvas(View v, Adapter a, TreeMap<Double, Double> g, boolean amplitude) {
         super(a, g);

@@ -6,12 +6,14 @@ import common.Model.FFT;
 /**
  * This handles the Frequency Domain Graphs
  *
- * @author Karel Durktoa and Adam Pere
+ * @author Karel Durktoa
+ * @author Adam Pere
+ * @author Gabriel Holodak
  */
 public class ImageGraph extends Graph {
 
-    public Complex[] compl;
-    public boolean polar;
+    private Complex[] complex;
+    private boolean polar;
 
     /**
      * Non-Default Constructor
@@ -30,7 +32,7 @@ public class ImageGraph extends Graph {
      * @param numbers - new array of Complex Numbers
      */
     public void setComplex(Complex[] numbers) {
-        compl = numbers;
+        complex = numbers;
     }
 
     /**
@@ -47,11 +49,11 @@ public class ImageGraph extends Graph {
 
     /**
      * This handles the creating of the Visibility Graph (Time Domain Graphs).
-     * It does so by taking the ifft of the array of Complex Numbers and setting
+     * It does so by taking the inverse fft of the array of Complex Numbers and setting
      * the points in the Visibility Graph accordingly.
      */
     public void createVisibilityGraph() {
-        Complex[] res = FFT.fft(compl);
+        Complex[] res = FFT.fft(complex);
         model.visibilityGraph.setComplex(res);
 
         model.visibilityGraph.getPoints().clear();
@@ -80,22 +82,22 @@ public class ImageGraph extends Graph {
      * dragged on the graph. This handles the real/magnitude graphs in the
      * Frequency Domain.
      *
-     * @param currentPoint x value of point
-     * @param toy          new y value.
+     * @param currentPoint the x-value of the point to be changed
+     * @param toy the new y value.
      */
     public void movePoint(double currentPoint, double toy) {
         int n = convertXPointToIndex(currentPoint);
         if (polar) {
-            if (toy != compl[n].abs()) {
-                compl[n] = new Complex(toy * Math.cos(compl[n].phase()), toy * Math.sin(compl[n].phase()));
-                getPoints2().put(currentPoint, compl[n].phase());
-                getPoints().put(currentPoint, compl[n].abs());
+            if (toy != complex[n].abs()) {
+                complex[n] = new Complex(toy * Math.cos(complex[n].phase()), toy * Math.sin(complex[n].phase()));
+                getPoints2().put(currentPoint, complex[n].phase());
+                getPoints().put(currentPoint, complex[n].abs());
             }
         } else {
-            if (toy != compl[n].re()) {
-                compl[n] = new Complex(toy, compl[n].im());
-                getPoints2().put(currentPoint, compl[n].im());
-                getPoints().put(currentPoint, compl[n].re());
+            if (toy != complex[n].re()) {
+                complex[n] = new Complex(toy, complex[n].im());
+                getPoints2().put(currentPoint, complex[n].im());
+                getPoints().put(currentPoint, complex[n].re());
             }
         }
         createVisibilityGraph();
@@ -103,27 +105,27 @@ public class ImageGraph extends Graph {
     }
 
     /**
-     * Changes the x-value of a point. This is called when a point is clicked or
+     * Changes the y-value of a point. This is called when a point is clicked or
      * dragged on the graph. This handles the imaginary/phase graphs in the
      * Frequency Domain.
      *
-     * @param currentPoint
-     * @param toy          - new x value.
+     * @param currentPoint the x-value of the point to be changed
+     * @param toy the new y value.
      */
     public void movePoint2(double currentPoint, double toy) {
         int n = convertXPointToIndex(currentPoint);
         if (polar) {
-            if (toy != compl[n].phase()) {
-                compl[n] = new Complex(compl[n].abs() * Math.cos(toy), compl[n].abs() * Math.sin(toy));
-                getPoints2().put(currentPoint, compl[n].phase());
-                getPoints().put(currentPoint, compl[n].abs());
+            if (toy != complex[n].phase()) {
+                complex[n] = new Complex(complex[n].abs() * Math.cos(toy), complex[n].abs() * Math.sin(toy));
+                getPoints2().put(currentPoint, complex[n].phase());
+                getPoints().put(currentPoint, complex[n].abs());
             }
 
         } else {
-            if (toy != compl[n].re()) {
-                compl[n] = new Complex(compl[n].re(), toy);
-                getPoints2().put(currentPoint, compl[n].im());
-                getPoints().put(currentPoint, compl[n].re());
+            if (toy != complex[n].re()) {
+                complex[n] = new Complex(complex[n].re(), toy);
+                getPoints2().put(currentPoint, complex[n].im());
+                getPoints().put(currentPoint, complex[n].re());
             }
         }
         createVisibilityGraph();

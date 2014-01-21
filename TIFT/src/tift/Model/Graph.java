@@ -2,11 +2,13 @@ package tift.Model;
 
 import java.util.TreeMap;
 
+/**
+ * @author Gabriel Holodak
+ */
 public abstract class Graph {
 
     public TreeMap<Double, Double> points, points2;
     public double deltaBaseline = .01;
-    public int exponent = 5;
     public Model model;
 
     public Graph(Model m) {
@@ -17,24 +19,11 @@ public abstract class Graph {
 
     public void setDeltaBaseline(double b) {
         deltaBaseline = b;
-        //model.visibilityGraph.reinicializePoints();
-    }
-
-    public int getExponent() {
-        return exponent;
-    }
-
-    public void setExponent(int e) {
-        exponent = e;
-        model.visibilityGraph.reinicializePoints();
+        //model.visibilityGraph.reinitializePoints();
     }
 
     public double getDeltaBaseline() {
         return deltaBaseline;
-    }
-
-    public Graph() {
-        points = new TreeMap<Double, Double>();
     }
 
     public TreeMap<Double, Double> getPoints() {

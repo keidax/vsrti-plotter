@@ -8,7 +8,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
@@ -31,8 +31,6 @@ public class View extends JFrame implements ModelListener {
     public String iEquation = "0";
     public JLabel lEquation;
     public boolean radio;
-    public File f;
-    private JFileChooser jfc;
 
     private final JTextField fDelta, fNumber, fMinFrequency, fMaxFrequency, fMinTime, fMaxTime;
 
@@ -40,14 +38,12 @@ public class View extends JFrame implements ModelListener {
     public View(final Adapter adapter, String title) {
         super(title);
         this.adapter = adapter;
-        jfc = new JFileChooser();
-        vGraph = new VCanvas(this, adapter, adapter.getVisiblityGraphPoints(), "Magnitude", "f(t) - Magnitude", true);
-        vGraph2 = new VCanvas(this, adapter, adapter.getVisiblityGraphPoints2(), "Phase", "f(t) - Phase", false);
+        vGraph = new VCanvas(this, adapter, adapter.getVisibilityGraphPoints(), "Magnitude", "f(t) - Magnitude", true);
+        vGraph2 = new VCanvas(this, adapter, adapter.getVisibilityGraphPoints2(), "Phase", "f(t) - Phase", false);
         // "\ud835\udf08" is unicode for mathematical italic small nu
         iGraph = new FFTCanvas(this, adapter, adapter.getImageGraphPoints(), "Magnitude", "F(\ud835\udf08) - Magnitude", true);
         iGraph2 = new FFTCanvas(this, adapter, adapter.getImageGraphPoints2(), "Phase", "F(\ud835\udf08) - Phase", false);
         radio = true;
-        f = null;
 
         JPanel mainPanel, sidePanel;
 
@@ -57,9 +53,7 @@ public class View extends JFrame implements ModelListener {
 
         // BUTTONS
 
-        final JButton bSave, bOpen, bExit, bReset, bAbout, bFullReset, bInstruction, bEquation, bRadio, bUpdate;
-        bOpen = new JButton("Open file");
-        bSave = new JButton("Save file");
+        final JButton bExit, bReset, bAbout, bFullReset, bInstruction, bEquation, bRadio, bUpdate;
         bExit = new JButton("Exit");
         bReset = new JButton("Reset");
         bFullReset = new JButton("Full Reset");
@@ -328,13 +322,6 @@ public class View extends JFrame implements ModelListener {
 
         c.gridy++;
         c.gridx = 0;
-        c.gridwidth = 1;
-        sidePanel.add(bOpen, c);
-        c.gridx = 1;
-        sidePanel.add(bSave, c);
-
-        c.gridy++;
-        c.gridx = 0;
         c.gridwidth = 2;
         sidePanel.add(bEquation, c);
 
@@ -369,55 +356,6 @@ public class View extends JFrame implements ModelListener {
         sidePanel.add(bExit, c);
 
         // BUTTONS FUNCTIONS
-        bOpen.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                jfc.showOpenDialog(View.this);
-                f = jfc.getSelectedFile();
-
-                if (f == null || !f.canRead()) {
-                    return;
-                }
-                Double tm[][] = parseFile(f);
-                adapter.fullReset();
-                if (tm != null) {
-                    ;
-                    adapter.importVisibilityGraphPoints(tm);
-                }
-                lEquation.setText("Equation: ");
-            }
-        });
-
-        bSave.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                jfc.showSaveDialog(View.this);
-                File f = jfc.getSelectedFile();
-                if (f == null) {
-                    return;
-                }
-                writeIntoFile(f, adapter.exportVisibilityGraphPoints());
-            }
-
-            private void writeIntoFile(File f, String exportVisibilityGraphPoints) {
-
-                BufferedWriter out;
-
-                try {
-
-                    out = new BufferedWriter(new FileWriter(f));
-                    out.write(exportVisibilityGraphPoints);
-                    out.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
         bExit.addActionListener(new ActionListener() {
 
             @Override
@@ -433,15 +371,6 @@ public class View extends JFrame implements ModelListener {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (f != null && f.canRead()) {
-                    Double tm[][] = parseFile(f);
-                    adapter.fullReset();
-                    if (tm != null) {
-                        ;
-                        adapter.importVisibilityGraphPoints(tm);
-                    }
-                    lEquation.setText("Equation: ");
-                } else {
                     if (!(equation.equals("") || iEquation.equals(""))) {
                         try {
                             adapter.evaluate(equation, iEquation);
@@ -452,8 +381,6 @@ public class View extends JFrame implements ModelListener {
                     } else {
                         adapter.reset();
                     }
-                }
-
             }
         });
         bFullReset.addActionListener(new ActionListener() {
@@ -607,54 +534,6 @@ public class View extends JFrame implements ModelListener {
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-    }
-
-    public Double[][] parseFile(File f) {
-        Double xValue[] = new Double[128];
-        Double real[] = new Double[128];
-        Double imag[] = new Double[128];
-        try {
-            FileInputStream fstream = new FileInputStream(f);
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String strLine;
-            boolean vis = false;
-            int count = 0;
-            while ((strLine = br.readLine()) != null) {
-                if (strLine.trim().startsWith(";")) {
-                    continue;
-                }
-                if (strLine.trim().startsWith("*deltaBaseline")) {
-                    adapter.setDeltaBaseline(Double.parseDouble(strLine.split(" ")[1]));
-                } else if (strLine.trim().startsWith("*numberOfPoints")) {
-                    adapter.setNumberOfPoints(Integer.parseInt(strLine.split(" ")[1]));
-                } else if (strLine.trim().startsWith("X_Y_Real_Imaginary")) {
-                    vis = true;
-                } else if (vis) {
-                    if (strLine.trim().equals("")) {
-                        continue;
-                    }
-                    try {
-                        String[] s = strLine.split(" ");
-
-                        xValue[count] = Double.parseDouble(s[0]);
-                        real[count] = Double.parseDouble(s[1]);
-                        imag[count] = Double.parseDouble(s[2]);
-                        count++;
-                    } catch (NumberFormatException e) {
-                    }
-                }
-            }
-            in.close();
-        } catch (Exception e) {// Catch exception if any
-            System.err.println("Error: " + e.getMessage());
-        }
-
-        Double returning[][] = new Double[3][128];
-        returning[0] = xValue;
-        returning[1] = real;
-        returning[2] = imag;
-        return returning;
     }
 
     public Adapter getAdapter() {

@@ -5,6 +5,7 @@ import java.util.Vector;
 /**
  * 
  * @author Karel Durktoa
+ * @author Gabriel Holodak
  * 
  */
 public class Model {
