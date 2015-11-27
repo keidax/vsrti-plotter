@@ -271,7 +271,8 @@ public class VisibilityGraph extends Graph {
             // System.out.println("gridX("+p.getX()+"/"+getLambda()+")="+getGridX(p.getX()/getLambda()));
             al.put(p.getX() / getLambda(), p.getY());
         }
-        // System.out.println("returning " + al.size() + " datapoints from visGraph");
+        // System.out.println("returning " + al.size() + " datapoints from visGraph" +
+        //        (al.size() > 0 ? ", last is (" + al.lastEntry().getKey() + ", " + al.lastEntry().getValue() + ")" : ""));
         return al;
     }
     

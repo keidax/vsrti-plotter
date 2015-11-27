@@ -593,8 +593,7 @@ public class View extends BaseView implements ModelListener {
             double tempTheta = Double.parseDouble(fTheta.getText());
             theta = tempTheta;
         } catch (NumberFormatException e1) {}
-        
-        getVCanvas().update();
+
         update();
         
     }
