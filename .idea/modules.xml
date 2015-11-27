@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Beam_width/Beam_width.iml" filepath="$PROJECT_DIR$/Beam_width/Beam_width.iml" />
       <module fileurl="file://$PROJECT_DIR$/Common/Common.iml" filepath="$PROJECT_DIR$/Common/Common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Fourier_Transform_1/Fourier_Transform_1.iml" filepath="$PROJECT_DIR$/Fourier_Transform_1/Fourier_Transform_1.iml" />
       <module fileurl="file://$PROJECT_DIR$/Plot_Fringe_Pattern/Plot_Fringe_Pattern.iml" filepath="$PROJECT_DIR$/Plot_Fringe_Pattern/Plot_Fringe_Pattern.iml" />
       <module fileurl="file://$PROJECT_DIR$/Plot_Visibilities/Plot_Visibilities.iml" filepath="$PROJECT_DIR$/Plot_Visibilities/Plot_Visibilities.iml" />
       <module fileurl="file://$PROJECT_DIR$/SRT_Plotter/SRT_Plotter.iml" filepath="$PROJECT_DIR$/SRT_Plotter/SRT_Plotter.iml" />
