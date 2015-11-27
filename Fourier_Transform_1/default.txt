@@ -1,7 +1,0 @@
-ft1_link http://www1.union.edu/marrj/Ast240/Instructions_Fourier_Transform.html
-ft_link http://www1.union.edu/marrj/Ast240/ToolforInteractiveFourierTransforms.html
-ft_link_cosine http://www1.union.edu/marrj/Ast240/ToolforInteractiveFourierTransforms.html
-beam_link http://www1.union.edu/marrj/Ast240/Instructions_Plot_Beam.html
-fringe_link http://www1.union.edu/marrj/Ast240/Instructions_Plot_Fringe_Pattern.html
-visibility_link http://www1.union.edu/marrj/Ast240/Instructions_Plot_Visibilities.html
-SRT_Plotter http://www1.union.edu/marrj/Ast240/Instructions_SRT_Plotter.html
