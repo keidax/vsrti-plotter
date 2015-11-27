@@ -18,11 +18,14 @@
 # IntelliJ IDEA files
 # Allow .iml files and most of .idea/ directory, except user-specific
 
-.idea/workspace.xml
-.idea/tasks.xml
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/dictionaries/
+**/.idea/uiDesigner.xml
 *.eml
 
 # from the project
 old_stuff/
 data/
 VSRTI\ Plotter/Sample_data
+dist/
