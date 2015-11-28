@@ -55,7 +55,7 @@ public class FileTable extends JTable implements TableModelListener {
             @Override
             public void mouseClicked(MouseEvent arg0) {
                 if (arg0.getButton() == MouseEvent.BUTTON3) {
-                    if (!View.viewer.canDelete) {
+                    if (View.getView(FileTable.this) == null || !View.getView(FileTable.this).canDelete) {
                         return;
                     }
                     arg0.consume();
@@ -67,7 +67,7 @@ public class FileTable extends JTable implements TableModelListener {
                     item.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            if (View.viewer.canDelete) {
+                            if (View.getView(FileTable.this).canDelete) {
                                 me.delete();
                             }
                         }
@@ -86,7 +86,7 @@ public class FileTable extends JTable implements TableModelListener {
                 int c = e.getKeyCode();
                 if (c == KeyEvent.VK_DELETE || c == KeyEvent.VK_BACK_SPACE) {
                     e.consume();
-                    if (View.viewer.canDelete) {
+                    if (View.getView(FileTable.this) != null && View.getView(FileTable.this).canDelete) {
                         me.delete();
                     }
                 }

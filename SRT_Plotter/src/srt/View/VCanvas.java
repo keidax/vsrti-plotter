@@ -315,17 +315,17 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         DecimalFormat df = new DecimalFormat("#.##");
         double min = 0;
         if (xAxis.equals("Frequency")) {
-            min = View.viewer.currentNode.fStart;
+            min = View.getView(this).currentNode.fStart;
         }
         for (int i = 0; i < (getPlotWidth() - 1) / steps + 1; i++) {
             g.setColor(Color.LIGHT_GRAY);
             g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() - bPad);
             g.setColor(Color.BLACK);
             if (xAxis.equals("Frequency (MHz)") && i == 0) {
-                g.drawString(View.viewer.currentNode.fStart + "+", 0, getHeight() - 17);
+                g.drawString(View.getView(this).currentNode.fStart + "+", 0, getHeight() - 17);
             }
             if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle")) {
-                g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.viewer.min), (int) (getLeftShift() + i
+                g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.getView(this).min), (int) (getLeftShift() + i
                         * steps - xLabelWidth / 4), getHeight() - 17);
             } else {
                 g.drawString("" + df.format(i * lstep * 100 / 100.0),
@@ -629,16 +629,16 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         mCany = evt.getY();
         double p = 0;
 
-        if (View.viewer.choosingDelete && getPointOnGraph(mCanx, mCany) != null
+        if (View.getView(this).choosingDelete && getPointOnGraph(mCanx, mCany) != null
                 && evt.getButton() != MouseEvent.BUTTON2) {
             p = getPointOnGraph(mCanx, mCany);
-            if (View.viewer.deleting[(int) p - 1] != -1) {
+            if (View.getView(this).deleting[(int) p - 1] != -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p), false);
-                View.viewer.deleting[(int) p - 1] = -1;
+                View.getView(this).deleting[(int) p - 1] = -1;
 
-            } else if (View.viewer.deleting[(int) p - 1] == -1) {
+            } else if (View.getView(this).deleting[(int) p - 1] == -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p));
-                View.viewer.deleting[(int) p - 1] = 0;
+                View.getView(this).deleting[(int) p - 1] = 0;
 
             }
         }
@@ -660,21 +660,21 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         mCany = evt.getY();
         double p = 0;
         if (evt.getButton() != MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null
-                && View.viewer.choosingDelete) {
+                && View.getView(this).choosingDelete) {
             p = getVerticallyPointOnGraph(mCanx, mCany);
 
-            if (View.viewer.deleting[(int) p - 1] != -1) {
+            if (View.getView(this).deleting[(int) p - 1] != -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p), false);
-                View.viewer.deleting[(int) p - 1] = -1;
+                View.getView(this).deleting[(int) p - 1] = -1;
             }
         }
         if (evt.getButton() == MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null
-                && View.viewer.choosingDelete) {
+                && View.getView(this).choosingDelete) {
             p = getVerticallyPointOnGraph(mCanx, mCany);
 
-            if (View.viewer.deleting[(int) p - 1] == -1) {
+            if (View.getView(this).deleting[(int) p - 1] == -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p));
-                View.viewer.deleting[(int) p - 1] = 0;
+                View.getView(this).deleting[(int) p - 1] = 0;
             }
         }
     }
@@ -685,18 +685,18 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         mCanx = evt.getX();
         mCany = evt.getY();
         double min = 0;
-        if (xAxis.equals("Frequency") && View.viewer.currentNode != null) {
-            min = View.viewer.currentNode.fStart;
+        if (xAxis.equals("Frequency") && View.getView(this).currentNode != null) {
+            min = View.getView(this).currentNode.fStart;
             df = new DecimalFormat("#.###");
         }
-        if (View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order") && getPointOnGraph(mCanx, mCany) != null) {
+        if (View.getView(this).vGraph.graphTitle.equals("Averge TA vs. Order") && getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]  Data Block: "
-                    + View.viewer.taPlotted[(int) p] + ")");
+                    + View.getView(this).taPlotted[(int) p] + ")");
         } else if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle")
                 && getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
-            setToolTipText("[" + df.format(p + View.viewer.min) + "; " + df.format(getPoints().get(p)) + "]");
+            setToolTipText("[" + df.format(p + View.getView(this).min) + "; " + df.format(getPoints().get(p)) + "]");
         } else if (getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]");

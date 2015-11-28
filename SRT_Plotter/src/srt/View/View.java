@@ -1,5 +1,6 @@
 package srt.View;
 
+import com.sun.istack.internal.Nullable;
 import srt.Model.Adapter;
 import srt.Model.ModelListener;
 
@@ -26,7 +27,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public FileTable jTable;
     public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks,
             bSpectrum, bTime, bSubtract, bUndo, bBeam;
-    public static View viewer;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_SRT_Plotter.html";
     public boolean canDelete = true;
     public LinkedList list;
@@ -43,7 +43,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
     
     public View(Adapter a, String title) {
         super(title);
-        View.viewer = this;
         setAdapter(a);
         choosingDelete = false;
         list = new LinkedList();
@@ -171,16 +170,16 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                jfc.showOpenDialog(View.viewer);
+                jfc.showOpenDialog(View.this);
                 File f = jfc.getSelectedFile();
                 if (f == null || !f.canRead()) {
                     return;
                 }
                 choosingDelete = false;
                 bDelete.setText("Delete Channels");
-                View.viewer.lDelta.setText("");
-                viewer.tableModel.removeAllInputFiles();
-                viewer.parseFile(f);
+                View.this.lDelta.setText("");
+                View.this.tableModel.removeAllInputFiles();
+                View.this.parseFile(f);
                 jTable.changeSelection(0, 0, false, false);
                 jTable.updateGraph();
                 jScroll.updateUI();
@@ -309,10 +308,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                View.viewer.lDelta.setText("");
-                viewer.vGraph.xAxis = "Frequency (MHz)";
-                viewer.vGraph.graphTitle = "Spectrum: Antenna Temperature vs. Frequency";
-                viewer.jTable.plotSpectrum();
+                View.this.lDelta.setText("");
+                View.this.vGraph.xAxis = "Frequency (MHz)";
+                View.this.vGraph.graphTitle = "Spectrum: Antenna Temperature vs. Frequency";
+                View.this.jTable.plotSpectrum();
                 
             }
         });
@@ -372,15 +371,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             JOptionPane.showMessageDialog(null, "You must select one or more data blocks..");
                             return;
                         }
-                        viewer.vGraph.xAxis = "Data Block";
-                        viewer.vGraph.graphTitle = "Averge TA vs. Order";
+                        View.this.vGraph.xAxis = "Data Block";
+                        View.this.vGraph.graphTitle = "Averge TA vs. Order";
                         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-                        viewer.vGraph.points.clear();
+                        View.this.vGraph.points.clear();
                         
                         for (int i = 0; i < taPlotted.length; i++) {
-                            points.put(i + 0.0, viewer.list.getNode(taPlotted[i]).getAverageOverFrequency());
+                            points.put(i + 0.0, View.this.list.getNode(taPlotted[i]).getAverageOverFrequency());
                         }
-                        viewer.adapter.importVisibilityGraphPoints(points);
+                        View.this.adapter.importVisibilityGraphPoints(points);
                         
                         jTable.clearSelection();
                         jTable.changeSelection(taPlotted[0], 0, true, false);
@@ -403,7 +402,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 jf.setPreferredSize(new Dimension(600, 400));
                 JButton enter = new JButton("Cancel");
                 JButton select = new JButton("Select");
-                TableModel t = new TableModel(View.viewer, list, 3);
+                TableModel t = new TableModel(View.this, list, 3);
                 final FileTable table = new FileTable(t);
                 tableModel.supreme = table;
                 JScrollPane jSC = new JScrollPane(table);
@@ -501,9 +500,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     public void actionPerformed(ActionEvent arg0) {
                         
                         if (table.plotBeam()) {
-                            View.viewer.lDelta.setText("");
-                            viewer.vGraph.xAxis = "Angle (degrees)";
-                            viewer.vGraph.graphTitle = "Beam Width: Average Antenna Temperature vs. Angle";
+                            View.this.lDelta.setText("");
+                            View.this.vGraph.xAxis = "Angle (degrees)";
+                            View.this.vGraph.graphTitle = "Beam Width: Average Antenna Temperature vs. Angle";
                             jf.setVisible(false);
                             canDelete = true;
 
@@ -531,8 +530,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 }
                 if (opt == 0)// yes
                 {
-                    View.viewer.lDelta.setText("");
-                    jfc.showSaveDialog(View.viewer);
+                    View.this.lDelta.setText("");
+                    jfc.showSaveDialog(View.this);
                     f = jfc.getSelectedFile();
                     if (f == null) {
                         return;
@@ -540,8 +539,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     writeIntoFile(f, currentNode.toString());
                 } else if (opt == 1) // no
                 {
-                    View.viewer.lDelta.setText("");
-                    jfc.showSaveDialog(View.viewer);
+                    View.this.lDelta.setText("");
+                    jfc.showSaveDialog(View.this);
                     f = jfc.getSelectedFile();
                     if (f == null) {
                         return;
@@ -650,7 +649,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             
                             title = title.substring(0, title.length() - 2);
                             list.insertAtTail(new ListNode(title, data, nodes[0].fStart, nodes[0].fStep));
-                            View.viewer.jTable.addNotify();
+                            View.this.jTable.addNotify();
                             jTable.clearSelection();
                             jTable.changeSelection(jTable.getRowCount() - 1, 0, true, false);
                             jTable.updateGraph();
@@ -677,7 +676,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     JOptionPane.showMessageDialog(null,
                             "You must select a data block before you can find its average over frequency.");
                 } else {
-                    View.viewer.lDelta.setText("Average Over Frequency: "
+                    View.this.lDelta.setText("Average Over Frequency: "
                             + df.format(currentNode.getAverageOverFrequency()));
                 }
             }
@@ -695,11 +694,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                View.viewer.lDelta.setText("");
+                View.this.lDelta.setText("");
                 choosingDelete = false;
                 bSelectEnd.setText("Delete End Channels");
-                if (View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order")) {
+                if (View.this.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.this.vGraph.graphTitle.equals("Averge TA vs. Order")) {
                     return;
                 }
                 choosingDelete = false;
@@ -724,9 +723,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                View.viewer.lDelta.setText("");
-                if (View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order")) {
+                View.this.lDelta.setText("");
+                if (View.this.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.this.vGraph.graphTitle.equals("Averge TA vs. Order")) {
                     return;
                 }
                 if (currentNode == null) {
@@ -757,8 +756,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (currentNode == null
-                        || View.viewer.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.viewer.vGraph.graphTitle.equals("Averge TA vs. Order")) {
+                        || View.this.vGraph.graphTitle.equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.this.vGraph.graphTitle.equals("Averge TA vs. Order")) {
                     return;
                 }
                 for (int i = 0; i < currentNode.data.length; i++) {
@@ -1105,5 +1104,22 @@ public class View extends JFrame implements ModelListener, ActionListener {
         } else {
             return 2.0;
         }
+    }
+
+    /**
+     * Return the View object that the given container is a child of. May return
+     * null if the top-level parent is not an instance of View.
+     * @param c a child component of a View object (may be many levels deep)
+     * @return a reference to a View object, or null
+     */
+    @Nullable
+    public static View getView(Container c){
+        while(c.getParent() != null){
+            c = c.getParent();
+        }
+        if(c instanceof View){
+            return (View)c;
+        }
+        return null;
     }
 }
