@@ -87,5 +87,14 @@ public class ViewUtilities {
         }
         return shortName;
     }
+
+    /**
+     * Utility function for SRT_Plotter
+     * @param freq Frequency in MHz
+     * @return Velocity in km/s
+     */
+    public static double frequencyToVelocity(double freq) {
+        return ((1420.406 - freq)/1420.406) * 3e5;
+    }
     
 }

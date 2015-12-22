@@ -16,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelListener;
 
+import common.View.ViewUtilities;
+
 /**
  * 
  * @author Adam Pere and Karel Durkota
@@ -136,6 +138,38 @@ public class FileTable extends JTable implements TableModelListener {
             
         }
     }
+
+    /**
+     * Plots the velocity of the selected data block on x-axis.
+     */
+    public void plotVelocity() {
+        int[] index = me.getSelectedRows();
+
+        if (index.length <= 0 || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
+            JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
+            return;
+        }
+        ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
+
+        double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
+        double start = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
+        double step = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
+        TreeMap<Double, Double> points = new TreeMap<Double, Double>();
+
+        double velOffset = ViewUtilities.frequencyToVelocity(start);
+
+
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] >= 0) {
+                double freq = start + i * step;
+                points.put(ViewUtilities.frequencyToVelocity(freq) - velOffset, data[i]);
+            }
+        }
+
+        ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms().clear();
+        ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
+        ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
+    }
     
     /**
      * Plots the spectrum of the selected data block. That is Temperature vs.
@@ -151,7 +185,6 @@ public class FileTable extends JTable implements TableModelListener {
         ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
         
         double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
-        // double start = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
         double step = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
         

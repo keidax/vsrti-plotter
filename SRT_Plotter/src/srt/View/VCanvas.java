@@ -12,13 +12,9 @@ import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.TreeMap;
 
+import common.View.*;
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
 import srt.Model.Adapter;
-
-import common.View.AbstractOrnament;
-import common.View.CircleOrnament;
-import common.View.SquareOrnament;
-import common.View.TriangleOrnament;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -42,7 +38,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
     protected String xAxis = "x-axis";
     protected String yAxis = "y-axis";
     protected String graphTitle = "Untitled";
-    protected double maxX = 40;
+    protected double xRange = 40;
     protected JFileChooser fileChooser;
 
     
@@ -287,7 +283,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
 
     public int g2cx(double x) {
         double ratio = getRatioX();
-        return (int) (x * ratio) + getLeftShift();
+        return (int) ((x - getPoints().firstKey()) * ratio) + getLeftShift();
     }
 
     public int g2cy(double y) {
@@ -313,17 +309,18 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         double lstep = countHorizontalLabelStep();
         g.setFont(new Font(g.getFont().getFontName(), 0, 11));
         DecimalFormat df = new DecimalFormat("#.##");
-        double min = 0;
-        if (xAxis.equals("Frequency")) {
-            min = View.getView(this).currentNode.fStart;
+
+        if (xAxis.startsWith("Frequency (MHz)")) {
+            g.drawString(View.getView(this).currentNode.fStart + "+", 0, getHeight() - 17);
+        } else if(xAxis.startsWith("Velocity (km/s")) {
+            g.drawString(ViewUtilities.frequencyToVelocity(View.getView(this).currentNode.fStart) + "+", 0, getHeight() - 17);
         }
+
         for (int i = 0; i < (getPlotWidth() - 1) / steps + 1; i++) {
             g.setColor(Color.LIGHT_GRAY);
             g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() - bPad);
             g.setColor(Color.BLACK);
-            if (xAxis.equals("Frequency (MHz)") && i == 0) {
-                g.drawString(View.getView(this).currentNode.fStart + "+", 0, getHeight() - 17);
-            }
+
             if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle")) {
                 g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.getView(this).min), (int) (getLeftShift() + i
                         * steps - xLabelWidth / 4), getHeight() - 17);
@@ -471,7 +468,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
      */
     public double countHorizontalLabelStep() {// NOT FINISHED
         int count = getPlotWidth() / squareWidth + 1;
-        double max = getMaxX();
+        double max = getXRange();
         return max / count;
     }
 
@@ -509,7 +506,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         if (getPoints() == null) {
             return (double) getPlotWidth() / (double) countMax(defaultY);
         }
-        return getPlotWidth() / getMaxX();
+        return getPlotWidth() / getXRange();
     }
 
     public double getRatioY() {
@@ -535,16 +532,16 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         return getMaxYPoint();
     }
 
-    public double getMaxX() {
+    public double getXRange() {
         if (getPoints() == null || getPoints().size() == 0) {
-            maxX = defaultY;
+            xRange = defaultY;
             return defaultY;
         }
-        maxX = getPoints().lastKey();
-        if (xAxis.equals("Frequency (MHz)")) {
-            return getPoints().lastKey();
+        xRange = Math.abs(getPoints().lastKey() - getPoints().firstKey());
+        if (xAxis.equals("Frequency (MHz)") || xAxis.equals("Velocity (km/s)")) {
+            return xRange;
         } else {
-            return Math.ceil(maxX / (getPlotWidth() / squareWidth + 1)) * (getPlotWidth() / squareWidth + 1);
+            return Math.ceil(xRange / (getPlotWidth() / squareWidth + 1)) * (getPlotWidth() / squareWidth + 1);
             // return this.getPoints().lastKey();
         }
     }

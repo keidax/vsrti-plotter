@@ -25,8 +25,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public JButton exit;
     public TableModel tableModel;
     public FileTable jTable;
-    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks,
-            bSpectrum, bTime, bSubtract, bUndo, bBeam;
+    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks, bTime,
+            bSubtract, bUndo, bBeam;
+    public JComboBox cbPlot;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_SRT_Plotter.html";
     public boolean canDelete = true;
     public LinkedList list;
@@ -67,13 +68,13 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
         bAvgBlocks = new JButton("Average Blocks of Data");
-        bSpectrum = new JButton("Plot Spectrum");
         bTime = new JButton("Plot Average TA vs. Order");
         bSubtract = new JButton("Subtract Background");
         bUndo = new JButton("Undo Delete");
         bBeam = new JButton("Plot Beam");
         lDelta = new JLabel("");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Select a data block to plot.</HTML>");
+        cbPlot = new JComboBox(new String[]{"Plot Channels", "Plot Spectrum", "Plot Velocity"});
         
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
@@ -148,7 +149,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jButtons3.add(bAvgFreq);
         jButtons3.add(bBeam);
         jButtons.add(bOpen);
-        jButtons4.add(bSpectrum);
+        jButtons4.add(cbPlot);
         
         jButtons.add(bSave);
         
@@ -304,15 +305,26 @@ public class View extends JFrame implements ModelListener, ActionListener {
             }
         });
         
-        bSpectrum.addActionListener(new ActionListener() {
+        cbPlot.addActionListener(new ActionListener() {
             
             @Override
-            public void actionPerformed(ActionEvent arg0) {
-                View.this.lDelta.setText("");
-                View.this.vGraph.xAxis = "Frequency (MHz)";
-                View.this.vGraph.graphTitle = "Spectrum: Antenna Temperature vs. Frequency";
-                View.this.jTable.plotSpectrum();
-                
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                String plotType = (String)cb.getSelectedItem();
+
+                if(plotType.equals("Plot Channels")) {
+
+                } else if(plotType.equals("Plot Spectrum")){
+                    View.this.lDelta.setText("");
+                    View.this.vGraph.xAxis = "Frequency (MHz)";
+                    View.this.vGraph.graphTitle = "Spectrum: Antenna Temperature vs. Frequency";
+                    View.this.jTable.plotSpectrum();
+                } else if(plotType.equals("Plot Velocity")) {
+                    View.this.lDelta.setText("");
+                    View.this.vGraph.xAxis = "Velocity (km/s)";
+                    //View.this.vGraph.graphTitle = "Spectrum: Antenna Temperature vs. Frequency";
+                    View.this.jTable.plotVelocity();
+                }
             }
         });
         
