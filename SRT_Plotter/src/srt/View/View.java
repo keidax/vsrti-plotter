@@ -1,6 +1,5 @@
 package srt.View;
 
-import com.sun.istack.internal.Nullable;
 import srt.Model.Adapter;
 import srt.Model.ModelListener;
 
@@ -1127,7 +1126,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
      * @param c a child component of a View object (may be many levels deep)
      * @return a reference to a View object, or null
      */
-    @Nullable
     public static View getView(Container c){
         while(c.getParent() != null){
             c = c.getParent();
