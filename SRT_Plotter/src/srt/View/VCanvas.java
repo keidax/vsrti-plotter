@@ -538,12 +538,8 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
             return defaultY;
         }
         xRange = Math.abs(getPoints().lastKey() - getPoints().firstKey());
-        if (xAxis.equals("Frequency (MHz)") || xAxis.equals("Velocity (km/s)")) {
-            return xRange;
-        } else {
-            return Math.ceil(xRange / (getPlotWidth() / squareWidth + 1)) * (getPlotWidth() / squareWidth + 1);
-            // return this.getPoints().lastKey();
-        }
+        return xRange;
+//        return Math.ceil(xRange);
     }
 
     public int getLeftShift() {

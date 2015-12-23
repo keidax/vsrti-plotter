@@ -313,7 +313,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 String plotType = (String)cb.getSelectedItem();
 
                 if(plotType.equals("Plot Channels")) {
-
+                    View.this.lDelta.setText("");
+                    View.this.vGraph.xAxis = "Channels";
+                    View.this.vGraph.graphTitle = "Antenna Temperature vs. Channel";
+                    View.this.jTable.updateGraph();
                 } else if(plotType.equals("Plot Spectrum")){
                     View.this.lDelta.setText("");
                     View.this.vGraph.xAxis = "Frequency (MHz)";
@@ -322,7 +325,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 } else if(plotType.equals("Plot Velocity")) {
                     View.this.lDelta.setText("");
                     View.this.vGraph.xAxis = "Velocity (km/s)";
-                    //View.this.vGraph.graphTitle = "Spectrum: Antenna Temperature vs. Frequency";
+                    View.this.vGraph.graphTitle = "Antenna Temperature vs. Velocity";
                     View.this.jTable.plotVelocity();
                 }
             }

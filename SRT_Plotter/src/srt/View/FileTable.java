@@ -115,8 +115,6 @@ public class FileTable extends JTable implements TableModelListener {
      * This is necessary if any points are deleted or changed.
      */
     public void updateGraph() {
-        ((TableModel) me.getModel()).viewer.vGraph.graphTitle = "Antenna Temperature vs. Channel";
-        ((TableModel) me.getModel()).viewer.vGraph.xAxis = "Channels";
         int[] index = me.getSelectedRows();
         ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
         
