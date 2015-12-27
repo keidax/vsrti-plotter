@@ -32,7 +32,7 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
     public CommonRootCanvas() {
         
     }
-    
+
     public String getGraphTitle() {
         return graphTitle;
     }
@@ -88,13 +88,29 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
         return getHeight() - tPad - bPad;
     }
     
-    public abstract double getMinX();
+    protected abstract double getMinX();
     
-    public abstract double getMinY();
+    protected abstract double getMinY();
     
     protected abstract double getMaxX();
     
     protected abstract double getMaxY();
+
+    public String getXAxisTitle() {
+        return xAxisTitle;
+    }
+
+    public void setXAxisTitle(String xAxisTitle) {
+        this.xAxisTitle = xAxisTitle;
+    }
+
+    public String getYAxisTitle() {
+        return yAxisTitle;
+    }
+
+    public void setYAxisTitle(String yAxisTitle) {
+        this.yAxisTitle = yAxisTitle;
+    }
 
     public double getXSpacing() {
         // determine spacing for marks on x-axis

@@ -20,24 +20,18 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 @SuppressWarnings("serial")
-public class VCanvas extends JPanel implements MouseListener, MouseMotionListener {
+public class VCanvas extends CommonRootCanvas {
 
-    public TreeMap<Double, Double> points;
     public View view;
     public Adapter adapter;
-    protected int lPad = 20, rPad = 30, tPad = 30, bPad = 40;
     protected static int[] steps = {1, 2, 5};
-    protected static int squareWidth = 30;
-    protected static int yLabelWidth = 40;
-    protected static int xLabelWidth = 30;
+    protected int squareWidth = 30;
+    protected int xLabelWidth = 30;
+    protected static int defaultX = 9;
     protected static int defaultY = 9;
     protected int mCanx, mCany;
     protected Double currentPoint;
     protected VolatileImage volatileImg;
-    protected final JPopupMenu menu = new JPopupMenu();
-    protected String xAxis = "x-axis";
-    protected String yAxis = "y-axis";
-    protected String graphTitle = "Untitled";
     protected double xRange = 40;
     protected JFileChooser fileChooser;
 
@@ -56,6 +50,13 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         fileChooser = new JFileChooser();
         setSize(new Dimension(200, 50));
         setVisible(true);
+
+        lPad = 20;
+        rPad = 30;
+        tPad = 30;
+        bPad = 40;
+
+        yLabelWidth = 40;
 
         JMenuItem item = new JMenuItem("Save as JPEG");
         JMenuItem item2 = new JMenuItem("Save as EPS");
@@ -179,8 +180,8 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
 
 
         dataPoints = adapter.getVisibilityGraphDataPoints();
-        xAxis = "Channel";
-        yAxis = "Antenna Temperature (K)";
+        xAxisTitle = "Channel";
+        yAxisTitle = "Antenna Temperature (K)";
         graphTitle = "Antenna Temperature vs. Channel";
     }
     
@@ -248,22 +249,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         this.currentPoint = currentPoint;
     }
 
-    /**
-     *
-     * @return tree map of points
-     */
-    public TreeMap<Double, Double> getPoints() {
-        return points;
-    }
-
-    /**
-     * Sets the points
-     */
-    public void setPoints(TreeMap<Double, Double> points) {
-        this.points = points;
-    }
-
-    /**
+       /**
      * Draws all points to the inputed graphics
      */
     public void drawDataSet(int count, Graphics2D g) {
@@ -291,7 +277,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         return (int) (getPlotHeight() - y * ratio);
     }
 
-    public double c2gx(int x) {
+    public double c2gx(double x) {
         double ratio = getRatioX();
         return (x - getLeftShift()) / ratio;
     }
@@ -310,9 +296,9 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         g.setFont(new Font(g.getFont().getFontName(), 0, 11));
         DecimalFormat df = new DecimalFormat("#.##");
 
-        if (xAxis.startsWith("Frequency (MHz)")) {
+        if (xAxisTitle.startsWith("Frequency (MHz)")) {
             g.drawString(View.getView(this).currentNode.fStart + "+", 0, getHeight() - 17);
-        } else if(xAxis.startsWith("Velocity (km/s")) {
+        } else if(xAxisTitle.startsWith("Velocity (km/s")) {
             g.drawString(ViewUtilities.frequencyToVelocity(View.getView(this).currentNode.fStart) + "+", 0, getHeight() - 17);
         }
 
@@ -330,7 +316,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
             }
 
         }
-        g.drawString(" " + xAxis + " ", getLeftShift() + getPlotWidth() / 2, getHeight() - 2);
+        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2, getHeight() - 2);
     }
 
     /**
@@ -341,7 +327,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         drawVerticalLine(lPad + (count / 2 + 1) * yLabelWidth, countVerticalStep(), g);
         g.setColor(colors[count % colors.length]);
         drawVerticalMetric(lPad, countVerticalLabelStep(), countVerticalStep(), g);
-        drawVerticalLabel(count / 2 * yLabelWidth + 5, " " + yAxis, g);
+        drawVerticalLabel(count / 2 * yLabelWidth + 5, " " + yAxisTitle, g);
     }
 
     /**
@@ -504,7 +490,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
 
     public double getRatioX() {
         if (getPoints() == null) {
-            return (double) getPlotWidth() / (double) countMax(defaultY);
+            return (double) getPlotWidth() / (double) countMax(defaultX);
         }
         return getPlotWidth() / getXRange();
     }
@@ -532,14 +518,30 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         return getMaxYPoint();
     }
 
-    public double getXRange() {
-        if (getPoints() == null || getPoints().size() == 0) {
-            xRange = defaultY;
-            return defaultY;
+    public double getMinY() {
+        if (getPoints().isEmpty()) {
+            return 0;
         }
-        xRange = Math.abs(getPoints().lastKey() - getPoints().firstKey());
+        return 0.0;
+    }
+
+    protected double getXRange() {
+        xRange = Math.abs(getMaxX() - getMinX());
         return xRange;
-//        return Math.ceil(xRange);
+    }
+
+    protected double getMaxX() {
+        if (getPoints() == null || getPoints().size() == 0) {
+            return defaultX;
+        }
+        return getPoints().lastKey();
+    }
+
+    protected double getMinX() {
+        if (getPoints() == null || getPoints().size() == 0) {
+            return 0.0;
+        }
+        return getPoints().firstKey();
     }
 
     public int getLeftShift() {
@@ -678,7 +680,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
         mCanx = evt.getX();
         mCany = evt.getY();
         double min = 0;
-        if (xAxis.equals("Frequency") && View.getView(this).currentNode != null) {
+        if (xAxisTitle.equals("Frequency") && View.getView(this).currentNode != null) {
             min = View.getView(this).currentNode.fStart;
             df = new DecimalFormat("#.###");
         }

@@ -116,7 +116,7 @@ public class FileTable extends JTable implements TableModelListener {
      */
     public void updateGraph() {
         int[] index = me.getSelectedRows();
-        ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
+        ((TableModel) me.getModel()).viewer.getVGraph().getPoints().clear();
         
         if (index.length > 0 && ((TableModel) me.getModel()).getRowCount() > index[0]) {
             double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
@@ -147,7 +147,7 @@ public class FileTable extends JTable implements TableModelListener {
             JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
             return;
         }
-        ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
+        ((TableModel) me.getModel()).viewer.getVGraph().getPoints().clear();
 
         double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
         double start = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
@@ -180,7 +180,7 @@ public class FileTable extends JTable implements TableModelListener {
             JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
             return;
         }
-        ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
+        ((TableModel) me.getModel()).viewer.getVGraph().getPoints().clear();
         
         double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
         double step = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
@@ -208,7 +208,7 @@ public class FileTable extends JTable implements TableModelListener {
             JOptionPane.showMessageDialog(null, "You must select at least one data block to plot the beam width.");
             return false;
         }
-        ((TableModel) me.getModel()).viewer.getVGraph().points.clear();
+        ((TableModel) me.getModel()).viewer.getVGraph().getPoints().clear();
         
         double avg = 0;
         double angle = 0;
