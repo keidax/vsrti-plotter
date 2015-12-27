@@ -37,7 +37,6 @@ public class VCanvas extends CommonVSRTICanvas {
     protected double defaultXRight = 25;
     protected Double currentPoint;
     protected VolatileImage volatileImg;
-    final JPopupMenu menu = new JPopupMenu();
     private JFileChooser fileChooser;
     /**
      * determines the size of the title
@@ -331,13 +330,6 @@ public class VCanvas extends CommonVSRTICanvas {
 
     public void setView(View view) {
         this.view = view;
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            menu.show(this, e.getX(), e.getY());
-        }
     }
 
     @Override

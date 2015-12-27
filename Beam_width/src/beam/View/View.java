@@ -46,7 +46,7 @@ import common.View.ViewUtilities;
 @SuppressWarnings("serial")
 public class View extends BaseView implements Observer {
     
-    private VCanvas vCanvas;
+    private Canvas canvas;
     private TableModel tableModel;
     private FileTable jTable;
     public JTextField fD, fLambda, fSigma, fNoise, fHorizontalError, fPeakValue;
@@ -64,9 +64,9 @@ public class View extends BaseView implements Observer {
         tableModel = new TableModel();
         jTable = new FileTable(tableModel, this);
         
-        vCanvas = new VCanvas(this, new TreeMap<Double, Double>());
+        canvas = new Canvas(this, new TreeMap<Double, Double>());
         
-        vCanvas.setSize(300, 100);
+        canvas.setSize(300, 100);
         
         JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons5, jRadioButtons, jThetaMax, jLabels, jFields;
         
@@ -125,7 +125,7 @@ public class View extends BaseView implements Observer {
         row1.add(row1col2);
         row1col1.setPreferredSize(new Dimension(600, 500));
         row1col1.setMinimumSize(new Dimension(300, 300));
-        row1col1.add(vCanvas);
+        row1col1.add(canvas);
         row1col2.setMaximumSize(new Dimension(200, 650));
         row1col2.add(jScroll);
         row1col2.add(Box.createRigidArea(new Dimension(5, 20)));
@@ -239,7 +239,7 @@ public class View extends BaseView implements Observer {
         FileDrop fileDrop = new FileDrop(jTable, new FileDrop.Listener() {
             @Override
             public void filesDropped(java.io.File[] files) {
-                vCanvas.setGraphTitle("Beam (" + ViewUtilities.getShortFileName(files[0]) + ")");
+                canvas.setGraphTitle("Beam (" + ViewUtilities.getShortFileName(files[0]) + ")");
                 for (int i = 0; i < files.length; i++) {
                     if (InputFile.isFormatCorrect(files[i])) {
                         tableModel.addInputFile(new InputFile(files[i]));
@@ -444,7 +444,7 @@ public class View extends BaseView implements Observer {
         fNoise.setText(model.getNoise() + "");
         fD.setText(model.getDiameter() + "");
         fHorizontalError.setText(model.getHorizontalError() + "");
-        vCanvas.repaint();
+        canvas.repaint();
         repaint();
     }
     
@@ -452,7 +452,7 @@ public class View extends BaseView implements Observer {
         return jTable;
     }
     
-    public VCanvas getCanvas() {
-        return vCanvas;
+    public Canvas getCanvas() {
+        return canvas;
     }
 }

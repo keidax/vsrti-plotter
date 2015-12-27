@@ -25,7 +25,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
     public TreeMap<Double, Double> points;
     public View view;
     public Adapter adapter;
-    protected static int lPad = 20, rPad = 30, tPad = 30, bPad = 40;
+    protected int lPad = 20, rPad = 30, tPad = 30, bPad = 40;
     protected static int[] steps = {1, 2, 5};
     protected static int squareWidth = 30;
     protected static int yLabelWidth = 40;
@@ -34,7 +34,7 @@ public class VCanvas extends JPanel implements MouseListener, MouseMotionListene
     protected int mCanx, mCany;
     protected Double currentPoint;
     protected VolatileImage volatileImg;
-    final JPopupMenu menu = new JPopupMenu();
+    protected final JPopupMenu menu = new JPopupMenu();
     protected String xAxis = "x-axis";
     protected String yAxis = "y-axis";
     protected String graphTitle = "Untitled";

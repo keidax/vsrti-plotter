@@ -26,17 +26,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
+import common.View.*;
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
-
-import common.View.CommonVSRTICanvas;
-import common.View.ViewUtilities;
 
 /**
  * Base class for graphs
  */
 
 @SuppressWarnings("serial")
-public abstract class Canvas extends CommonVSRTICanvas {
+public class Canvas extends CommonVSRTICanvas {
     
     public View view;
     
@@ -50,12 +48,13 @@ public abstract class Canvas extends CommonVSRTICanvas {
     protected double defaultXRight = 45;
     protected int mCanx, mCany;
     protected Double currentPoint;
-    protected Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
-    final JPopupMenu menu = new JPopupMenu();
     protected int mouseButton = 0;
     protected double maxX = 40;
     private JFileChooser fileChooser;
+
+    protected AbstractOrnament[] ornaments = {new CircleOrnament(3), new SquareOrnament(3)};
+    protected Color[] colors = {Color.BLUE, Color.BLACK};
     
     /**
      * determines the size of the title
@@ -73,6 +72,10 @@ public abstract class Canvas extends CommonVSRTICanvas {
         rPad = 30;
         tPad = 50;
         bPad = 60;
+        xAxisTitle = "Angle (degrees)";
+        yAxisTitle = "Power";
+        graphTitle = "Beam";
+
         setSize(new Dimension(200, 50));
         setVisible(true);
         fileChooser = new JFileChooser();
@@ -197,36 +200,48 @@ public abstract class Canvas extends CommonVSRTICanvas {
         menu.add(item);
         menu.add(item2);
     }
-    
-    public TreeMap<Double, Double> getPoints() {
-        return points;
-    }
-    
-    public void setPoints(TreeMap<Double, Double> points) {
-        this.points = points;
-    }
-    
+
     public void drawDataSet(Graphics2D g) {
-        if (points.size() == 0) {
+        TreeMap<Double, Double> currentPoints = view.getModel().getPoints();
+        if (currentPoints.size() == 0) {
             return;
         }
-        Set<Double> keys = points.keySet();
-        Double previousKey = points.firstKey();
+        Set<Double> keys = currentPoints.keySet();
+        Double previousKey = currentPoints.firstKey();
         for (Double key : keys) {
-            if (Math.abs(key) > 40) {
-                continue;
-            }
             g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(strokeSize));
-            g.drawLine(g2cx(previousKey), g2cy(points.get(previousKey)), g2cx(key), g2cy(points.get(key)));
+            g.drawLine(g2cx(previousKey), g2cy(currentPoints.get(previousKey)), g2cx(key), g2cy(currentPoints.get(key)));
             previousKey = key;
-            System.out.println("point at " + key + " - ");
-            drawPoint(g, key, points.get(key));
+            drawPoint(g, key, currentPoints.get(key));
+            if (view.getModel().getRms().containsKey(key)) {
+                drawRms(g, key, currentPoints.get(key));
+            }
+            if (view.getModel().getHorizontalError() > 0) {
+                drawHorizontalError(g, key, currentPoints.get(key));
+            }
         }
-        
     }
-    
-    public void drawPoint(Graphics2D g, double x, double y) {}
+
+    public void drawRms(Graphics2D g, double x, double y) {
+        double upperY = y + view.getModel().getRms().get(x).doubleValue() * view.getModel().getDisplayFactor() / 2;
+        double lowerY = y - view.getModel().getRms().get(x).doubleValue() * view.getModel().getDisplayFactor() / 2;
+        g.drawLine(g2cx(x), g2cy(lowerY), g2cx(x), g2cy(upperY));
+        g.drawLine(g2cx(x) - 1, g2cy(lowerY), g2cx(x) + 1, g2cy(lowerY));
+        g.drawLine(g2cx(x) - 1, g2cy(upperY), g2cx(x) + 1, g2cy(upperY));
+    }
+
+    public void drawHorizontalError(Graphics2D g, double x, double y) {
+        double leftX = x - view.getModel().getHorizontalError();
+        double rightX = x + view.getModel().getHorizontalError();
+        g.drawLine(g2cx(leftX), g2cy(y), g2cx(rightX), g2cy(y));
+        g.drawLine(g2cx(leftX), g2cy(y) + 1, g2cx(leftX), g2cy(y) - 1);
+        g.drawLine(g2cx(rightX), g2cy(y) + 1, g2cx(rightX), g2cy(y) - 1);
+    }
+
+    public void drawPoint(Graphics2D g, double x, double y) {
+        g.setColor(colors[0]);
+        ornaments[1].draw(g, g2cx(x), g2cy(y));
+    }
     
     public double countVerticalStep() {// NOT FINISHED
         /*
@@ -350,8 +365,11 @@ public abstract class Canvas extends CommonVSRTICanvas {
     public Double getCurrentPoint() {
         return currentPoint;
     }
-    
+
     public void setCurrentPoint(Double currentPoint) {
+        try {
+            view.removeRmsPoint(currentPoint);
+        } catch (NullPointerException e) {}
         this.currentPoint = currentPoint;
     }
     
@@ -361,13 +379,6 @@ public abstract class Canvas extends CommonVSRTICanvas {
     
     public void setColors(Color[] colors) {
         this.colors = colors;
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            menu.show(this, e.getX(), e.getY());
-        }
     }
     
     @Override

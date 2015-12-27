@@ -1,16 +1,13 @@
 package common.View;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 
 @SuppressWarnings("serial")
 public abstract class CommonVSRTICanvas extends CommonRootCanvas {
-    
-    /**
-     * determines the size of the axis labels and numbers
-     */
-    protected int fontSize = 20;
+
     protected int strokeSize = 5;
     
     public CommonVSRTICanvas() {
@@ -20,38 +17,17 @@ public abstract class CommonVSRTICanvas extends CommonRootCanvas {
     
     public void drawXAxis(Graphics2D g) {
         g.setStroke(new BasicStroke(strokeSize));
-        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+        g.setFont(getNormalFont());
         DecimalFormat df = new DecimalFormat("#.#");
         FontMetrics fm = g.getFontMetrics();
-        
-        // determine spacing for marks on x-axis
-        double xSpacing = 1;
-        double pixelsPerNumber = this.getPlotWidth() * 1.0 / (getMaxX() - getMinX());
-        if (pixelsPerNumber > 200) {
-            xSpacing = 0.2;
-        } else if (pixelsPerNumber > 100) {
-            xSpacing = 0.5;
-        } else if (pixelsPerNumber > 35) {
-            xSpacing = 1;
-        } else if (pixelsPerNumber > 25) {
-            xSpacing = 2;
-        } else if (pixelsPerNumber > 8) {
-            xSpacing = 5;
-        } else if (pixelsPerNumber > 3.5) {
-            xSpacing = 10;
-        } else {
-            xSpacing = 15;
-        }
-        
+
+        double xSpacing = getXSpacing();
+
         // draw axis title
         g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
                 getHeight() - 10);
         // draw horizontal axis
         g.drawLine(getLPad(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
-        
-        // draw vertical line at theta=0
-        g.setColor(Color.LIGHT_GRAY);
-        g.drawLine(g2cx(0), tPad, g2cx(0), getHeight() - bPad);
         
         for (double i = (int) ((int) (getMinX() / xSpacing) * xSpacing); i <= getMaxX(); i += xSpacing) {
             int xPosition = g2cx(i);
@@ -66,7 +42,16 @@ public abstract class CommonVSRTICanvas extends CommonRootCanvas {
             String lString = df.format(i);
             g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + 5);
         }
-        
+    }
+
+    /**
+     * Draw a vertical line at theta=0
+     * @param g the Graphics2D object
+     */
+    protected void drawThetaLine(Graphics2D g) {
+        g.setStroke(new BasicStroke(strokeSize));
+        g.setColor(Color.LIGHT_GRAY);
+        g.drawLine(g2cx(0), tPad, g2cx(0), getHeight() - bPad);
     }
     
     public void drawYAxis(Graphics2D g) {
@@ -134,38 +119,6 @@ public abstract class CommonVSRTICanvas extends CommonRootCanvas {
         return 0.0;
     }
     
-    public int getLPad() {
-        return lPad;
-    }
-    
-    public void setLPad(int pad) {
-        lPad = pad;
-    }
-    
-    public int getRPad() {
-        return rPad;
-    }
-    
-    public void setRPad(int pad) {
-        rPad = pad;
-    }
-    
-    public int getTPad() {
-        return tPad;
-    }
-    
-    public void setTPad(int pad) {
-        tPad = pad;
-    }
-    
-    public int getBPad() {
-        return bPad;
-    }
-    
-    public void setBPad(int pad) {
-        bPad = pad;
-    }
-    
     @Override
     public void mouseMoved(MouseEvent e) {
         // System.out.println("moved!!!");
@@ -180,5 +133,7 @@ public abstract class CommonVSRTICanvas extends CommonRootCanvas {
             this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
     }
+
+
     
 }

@@ -55,7 +55,6 @@ public abstract class Canvas extends CommonVSRTICanvas {
     protected Double currentPoint;
     protected Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
-    final JPopupMenu menu = new JPopupMenu();
     protected int mouseButton = 0;
     protected double maxX = 40;
     private JFileChooser fileChooser;
@@ -202,15 +201,7 @@ public abstract class Canvas extends CommonVSRTICanvas {
         menu.add(item);
         menu.add(item2);
     }
-    
-    public TreeMap<Double, Double> getPoints() {
-        return points;
-    }
-    
-    public void setPoints(TreeMap<Double, Double> points) {
-        this.points = points;
-    }
-    
+
     public void drawDataSet(int count, Graphics2D g) {
         if (points.size() == 0) {
             return;
@@ -387,13 +378,6 @@ public abstract class Canvas extends CommonVSRTICanvas {
     
     public void setColors(Color[] colors) {
         this.colors = colors;
-    }
-    
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            menu.show(this, e.getX(), e.getY());
-        }
     }
     
     @Override

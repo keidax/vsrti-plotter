@@ -33,15 +33,13 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     protected static Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
 
-    protected final JPopupMenu menu = new JPopupMenu();
     protected JFileChooser fileChooser;
 
     protected int strokeSize = 4;
-    protected int fontSize = 20;
+    protected Font titleFont;
 
     protected CommonTIFTAdapter commonAdapter;
 
-    private Font titleFont, normalFont;
     private boolean antialiasing = true;
 
     //experimental speed optimizations
@@ -479,13 +477,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         volatileImg = gc.createCompatibleVolatileImage(getWidth(), getHeight());
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON3) {
-            menu.show(this, e.getX(), e.getY());
-        }
-    }
-
     /**
      * Records coordinates mouse was released and if there was no currentPoint,
      * then creates new point with particular coordinates
@@ -552,27 +543,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         DecimalFormat df = new DecimalFormat("#.#");
         FontMetrics fm = g.getFontMetrics();
 
-        // determine spacing for marks on x-axis
-        double xSpacing = 1;
-        //TODO make this able to scale arbitrarily
-        double pixelsPerNumber = this.getPlotWidth() * 1.0 / (getMaxX() - getMinX());
-        if (pixelsPerNumber > 350) {
-            xSpacing = 0.1;
-        } else if (pixelsPerNumber > 200) {
-            xSpacing = 0.2;
-        } else if (pixelsPerNumber > 100) {
-            xSpacing = 0.5;
-        } else if (pixelsPerNumber > 35) {
-            xSpacing = 1;
-        } else if (pixelsPerNumber > 25) {
-            xSpacing = 2;
-        } else if (pixelsPerNumber > 8) {
-            xSpacing = 5;
-        } else if (pixelsPerNumber > 3.5) {
-            xSpacing = 10;
-        } else {
-            xSpacing = 15;
-        }
+        double xSpacing = getXSpacing();
 
         // draw axis title
         g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
@@ -593,7 +564,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
             String lString = df.format(i);
             g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + 5);
         }
-
     }
 
     /**
@@ -674,13 +644,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
             }
         }
         return titleFont;
-    }
-
-    private Font getNormalFont() {
-        if (normalFont == null) {
-            normalFont = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize);
-        }
-        return normalFont;
     }
 
 }
