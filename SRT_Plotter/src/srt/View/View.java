@@ -67,7 +67,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
         bAvgBlocks = new JButton("Average Blocks of Data");
-        bTime = new JButton("Plot Average TA vs. Order");
+        bTime = new JButton("Plot Average TAs vs. Scan No.");
         bSubtract = new JButton("Subtract Background");
         bUndo = new JButton("Undo Delete");
         bBeam = new JButton("Plot Beam");
@@ -316,12 +316,12 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     View.this.vGraph.setXAxisTitle("Channels");
                     View.this.vGraph.setGraphTitle("Antenna Temperature vs. Channel");
                     View.this.jTable.updateGraph();
-                } else if(plotType.equals("Plot Spectrum")){
+                } else if(plotType.equals("Plot Frequencies")){
                     View.this.lDelta.setText("");
                     View.this.vGraph.setXAxisTitle("Frequency (MHz)");
                     View.this.vGraph.setGraphTitle("Spectrum: Antenna Temperature vs. Frequency");
                     View.this.jTable.plotSpectrum();
-                } else if(plotType.equals("Plot Velocity")) {
+                } else if(plotType.equals("Plot Velocities")) {
                     View.this.lDelta.setText("");
                     View.this.vGraph.setXAxisTitle("Velocity (km/s)");
                     View.this.vGraph.setGraphTitle("Antenna Temperature vs. Velocity");
