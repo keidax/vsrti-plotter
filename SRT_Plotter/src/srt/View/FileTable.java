@@ -102,7 +102,7 @@ public class FileTable extends JTable implements TableModelListener {
         if (me.getEditingColumn() == 2) {
             try {
                 Double.parseDouble((String) this.getCellEditor().getCellEditorValue());
-                ((TableModel) me.getModel()).list.getNode(getEditingRow()).angle = Double.parseDouble((String) this.getCellEditor().getCellEditorValue());
+                ((TableModel) me.getModel()).list.get(getEditingRow()).angle = Double.parseDouble((String) this.getCellEditor().getCellEditorValue());
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "You can only set the angle to a number.");
             }
@@ -119,7 +119,7 @@ public class FileTable extends JTable implements TableModelListener {
         ((TableModel) me.getModel()).viewer.getVGraph().getPoints().clear();
         
         if (index.length > 0 && ((TableModel) me.getModel()).getRowCount() > index[0]) {
-            double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
+            double[] data = ((TableModel) me.getModel()).getValueAt(index[0]).data;
             
             TreeMap<Double, Double> points = new TreeMap<Double, Double>();
             // TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
@@ -132,7 +132,7 @@ public class FileTable extends JTable implements TableModelListener {
             }
             ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms().clear();
             ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
-            ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
+            ((TableModel) me.getModel()).viewer.currentDataBlock = ((TableModel) me.getModel()).getValueAt(index[0]);
             
         }
     }
@@ -143,15 +143,15 @@ public class FileTable extends JTable implements TableModelListener {
     public void plotVelocity() {
         int[] index = me.getSelectedRows();
 
-        if (index.length <= 0 || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
+        if (index.length <= 0 || ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
             JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
             return;
         }
         ((TableModel) me.getModel()).viewer.getVGraph().getPoints().clear();
 
-        double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
-        double start = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStart;
-        double step = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
+        double[] data = ((TableModel) me.getModel()).getValueAt(index[0]).data;
+        double start = ((TableModel) me.getModel()).getValueAt(index[0]).fStart;
+        double step = ((TableModel) me.getModel()).getValueAt(index[0]).fStep;
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
 
         double velOffset = ViewUtilities.frequencyToVelocity(start);
@@ -166,7 +166,7 @@ public class FileTable extends JTable implements TableModelListener {
 
         ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms().clear();
         ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
-        ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
+        ((TableModel) me.getModel()).viewer.currentDataBlock = ((TableModel) me.getModel()).getValueAt(index[0]);
     }
     
     /**
@@ -176,14 +176,14 @@ public class FileTable extends JTable implements TableModelListener {
     public void plotSpectrum() {
         int[] index = me.getSelectedRows();
         
-        if (index.length <= 0 || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
+        if (index.length <= 0 || ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
             JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
             return;
         }
         ((TableModel) me.getModel()).viewer.getVGraph().getPoints().clear();
         
-        double[] data = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).data;
-        double step = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[0])).fStep;
+        double[] data = ((TableModel) me.getModel()).getValueAt(index[0]).data;
+        double step = ((TableModel) me.getModel()).getValueAt(index[0]).fStep;
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
         
         for (int i = 0; i < data.length; i++) {
@@ -194,7 +194,7 @@ public class FileTable extends JTable implements TableModelListener {
         }
         ((TableModel) me.getModel()).viewer.adapter.getVisiblityGraphRms().clear();
         ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
-        ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
+        ((TableModel) me.getModel()).viewer.currentDataBlock = ((TableModel) me.getModel()).getValueAt(index[0]);
     }
     
     /**
@@ -204,7 +204,7 @@ public class FileTable extends JTable implements TableModelListener {
     public boolean plotBeam() {
         int[] index = me.getSelectedRows();
         
-        if (index.length <= 0 || (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
+        if (index.length <= 0 || ((TableModel) me.getModel()).getValueAt(index[0]) == null) {
             JOptionPane.showMessageDialog(null, "You must select at least one data block to plot the beam width.");
             return false;
         }
@@ -219,15 +219,15 @@ public class FileTable extends JTable implements TableModelListener {
         double min = ((TableModel) me.getModel()).viewer.min;
         System.out.println(min);
         for (int i = 0; i < index.length; i++) {
-            avg = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[i])).getAverageOverFrequency();
-            angle = ((ListNode) ((TableModel) me.getModel()).getValueAt(index[i])).angle - min;
+            avg = ((TableModel) me.getModel()).getValueAt(index[i]).getAverageOverFrequency();
+            angle = ((TableModel) me.getModel()).getValueAt(index[i]).angle - min;
             points.put(angle, avg);
             rms.put(angle, avg / Math.sqrt(index.length));
             
         }
         ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphRms(rms);
         ((TableModel) me.getModel()).viewer.adapter.importVisibilityGraphPoints(points);
-        ((TableModel) me.getModel()).viewer.currentNode = (ListNode) ((TableModel) me.getModel()).getValueAt(index[0]);
+        ((TableModel) me.getModel()).viewer.currentDataBlock = ((TableModel) me.getModel()).getValueAt(index[0]);
         return true;
     }
     
@@ -240,31 +240,27 @@ public class FileTable extends JTable implements TableModelListener {
         if (selected.length == 0 || me.getRowCount() == 0) {
             return;
         }
-        ListNode node = ((TableModel) me.getModel()).viewer.list.getFirstNode();
         int count = 0;
-        int count1 = 0;
         String mess = "";
         String numb = " ";
         String[] temp, temp1;
         
         for (int i = 0; i < selected.length; i++) {
-            mess = mess + selected[i] + ") " + ((TableModel) me.getModel()).viewer.list.getNode(selected[i]).title + "\n";
+            mess = mess + selected[i] + ") " + ((TableModel) me.getModel()).viewer.dataBlockList.get(selected[i]).title + "\n";
             numb = numb + selected[i] + " ";
         }
-        
-        while (node != null) {
+
+        for(DataBlock node : ((TableModel) me.getModel()).viewer.dataBlockList) {
             if (node.title.contains("AVG") || node.title.contains("SUB")) {
                 temp = node.title.split(" ");
                 for (int i = 0; i < temp.length; i++) {
                     if (numb.contains(temp[i])) {
                         mess = mess + count + ") " + node.title + "\n";
-                        count1++;
                         break;
                     }
                 }
             }
             count++;
-            node = node.next;
         }
         
         int delete = JOptionPane.showConfirmDialog(null,
@@ -274,16 +270,15 @@ public class FileTable extends JTable implements TableModelListener {
             for (int i = selected.length - 1; i >= 0; i--) {
                 ((TableModel) me.getModel()).removeInputFile(selected[i]);
             }
-            ((TableModel) me.getModel()).viewer.currentNode = null;
-            
-            node = ((TableModel) me.getModel()).viewer.list.getFirstNode();
-            while (node != null) {
+            ((TableModel) me.getModel()).viewer.currentDataBlock = null;
+
+            for(DataBlock node : ((TableModel) me.getModel()).viewer.dataBlockList) {
                 if (node.title.contains("AVG") || node.title.contains("SUB")) {
                     temp = node.title.split(" ");
                     temp1 = numb.split(" ");
                     for (int i = 0; i < temp.length; i++) {
                         if (numb.contains(" " + temp[i] + " ")) {
-                            ((TableModel) me.getModel()).viewer.list.remove(node.title);
+                            ((TableModel) me.getModel()).viewer.dataBlockList.remove(node.title);
                             break;
                         }
                         
@@ -304,7 +299,6 @@ public class FileTable extends JTable implements TableModelListener {
                         node.title = node.title + " " + temp[k];
                     }
                 }
-                node = node.next;
             }
             me.addNotify();
             me.clearSelection();

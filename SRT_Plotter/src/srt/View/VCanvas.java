@@ -297,9 +297,9 @@ public class VCanvas extends CommonRootCanvas {
         DecimalFormat df = new DecimalFormat("#.##");
 
         if (xAxisTitle.startsWith("Frequency (MHz)")) {
-            g.drawString(View.getView(this).currentNode.fStart + "+", 0, getHeight() - 17);
+            g.drawString(View.getView(this).currentDataBlock.fStart + "+", 0, getHeight() - 17);
         } else if(xAxisTitle.startsWith("Velocity (km/s")) {
-            g.drawString(ViewUtilities.frequencyToVelocity(View.getView(this).currentNode.fStart) + "+", 0, getHeight() - 17);
+            g.drawString(ViewUtilities.frequencyToVelocity(View.getView(this).currentDataBlock.fStart) + "+", 0, getHeight() - 17);
         }
 
         for (int i = 0; i < (getPlotWidth() - 1) / steps + 1; i++) {
@@ -680,8 +680,8 @@ public class VCanvas extends CommonRootCanvas {
         mCanx = evt.getX();
         mCany = evt.getY();
         double min = 0;
-        if (xAxisTitle.equals("Frequency") && View.getView(this).currentNode != null) {
-            min = View.getView(this).currentNode.fStart;
+        if (xAxisTitle.equals("Frequency") && View.getView(this).currentDataBlock != null) {
+            min = View.getView(this).currentDataBlock.fStart;
             df = new DecimalFormat("#.###");
         }
         if (View.getView(this).vGraph.graphTitle.equals("Averge TA vs. Order") && getPointOnGraph(mCanx, mCany) != null) {

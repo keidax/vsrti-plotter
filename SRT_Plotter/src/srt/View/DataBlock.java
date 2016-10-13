@@ -1,19 +1,19 @@
 package srt.View;
 
 /**
- * List Node for Linked List
+ * Representation of one scan (one set of points)
  *
  * @author Adam Pere
+ * @author Gabriel Holodak
  */
-public class ListNode {
+public class DataBlock {
     public double[] data, deleted, endChannels; // actual data points, deleted data points, deleted end channels
     public String title;
     public double fStart, fStep; // Start Frequency and Frequency Step
     public double angle;
     public double azumith, elevation;
-    public ListNode next;
 
-    public ListNode(String t, double[] d, double startFreq, double stepFreq) {
+    public DataBlock(String t, double[] d, double startFreq, double stepFreq) {
         title = t;
         data = d;
         fStart = startFreq;
@@ -24,8 +24,8 @@ public class ListNode {
 
     }
 
-    public ListNode(String t, double[] d, double startFreq, double stepFreq,
-                    double[] del, double[] end) {
+    public DataBlock(String t, double[] d, double startFreq, double stepFreq,
+                     double[] del, double[] end) {
         title = t;
         data = d;
         fStart = startFreq;
