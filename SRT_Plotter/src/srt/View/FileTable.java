@@ -119,81 +119,37 @@ public class FileTable extends JTable implements TableModelListener {
      */
     public void updateGraph() {
         int[] index = this.getSelectedRows();
-        this.getModel().viewer.getCanvas().getPoints().clear();
-        
-        if (index.length > 0 && this.getModel().getRowCount() > index[0]) {
-            double[] data = this.getModel().getValueAt(index[0]).data;
-            
-            TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-            // TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
-            
-            for (int i = 0; i < data.length; i++) {
-                if (data[i] != -1) {
-                    points.put(i + 1.0, data[i]);
-                    
-                }
-            }
-            this.getModel().viewer.adapter.getVisiblityGraphRms().clear();
-            this.getModel().viewer.adapter.importVisibilityGraphPoints(points);
-            this.getModel().viewer.currentDataBlock = this.getModel().getValueAt(index[0]);
-            
-        }
-    }
-
-    /**
-     * Plots the velocity of the selected data block on x-axis.
-     */
-    public void plotVelocity() {
-        int[] index = this.getSelectedRows();
 
         if (index.length <= 0 || this.getModel().getValueAt(index[0]) == null) {
             JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
             return;
         }
+
         this.getModel().viewer.getCanvas().getPoints().clear();
 
         double[] data = this.getModel().getValueAt(index[0]).data;
         double start = this.getModel().getValueAt(index[0]).fStart;
         double step = this.getModel().getValueAt(index[0]).fStep;
-        TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-
         double velOffset = ViewUtilities.frequencyToVelocity(start);
 
-
-        for (int i = 0; i < data.length; i++) {
-            if (data[i] >= 0) {
-                double freq = start + i * step;
-                points.put(ViewUtilities.frequencyToVelocity(freq) - velOffset, data[i]);
-            }
-        }
-
-        this.getModel().viewer.adapter.getVisiblityGraphRms().clear();
-        this.getModel().viewer.adapter.importVisibilityGraphPoints(points);
-        this.getModel().viewer.currentDataBlock = this.getModel().getValueAt(index[0]);
-    }
-    
-    /**
-     * Plots the spectrum of the selected data block. That is Temperature vs.
-     * Frequency.
-     */
-    public void plotSpectrum() {
-        int[] index = this.getSelectedRows();
-        
-        if (index.length <= 0 || this.getModel().getValueAt(index[0]) == null) {
-            JOptionPane.showMessageDialog(null, "You must select a data block before you can plot its spectrum.");
-            return;
-        }
-        this.getModel().viewer.getCanvas().getPoints().clear();
-        
-        double[] data = this.getModel().getValueAt(index[0]).data;
-        double step = this.getModel().getValueAt(index[0]).fStep;
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-        
+        TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
+
         for (int i = 0; i < data.length; i++) {
-            if (data[i] >= 0) {
-                points.put(i * step, data[i]);
+            if (data[i] != -1) {
+                switch (this.getModel().viewer.canvas.getPlotMode()){
+                    case PLOT_CHANNELS:
+                        points.put(i + 1.0, data[i]);
+                        break;
+                    case PLOT_FREQUENCIES:
+                        points.put(i * step, data[i]);
+                        break;
+                    case PLOT_VELOCITIES:
+                        double freq = start + i * step;
+                        points.put(ViewUtilities.frequencyToVelocity(freq) - velOffset, data[i]);
+                        break;
+                }
             }
-            
         }
         this.getModel().viewer.adapter.getVisiblityGraphRms().clear();
         this.getModel().viewer.adapter.importVisibilityGraphPoints(points);

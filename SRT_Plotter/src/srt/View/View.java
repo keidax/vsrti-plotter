@@ -71,7 +71,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bBeam = new JButton("Plot Beam");
         lDelta = new JLabel("");
         jTable.setToolTipText("<HTML><P WIDTH='100px'>Select a data block to plot.</HTML>");
-        cbPlot = new JComboBox(new String[]{"Plot Channels", "Plot Spectrum", "Plot Velocity"});
+        cbPlot = new JComboBox(new String[]{"Plot Channels", "Plot Frequencies", "Plot Velocities"});
         
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         row1 = new JPanel();
@@ -310,21 +310,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 String plotType = (String)cb.getSelectedItem();
 
                 if(plotType.equals("Plot Channels")) {
-                    View.this.lDelta.setText("");
-                    View.this.canvas.setXAxisTitle("Channels");
-                    View.this.canvas.setGraphTitle("Antenna Temperature vs. Channel");
-                    View.this.jTable.updateGraph();
+                    View.this.canvas.setPlotMode(VCanvas.PlotMode.PLOT_CHANNELS);
                 } else if(plotType.equals("Plot Frequencies")){
-                    View.this.lDelta.setText("");
-                    View.this.canvas.setXAxisTitle("Frequency (MHz)");
-                    View.this.canvas.setGraphTitle("Spectrum: Antenna Temperature vs. Frequency");
-                    View.this.jTable.plotSpectrum();
+                    View.this.canvas.setPlotMode(VCanvas.PlotMode.PLOT_FREQUENCIES);
                 } else if(plotType.equals("Plot Velocities")) {
-                    View.this.lDelta.setText("");
-                    View.this.canvas.setXAxisTitle("Velocity (km/s)");
-                    View.this.canvas.setGraphTitle("Antenna Temperature vs. Velocity");
-                    View.this.jTable.plotVelocity();
+                    View.this.canvas.setPlotMode(VCanvas.PlotMode.PLOT_VELOCITIES);
                 }
+                View.this.lDelta.setText("");
+                View.this.jTable.updateGraph();
             }
         });
         
@@ -383,8 +376,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             JOptionPane.showMessageDialog(null, "You must select one or more data blocks..");
                             return;
                         }
-                        View.this.canvas.setXAxisTitle("Data Block");
-                        View.this.canvas.setGraphTitle("Averge TA vs. Order");
+                        View.this.canvas.setPlotMode(VCanvas.PlotMode.PLOT_AVERAGE_TA);
                         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
                         View.this.canvas.getPoints().clear();
                         
@@ -508,8 +500,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         
                         if (table.plotBeam()) {
                             View.this.lDelta.setText("");
-                            View.this.canvas.setXAxisTitle("Angle (degrees)");
-                            View.this.canvas.setGraphTitle("Beam Width: Average Antenna Temperature vs. Angle");
+                            View.this.canvas.setPlotMode(VCanvas.PlotMode.PLOT_BEAM_WIDTH);
                             jf.setVisible(false);
                             canDelete = true;
 
@@ -704,8 +695,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 View.this.lDelta.setText("");
                 choosingDelete = false;
                 bSelectEnd.setText("Delete End Channels");
-                if (View.this.canvas.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.this.canvas.getGraphTitle().equals("Averge TA vs. Order")) {
+                if (View.this.canvas.getPlotMode() == VCanvas.PlotMode.PLOT_FREQUENCIES
+                        || View.this.canvas.getPlotMode() == VCanvas.PlotMode.PLOT_AVERAGE_TA) {
                     return;
                 }
                 choosingDelete = false;
@@ -731,8 +722,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 View.this.lDelta.setText("");
-                if (View.this.canvas.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.this.canvas.getGraphTitle().equals("Averge TA vs. Order")) {
+                if (View.this.canvas.getPlotMode() == VCanvas.PlotMode.PLOT_FREQUENCIES
+                        || View.this.canvas.getPlotMode() == VCanvas.PlotMode.PLOT_AVERAGE_TA) {
                     return;
                 }
                 if (currentDataBlock == null) {
@@ -763,8 +754,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (currentDataBlock == null
-                        || View.this.canvas.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.this.canvas.getGraphTitle().equals("Averge TA vs. Order")) {
+                        || View.this.canvas.getPlotMode() == VCanvas.PlotMode.PLOT_FREQUENCIES
+                        || View.this.canvas.getPlotMode() == VCanvas.PlotMode.PLOT_AVERAGE_TA) {
                     return;
                 }
                 for (int i = 0; i < currentDataBlock.data.length; i++) {

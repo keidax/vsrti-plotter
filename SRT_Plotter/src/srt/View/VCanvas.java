@@ -40,6 +40,47 @@ public class VCanvas extends CommonRootCanvas {
     protected static AbstractOrnament[] ornaments = {new CircleOrnament(3), new SquareOrnament(3)};
     protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
+
+    public enum PlotMode {
+        PLOT_CHANNELS, PLOT_FREQUENCIES, PLOT_VELOCITIES, PLOT_AVERAGE_TA, PLOT_BEAM_WIDTH
+    }
+
+    private PlotMode currentPlotMode;
+
+    public PlotMode getPlotMode() {
+        return currentPlotMode;
+    }
+
+    public void setPlotMode(PlotMode currentPlotMode) {
+        this.currentPlotMode = currentPlotMode;
+        switch (currentPlotMode){
+            case PLOT_AVERAGE_TA:
+                setXAxisTitle("Data Block");
+                setYAxisTitle("Antenna Temperature (K)");
+                setGraphTitle("Averge TA vs. Order");
+                break;
+            case PLOT_CHANNELS:
+                setXAxisTitle("Channels");
+                setYAxisTitle("Antenna Temperature (K)");
+                setGraphTitle("Antenna Temperature vs. Channel");
+                break;
+            case PLOT_FREQUENCIES:
+                setXAxisTitle("Frequency (MHz)");
+                setYAxisTitle("Antenna Temperature (K)");
+                setGraphTitle("Spectrum: Antenna Temperature vs. Frequency");
+                break;
+            case PLOT_VELOCITIES:
+                setXAxisTitle("Velocity (km/s)");
+                setYAxisTitle("Antenna Temperature (K)");
+                setGraphTitle("Antenna Temperature vs. Velocity");
+                break;
+            case PLOT_BEAM_WIDTH:
+                setXAxisTitle("Angle (degrees)");
+                setYAxisTitle("Antenna Temperature (K)");
+                setGraphTitle("Beam Width: Average Antenna Temperature vs. Angle");
+                break;
+        }
+    }
     
     public VCanvas(View v, Adapter a, TreeMap<Double, Double> g) {
         setPoints(g);
@@ -177,12 +218,8 @@ public class VCanvas extends CommonRootCanvas {
         menu.add(item);
         menu.add(item2);
 
-
-
         dataPoints = adapter.getVisibilityGraphDataPoints();
-        xAxisTitle = "Channel";
-        yAxisTitle = "Antenna Temperature (K)";
-        graphTitle = "Antenna Temperature vs. Channel";
+        setPlotMode(PlotMode.PLOT_CHANNELS);
     }
     
     /**
@@ -223,15 +260,6 @@ public class VCanvas extends CommonRootCanvas {
         g.drawLine(x, y1, x, y2);
         g.drawLine(x - 1, y1, x + 1, y1);
         g.drawLine(x - 1, y2, x + 1, y2);
-    }
-    
-    /**
-     * updates the data points and paints to the graphics
-     */
-    @Override
-    public void update(Graphics g) {
-        dataPoints = adapter.getVisibilityGraphDataPoints();
-        paint(g);
     }
     
     public int getSigma() {
@@ -296,9 +324,9 @@ public class VCanvas extends CommonRootCanvas {
         g.setFont(new Font(g.getFont().getFontName(), 0, 11));
         DecimalFormat df = new DecimalFormat("#.##");
 
-        if (xAxisTitle.startsWith("Frequency (MHz)")) {
+        if (currentPlotMode == PlotMode.PLOT_FREQUENCIES) {
             g.drawString(View.getView(this).currentDataBlock.fStart + "+", 0, getHeight() - 17);
-        } else if(xAxisTitle.startsWith("Velocity (km/s")) {
+        } else if(currentPlotMode == PlotMode.PLOT_VELOCITIES) {
             g.drawString(ViewUtilities.frequencyToVelocity(View.getView(this).currentDataBlock.fStart) + "+", 0, getHeight() - 17);
         }
 
@@ -307,7 +335,7 @@ public class VCanvas extends CommonRootCanvas {
             g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() - bPad);
             g.setColor(Color.BLACK);
 
-            if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle")) {
+            if (currentPlotMode == PlotMode.PLOT_BEAM_WIDTH) {
                 g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.getView(this).min), (int) (getLeftShift() + i
                         * steps - xLabelWidth / 4), getHeight() - 17);
             } else {
@@ -680,16 +708,15 @@ public class VCanvas extends CommonRootCanvas {
         mCanx = evt.getX();
         mCany = evt.getY();
         double min = 0;
-        if (xAxisTitle.equals("Frequency") && View.getView(this).currentDataBlock != null) {
+        if (currentPlotMode == PlotMode.PLOT_FREQUENCIES && View.getView(this).currentDataBlock != null) {
             min = View.getView(this).currentDataBlock.fStart;
             df = new DecimalFormat("#.###");
         }
-        if (View.getView(this).canvas.graphTitle.equals("Averge TA vs. Order") && getPointOnGraph(mCanx, mCany) != null) {
+        if (currentPlotMode == PlotMode.PLOT_AVERAGE_TA && getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]  Data Block: "
                     + View.getView(this).taPlotted[(int) p] + ")");
-        } else if (graphTitle.equals("Beam Width: Average Antenna Temperature vs. Angle")
-                && getPointOnGraph(mCanx, mCany) != null) {
+        } else if (currentPlotMode == PlotMode.PLOT_BEAM_WIDTH && getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
             setToolTipText("[" + df.format(p + View.getView(this).min) + "; " + df.format(getPoints().get(p)) + "]");
         } else if (getPointOnGraph(mCanx, mCany) != null) {
