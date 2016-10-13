@@ -135,13 +135,13 @@ public class Adapter {
     
     public void reset() {
         
-        getModel().getVisibilityGraph().reinicializePoints();
+        getModel().getVisibilityGraph().reinitializePoints();
         getModel().updateListeners();
     }
     
     public void resetF() {
         getModel().getVisibilityGraph().getRawPoints();
-        getModel().getVisibilityGraph().reinicializePoints();
+        getModel().getVisibilityGraph().reinitializePoints();
         getModel().updateListeners();
     }
     

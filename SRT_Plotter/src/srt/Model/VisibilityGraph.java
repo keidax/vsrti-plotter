@@ -26,7 +26,7 @@ public class VisibilityGraph extends Graph {
         super(m);
         rawPoints = new TreeSet<Point>();
         rms = new TreeMap<Double, Double>();
-        // reinicializePoints();
+        // reinitializePoints();
     }
     
     public TreeMap<Double, InputFile> getInputFiles() {
@@ -52,7 +52,7 @@ public class VisibilityGraph extends Graph {
         this.gridedRms = gridedRms;
     }
     
-    public void reinicializePoints() {
+    public void reinitializePoints() {
         
         getPoints().clear();
         
@@ -143,7 +143,7 @@ public class VisibilityGraph extends Graph {
     public void emptyRawPoints() {
         rawPoints.clear();
         halfBZero = 0;
-        reinicializePoints();
+        reinitializePoints();
         // this.getPoints().clear();
     }
     
@@ -172,7 +172,7 @@ public class VisibilityGraph extends Graph {
     public void setLambda(double lamb) {
         lambda = lamb;
         // System.out.println(this.getRawPoints().size());
-        // this.reinicializePoints();
+        // this.reinitializePoints();
     }
     
     public SortedSet<Point> getRawPoints() {
@@ -235,7 +235,7 @@ public class VisibilityGraph extends Graph {
         }
         
         // System.out.println("ImportedPoint and call updating");
-        reinicializePoints();
+        reinitializePoints();
         // update();
         // System.out.println("points imported "+getPoints().size());
     }
