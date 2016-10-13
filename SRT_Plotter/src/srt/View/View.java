@@ -20,9 +20,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
     
     private static final long serialVersionUID = 1L;
     public Adapter adapter;
-    public VCanvas vGraph;
-    public JButton exit;
-    public TableModel tableModel;
+    public VCanvas canvas;
+    public MyTableModel tableModel;
     public FileTable jTable;
     public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks, bTime,
             bSubtract, bUndo, bBeam;
@@ -38,7 +37,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public int[] selectedRows, taPlotted;
     public boolean gotB = false;
     public double min = 0.0;
-    public JTextField fD, fLambda;
+    public JTextField fD;
     private JFileChooser jfc;
     
     public View(Adapter a, String title) {
@@ -47,12 +46,11 @@ public class View extends JFrame implements ModelListener, ActionListener {
         choosingDelete = false;
         dataBlockList = new DataBlockList();
         currentDataBlock = null;
-        tableModel = new TableModel(this, dataBlockList);
+        tableModel = new MyTableModel(this, dataBlockList);
         jTable = new FileTable(tableModel);
-        tableModel.supreme = jTable;
-        vGraph = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
+        canvas = new VCanvas(this, getAdapter(), getAdapter().getVisiblityGraphPoints());
         setMinimumSize(new Dimension(1300, 500));
-        vGraph.setSize(300, 100);
+        canvas.setSize(300, 100);
         jfc = new JFileChooser();
         JPanel row1, row1col1, row1col2, row1col2col2, labels, jDelta, jLambda, jExponent, jButtons, jButtons2, jButtons3, jButtons4, jButtons6, jButtons7, jButtons8, jBlank, jThetaMax, jLabels, jFields;
         
@@ -96,7 +94,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         row1.add(row1col2);
         row1col1.setPreferredSize(new Dimension(800, 500));
         row1col1.setMinimumSize(new Dimension(700, 300));
-        row1col1.add(vGraph);
+        row1col1.add(canvas);
         row1col2.setMaximumSize(new Dimension(500, 500));
         
         jDelta = new JPanel();
@@ -313,18 +311,18 @@ public class View extends JFrame implements ModelListener, ActionListener {
 
                 if(plotType.equals("Plot Channels")) {
                     View.this.lDelta.setText("");
-                    View.this.vGraph.setXAxisTitle("Channels");
-                    View.this.vGraph.setGraphTitle("Antenna Temperature vs. Channel");
+                    View.this.canvas.setXAxisTitle("Channels");
+                    View.this.canvas.setGraphTitle("Antenna Temperature vs. Channel");
                     View.this.jTable.updateGraph();
                 } else if(plotType.equals("Plot Frequencies")){
                     View.this.lDelta.setText("");
-                    View.this.vGraph.setXAxisTitle("Frequency (MHz)");
-                    View.this.vGraph.setGraphTitle("Spectrum: Antenna Temperature vs. Frequency");
+                    View.this.canvas.setXAxisTitle("Frequency (MHz)");
+                    View.this.canvas.setGraphTitle("Spectrum: Antenna Temperature vs. Frequency");
                     View.this.jTable.plotSpectrum();
                 } else if(plotType.equals("Plot Velocities")) {
                     View.this.lDelta.setText("");
-                    View.this.vGraph.setXAxisTitle("Velocity (km/s)");
-                    View.this.vGraph.setGraphTitle("Antenna Temperature vs. Velocity");
+                    View.this.canvas.setXAxisTitle("Velocity (km/s)");
+                    View.this.canvas.setGraphTitle("Antenna Temperature vs. Velocity");
                     View.this.jTable.plotVelocity();
                 }
             }
@@ -385,10 +383,10 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             JOptionPane.showMessageDialog(null, "You must select one or more data blocks..");
                             return;
                         }
-                        View.this.vGraph.setXAxisTitle("Data Block");
-                        View.this.vGraph.setGraphTitle("Averge TA vs. Order");
+                        View.this.canvas.setXAxisTitle("Data Block");
+                        View.this.canvas.setGraphTitle("Averge TA vs. Order");
                         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-                        View.this.vGraph.getPoints().clear();
+                        View.this.canvas.getPoints().clear();
                         
                         for (int i = 0; i < taPlotted.length; i++) {
                             points.put(i + 0.0, View.this.dataBlockList.get(taPlotted[i]).getAverageOverFrequency());
@@ -416,9 +414,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 jf.setPreferredSize(new Dimension(600, 400));
                 JButton enter = new JButton("Cancel");
                 JButton select = new JButton("Select");
-                TableModel t = new TableModel(View.this, dataBlockList, 3);
+                MyTableModel t = new MyTableModel(View.this, dataBlockList, 3);
                 final FileTable table = new FileTable(t);
-                tableModel.supreme = table;
                 JScrollPane jSC = new JScrollPane(table);
                 jSC.setMaximumSize(new Dimension(800, 300));
                 
@@ -511,8 +508,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                         
                         if (table.plotBeam()) {
                             View.this.lDelta.setText("");
-                            View.this.vGraph.setXAxisTitle("Angle (degrees)");
-                            View.this.vGraph.setGraphTitle("Beam Width: Average Antenna Temperature vs. Angle");
+                            View.this.canvas.setXAxisTitle("Angle (degrees)");
+                            View.this.canvas.setGraphTitle("Beam Width: Average Antenna Temperature vs. Angle");
                             jf.setVisible(false);
                             canDelete = true;
 
@@ -635,7 +632,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             String title = "AVG: ";
                             
                             for (int i = 0; i < nodes.length; i++) {
-                                nodes[i] = ((TableModel) jTable.getModel()).getValueAt(selected[i]);
+                                nodes[i] = jTable.getModel().getValueAt(selected[i]);
                                 title = title + selected[i] + " & ";
                             }
                             
@@ -707,8 +704,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 View.this.lDelta.setText("");
                 choosingDelete = false;
                 bSelectEnd.setText("Delete End Channels");
-                if (View.this.vGraph.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.this.vGraph.getGraphTitle().equals("Averge TA vs. Order")) {
+                if (View.this.canvas.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.this.canvas.getGraphTitle().equals("Averge TA vs. Order")) {
                     return;
                 }
                 choosingDelete = false;
@@ -734,8 +731,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 View.this.lDelta.setText("");
-                if (View.this.vGraph.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.this.vGraph.getGraphTitle().equals("Averge TA vs. Order")) {
+                if (View.this.canvas.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.this.canvas.getGraphTitle().equals("Averge TA vs. Order")) {
                     return;
                 }
                 if (currentDataBlock == null) {
@@ -766,8 +763,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 if (currentDataBlock == null
-                        || View.this.vGraph.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
-                        || View.this.vGraph.getGraphTitle().equals("Averge TA vs. Order")) {
+                        || View.this.canvas.getGraphTitle().equals("Spectrum: Antenna Temperature vs. Frequency")
+                        || View.this.canvas.getGraphTitle().equals("Averge TA vs. Order")) {
                     return;
                 }
                 for (int i = 0; i < currentDataBlock.data.length; i++) {
@@ -1078,8 +1075,8 @@ public class View extends JFrame implements ModelListener, ActionListener {
      * 
      * @return VGraph
      */
-    public VCanvas getVGraph() {
-        return vGraph;
+    public VCanvas getCanvas() {
+        return canvas;
     }
     
     /**
@@ -1087,7 +1084,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
      * @param graph
      */
     public void setVGraph(VCanvas graph) {
-        vGraph = graph;
+        canvas = graph;
     }
     
     /**

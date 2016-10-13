@@ -1,24 +1,22 @@
 package srt.View;
 
-import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 @SuppressWarnings("serial")
-public class TableModel extends AbstractTableModel {
+public class MyTableModel extends AbstractTableModel {
     
     public View viewer;
-    public JTable supreme;
     public DataBlockList list;
     private int numCol;
     
-    public TableModel(View v, DataBlockList l) {
+    public MyTableModel(View v, DataBlockList l) {
         super();
         viewer = v;
         list = l;
         numCol = 2;
     }
     
-    public TableModel(View v, DataBlockList l, int columns) {
+    public MyTableModel(View v, DataBlockList l, int columns) {
         super();
         viewer = v;
         list = l;

@@ -684,7 +684,7 @@ public class VCanvas extends CommonRootCanvas {
             min = View.getView(this).currentDataBlock.fStart;
             df = new DecimalFormat("#.###");
         }
-        if (View.getView(this).vGraph.graphTitle.equals("Averge TA vs. Order") && getPointOnGraph(mCanx, mCany) != null) {
+        if (View.getView(this).canvas.graphTitle.equals("Averge TA vs. Order") && getPointOnGraph(mCanx, mCany) != null) {
             double p = getVerticallyPointOnGraph(mCanx, mCany);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]  Data Block: "
                     + View.getView(this).taPlotted[(int) p] + ")");
