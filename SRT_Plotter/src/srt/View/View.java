@@ -23,7 +23,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public VCanvas canvas;
     public MyTableModel tableModel;
     public FileTable jTable;
-    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks, bTime,
+    public JButton bSave, bOpen, bExit, bReset, bDelete, bSelectEnd, bInstruction, bAbout, bAvgFreq, bAvgBlocks, bAvgTAs,
             bSubtract, bUndo, bBeam;
     public JComboBox cbPlot;
     public String link = "http://www1.union.edu/marrj/radioastro/Instructions_SRT_Plotter.html";
@@ -65,7 +65,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
         bAvgBlocks = new JButton("Average Blocks of Data");
-        bTime = new JButton("Plot Average TAs vs. Scan No.");
+        bAvgTAs = new JButton("Plot Average TAs vs. Scan No.");
         bSubtract = new JButton("Subtract Background");
         bUndo = new JButton("Undo Delete");
         bBeam = new JButton("Plot Beam");
@@ -160,7 +160,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         jButtons8.add(bAbout);
         
         jButtons8.add(bExit);
-        jButtons4.add(bTime);
+        jButtons4.add(bAvgTAs);
         jLabels.add(lDelta);
         
         // BUTTONS FUNCTIONS
@@ -328,7 +328,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
             }
         });
         
-        bTime.addActionListener(new ActionListener() {
+        bAvgTAs.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
