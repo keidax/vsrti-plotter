@@ -41,17 +41,16 @@ public class DataBlock {
      * @return
      */
     public double getAverageOverFrequency() {
-        int ans = 0;
-        double count = 0.0;
+        double sum = 0;
+        int count = 0;
 
         for (int i = 0; i < data.length; i++) {
             if (data[i] != -1) {
-                ans += data[i];
-            } else {
+                sum += data[i];
                 count++;
             }
         }
-        return ans / (data.length - count);
+        return sum / count;
     }
 
     /**
