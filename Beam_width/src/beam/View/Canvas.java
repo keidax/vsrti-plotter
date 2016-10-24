@@ -1,6 +1,5 @@
 package beam.View;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,7 +9,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.File;
@@ -24,7 +22,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 
 import common.View.*;
 import org.sourceforge.jlibeps.epsgraphics.EpsGraphics2D;
@@ -68,10 +65,10 @@ public class Canvas extends CommonVSRTICanvas {
         points = g;
         setView(v);
         
-        lPad = 90;
-        rPad = 30;
-        tPad = 50;
-        bPad = 60;
+        lCanvasPadding = 90;
+        rCanvasPadding = 30;
+        tCanvasPadding = 50;
+        bCanvasPadding = 60;
         xAxisTitle = "Angle (degrees)";
         yAxisTitle = "Power";
         graphTitle = "Beam";
@@ -472,7 +469,7 @@ public class Canvas extends CommonVSRTICanvas {
         // draw axes
         g2.setColor(Color.BLACK);
         g.setFont(new Font(g.getFont().getFontName(), 0, titleSize));
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tPad + g2
+        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tCanvasPadding + g2
                 .getFontMetrics().getHeight() / 2) / 2);
         g2.setColor(colors[0]);
         drawDataSet(g2);

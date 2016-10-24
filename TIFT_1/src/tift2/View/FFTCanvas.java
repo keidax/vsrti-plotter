@@ -113,7 +113,7 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
         }
         
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            double toy = Math.min(Math.max(tCanvasPadding, e.getY()), getHeight() - bCanvasPadding);
             // System.out.println("moving to ["+tox+","+toy+"]");
             adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
             // getCurrentPoint().movePoint(getCurrentPoint(),
@@ -132,7 +132,7 @@ public class FFTCanvas extends Canvas { // JPanel implements MouseListener,
         
         if (getCurrentPoint() != null) {
             // double tox = Math.min(Math.max(getLeftShift(), mCanx), getLeftShift() + getPlotWidth());
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            double toy = Math.min(Math.max(tCanvasPadding, e.getY()), getHeight() - bCanvasPadding);
             adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
         }
     }

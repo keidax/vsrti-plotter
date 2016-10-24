@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -11,16 +12,17 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public abstract class CommonRootCanvas extends JPanel implements MouseListener, MouseMotionListener {
-    
+
     protected TreeMap<Double, Double> points;
-    
-    protected int lPad, rPad, tPad, bPad;
-    
+
+    protected int lCanvasPadding, rCanvasPadding, tCanvasPadding, bCanvasPadding;
+
     protected String xAxisTitle = "x-axis";
     protected String yAxisTitle = "y-axis";
     protected String graphTitle = "Untitled";
-    
+
     protected int yLabelWidth = 10;
+    protected int strokeSize = 4;
 
     /**
      * determines the size of the axis labels and numbers
@@ -28,21 +30,49 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
     protected int fontSize = 20;
     protected Font normalFont;
     protected final JPopupMenu menu = new JPopupMenu();
-    
+
     public CommonRootCanvas() {
-        
+
     }
 
     public String getGraphTitle() {
         return graphTitle;
     }
-    
+
     public void setGraphTitle(String graphTitle) {
         this.graphTitle = graphTitle;
     }
-    
+
+    /**
+     * @param x the x coordinate of the graph, in units
+     * @return the x coordinate of the canvas, in pixels
+     */
     public int g2cx(double x) {
-        return (int) (lPad + (x - getMinX()) * getRatioX());
+        return (int) (lCanvasPadding + (x - getMinX()) * getRatioX());
+    }
+
+    /**
+     * @param y the y coordinate of the graph, in units
+     * @return the y coordinate of the canvas, in pixels
+     */
+    public int g2cy(double y) {
+        return (int) (getPlotHeight() + tCanvasPadding - (y - getMinY()) * getRatioY());
+    }
+
+    /**
+     * @param x the x coordinate of the canvas, in pixels
+     * @return the x coordinate of the graph, in units
+     */
+    public double c2gx(double x) {
+        return (x - lCanvasPadding) / getRatioX() + getMinX();
+    }
+
+    /**
+     * @param y the y coordinate of the canvas, in pixels
+     * @return the y coordinate of the graph, in units
+     */
+    public double c2gy(double y) {
+        return (y - getPlotHeight() - tCanvasPadding) / -getRatioY() + getMinY();
     }
 
     protected Font getNormalFont() {
@@ -51,49 +81,27 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
         }
         return normalFont;
     }
-    
-    /**
-     * @param y
-     *            the y coordinate of the graph, in units
-     * @return the y coordinate of the canvas, in pixels
-     */
-    public int g2cy(double y) {
-        return (int) (getPlotHeight() + tPad - (y - getMinY()) * getRatioY());
-    }
-    
-    public double c2gx(double x) {
-        return (x - lPad) / getRatioX() + getMinX();
-    }
-    
-    /**
-     * @param toy
-     *            the y coordinate of the canvas, in pixels
-     * @return the y coordinate of the graph, in units
-     */
-    public double c2gy(double toy) {
-        return (toy - getPlotHeight() - tPad) / -getRatioY() + getMinY();
-    }
-    
+
     /**
      * @return The width of the plot section of the canvas, in pixels
      */
     protected int getPlotWidth() {
-        return getWidth() - lPad - rPad;
+        return getWidth() - lCanvasPadding - rCanvasPadding;
     }
-    
+
     /**
      * @return The height of the plot section of the canvas, in pixels
      */
     protected int getPlotHeight() {
-        return getHeight() - tPad - bPad;
+        return getHeight() - tCanvasPadding - bCanvasPadding;
     }
-    
+
     protected abstract double getMinX();
-    
+
     protected abstract double getMinY();
-    
+
     protected abstract double getMaxX();
-    
+
     protected abstract double getMaxY();
 
     public String getXAxisTitle() {
@@ -137,59 +145,173 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
         return xSpacing;
     }
 
-    public int getLPad() {
-        return lPad;
+    public double getYSpacing(){
+        // determine spacing for marks on y-axis
+        double ySpacing = 1;
+        double pixelsPerNumber = this.getPlotHeight() * 1.0 / (getMaxY() - getMinY());
+        if (pixelsPerNumber > 200) {
+            ySpacing = 0.2;
+        } else if (pixelsPerNumber > 100) {
+            ySpacing = 0.5;
+        } else if (pixelsPerNumber > 35) {
+            ySpacing = 1;
+        } else if (pixelsPerNumber > 25) {
+            ySpacing = 2;
+        } else if (pixelsPerNumber > 8) {
+            ySpacing = 5;
+        } else if (pixelsPerNumber > 3.5) {
+            ySpacing = 10;
+        } else {
+            ySpacing = 15;
+        }
+        return ySpacing;
     }
 
-    public void setLPad(int pad) {
-        lPad = pad;
-    }
-
-    public int getRPad() {
-        return rPad;
-    }
-
-    public void setRPad(int pad) {
-        rPad = pad;
-    }
-
-    public int getTPad() {
-        return tPad;
-    }
-
-    public void setTPad(int pad) {
-        tPad = pad;
-    }
-
-    public int getBPad() {
-        return bPad;
-    }
-
-    public void setBPad(int pad) {
-        bPad = pad;
-    }
-    
     /**
-     * 
+     * Draws the y-axis of the graph
+     *
+     * @param g the Graphics2D object to use
+     */
+    public void drawYAxis(Graphics2D g) {
+        g.setStroke(new BasicStroke(strokeSize));
+        g.setFont(getNormalFont());
+
+        g.setColor(Color.BLACK);
+        g.drawLine(lCanvasPadding, tCanvasPadding, lCanvasPadding, getHeight() - bCanvasPadding);
+        drawYAxisMetric(g);
+        drawYAxisTitle(g);
+    }
+
+    /**
+     * Draws vertical metric - the labels and markings on the y-axis
+     */
+    public void drawYAxisMetric(Graphics2D g) {
+        FontMetrics fm = g.getFontMetrics();
+        DecimalFormat df = new DecimalFormat("0.0");
+
+        double ySpacing = getYSpacing();
+        for(double i = (int) ((int)(getMinY() / ySpacing) * ySpacing); i <= getMaxY(); i+= ySpacing){
+            int xPos = lCanvasPadding;
+            int yPos = g2cy(i);
+            // draw horixontal marks
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(xPos - 2, yPos, xPos + 2, yPos);
+            // draw label for each mark
+            g.setColor(Color.BLACK);
+            String tempString = df.format(i);
+            g.drawString(tempString, xPos - fm.stringWidth(tempString) - 5, yPos + fm.getAscent() / 2);
+        }
+    }
+
+    /**
+     * Draws the title for the y axis
+     */
+    public void drawYAxisTitle(Graphics2D g) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font(g.getFont().getFontName(), 0, fontSize));
+
+        int translateDown = tCanvasPadding + (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
+
+        g.translate(yLabelWidth, translateDown);
+        g.rotate(-Math.PI / 2.0);
+
+        g.drawString(yAxisTitle, 0, 10);
+
+        g.rotate(Math.PI / 2.0);
+        g.translate(-yLabelWidth, -translateDown);
+    }
+
+    /**
+     * Draws the x-axis
+     */
+    public void drawXAxis(Graphics2D g) {
+        g.setStroke(new BasicStroke(strokeSize));
+        g.setFont(getNormalFont());
+
+        // draw horizontal axis
+        g.setColor(Color.BLACK);
+        g.drawLine(lCanvasPadding, g2cy(0.0), getWidth() - rCanvasPadding, g2cy(0.0));
+        drawXAxisMetric(g);
+        drawXAxisTitle(g);
+    }
+
+    public void drawXAxisMetric(Graphics2D g){
+        DecimalFormat df = new DecimalFormat("#.#");
+        FontMetrics fm = g.getFontMetrics();
+        double xSpacing = getXSpacing();
+        for (double i = (int) ((int) (getMinX() / xSpacing) * xSpacing); i <= getMaxX(); i += xSpacing) {
+            int xPosition = g2cx(i);
+            int yPosition = getHeight() - bCanvasPadding;
+
+            // draw vertical marks
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(xPosition, yPosition + 2, xPosition, yPosition - 2);
+
+            // draw labels for each mark
+            g.setColor(Color.BLACK);
+            String lString = df.format(i);
+            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + 5);
+        }
+    }
+
+    public void drawXAxisTitle(Graphics2D g){
+        g.drawString(xAxisTitle, lCanvasPadding + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
+                getHeight() - 10);
+    }
+
+    public int getLeftCanvasPadding() {
+        return lCanvasPadding;
+    }
+
+    public void setLeftCanvasPadding(int pad) {
+        lCanvasPadding = pad;
+    }
+
+    public int getRightCanvasPadding() {
+        return rCanvasPadding;
+    }
+
+    public void setRightCanvasPadding(int pad) {
+        rCanvasPadding = pad;
+    }
+
+    public int getTopCanvasPadding() {
+        return tCanvasPadding;
+    }
+
+    public void setTopCanvasPadding(int pad) {
+        tCanvasPadding = pad;
+    }
+
+    public int getBottomCanvasPadding() {
+        return bCanvasPadding;
+    }
+
+    public void setBottomCanvasPadding(int pad) {
+        bCanvasPadding = pad;
+    }
+
+    /**
+     *
      * @return The points on the graph
      */
     public TreeMap<Double, Double> getPoints() {
         return points;
     }
-    
+
     /**
      * Set the points on the graph
-     * 
+     *
      * @param points
      */
     public void setPoints(TreeMap<Double, Double> points) {
         this.points = points;
     }
-    
+
     /**
      * Returns the object MyPoint which is in closer then MyCanvas.r to
      * coordinates [x,y]
-     * 
+     *
      * @param x
      *            int
      * @param y
@@ -197,7 +319,7 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
      * @return MyPoint
      */
     protected Double getPointOnGraph(int x, int y) {
-        
+
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
             if (new SquareOrnament(getOrnamentSize(key)).isInside(x, y, g2cx(key), g2cy(getPoints().get(key)))) {
@@ -206,22 +328,22 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
         }
         return null;
     }
-    
+
     protected int getOrnamentSize(double x) {
         return 3;
     }
-    
+
     public double getRatioY() {
         return getPlotHeight() / (getMaxY() - getMinY());
     }
-    
+
     public double getRatioX() {
         return getPlotWidth() / (getMaxX() - getMinX());
     }
-    
+
     @Override
     public void mouseEntered(MouseEvent e) {}
-    
+
     @Override
     public void mouseExited(MouseEvent e) {}
 
@@ -234,14 +356,14 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
 
     @Override
     public void mousePressed(MouseEvent e) {}
-    
+
     @Override
     public void mouseReleased(MouseEvent e) {}
-    
+
     @Override
     public void mouseMoved(MouseEvent e) {}
-    
+
     @Override
     public void mouseDragged(MouseEvent e) {}
-    
+
 }

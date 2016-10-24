@@ -24,15 +24,10 @@ public class VCanvas extends CommonRootCanvas {
 
     public View view;
     public Adapter adapter;
-    protected static int[] steps = {1, 2, 5};
     protected int squareWidth = 30;
-    protected int xLabelWidth = 30;
     protected static int defaultX = 9;
     protected static int defaultY = 9;
-    protected int mCanx, mCany;
-    protected Double currentPoint;
     protected VolatileImage volatileImg;
-    protected double xRange = 40;
     protected JFileChooser fileChooser;
 
     
@@ -92,12 +87,13 @@ public class VCanvas extends CommonRootCanvas {
         setSize(new Dimension(200, 50));
         setVisible(true);
 
-        lPad = 20;
-        rPad = 30;
-        tPad = 30;
-        bPad = 40;
+        // lCanvasPadding = (old) lPad + yLabelWidth
+        lCanvasPadding = 100;
+        rCanvasPadding = 30;
+        tCanvasPadding = 30;
+        bCanvasPadding = 60;
 
-        yLabelWidth = 40;
+        yLabelWidth = 10;
 
         JMenuItem item = new JMenuItem("Save as JPEG");
         JMenuItem item2 = new JMenuItem("Save as EPS");
@@ -230,8 +226,8 @@ public class VCanvas extends CommonRootCanvas {
             g.setColor(Color.BLACK);
             ornaments[1].draw(g, g2cx(x), g2cy(y));
             if (adapter.getRms().containsKey(x)) {
-                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * getSigma() / 2), g2cy(y
-                        + adapter.getRms().get(x) * getSigma() / 2));
+                drawRms(g, g2cx(x), g2cy(y - adapter.getRms().get(x) * sigma / 2), g2cy(y
+                        + adapter.getRms().get(x) * sigma / 2));
             }
         } else {
             g.setColor(Color.BLACK);
@@ -261,21 +257,6 @@ public class VCanvas extends CommonRootCanvas {
         g.drawLine(x - 1, y1, x + 1, y1);
         g.drawLine(x - 1, y2, x + 1, y2);
     }
-    
-    public int getSigma() {
-        return sigma;
-    }
-    
-    public void setSigma(int i) {
-        sigma = i;
-    }
-
-    public void setCurrentPoint(Double currentPoint) {
-        try {
-            adapter.removeRmsPoint(currentPoint);
-        } catch (NullPointerException e) {}
-        this.currentPoint = currentPoint;
-    }
 
        /**
      * Draws all points to the inputed graphics
@@ -295,30 +276,10 @@ public class VCanvas extends CommonRootCanvas {
 
     }
 
-    public int g2cx(double x) {
-        double ratio = getRatioX();
-        return (int) ((x - getPoints().firstKey()) * ratio) + getLeftShift();
-    }
-
-    public int g2cy(double y) {
-        double ratio = getRatioY();
-        return (int) (getPlotHeight() - y * ratio);
-    }
-
-    public double c2gx(double x) {
-        double ratio = getRatioX();
-        return (x - getLeftShift()) / ratio;
-    }
-
-    public double c2gy(double toy) {
-        double ratio = getRatioY();
-        return (toy - getPlotHeight()) / -ratio;
-    }
-
     /**
      * Draws the x-axis
      */
-    public void drawXAxis(Graphics2D g) {
+    /*public void drawXAxis(Graphics2D g) {
         double steps = countHorizontalStep();
         double lstep = countHorizontalLabelStep();
         g.setFont(new Font(g.getFont().getFontName(), 0, 11));
@@ -332,101 +293,52 @@ public class VCanvas extends CommonRootCanvas {
 
         for (int i = 0; i < (getPlotWidth() - 1) / steps + 1; i++) {
             g.setColor(Color.LIGHT_GRAY);
-            g.drawLine((int) (getLeftShift() + i * steps), tPad, (int) (getLeftShift() + i * steps), getHeight() - bPad);
+            g.drawLine((int) (lCanvasPadding + i * steps), tCanvasPadding, (int) (lCanvasPadding + i * steps), getHeight() - bCanvasPadding);
             g.setColor(Color.BLACK);
 
             if (currentPlotMode == PlotMode.PLOT_BEAM_WIDTH) {
-                g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.getView(this).min), (int) (getLeftShift() + i
+                g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.getView(this).min), (int) (lCanvasPadding + i
                         * steps - xLabelWidth / 4), getHeight() - 17);
             } else {
                 g.drawString("" + df.format(i * lstep * 100 / 100.0),
-                        (int) (getLeftShift() + i * steps - xLabelWidth / 4), getHeight() - 17);
+                        (int) (lCanvasPadding + i * steps - xLabelWidth / 4), getHeight() - 17);
             }
 
         }
-        g.drawString(" " + xAxisTitle + " ", getLeftShift() + getPlotWidth() / 2, getHeight() - 2);
-    }
+        drawXAxisTitle(g);
+    }*/
 
-    /**
-     * Draws the y-axis
-     */
-    public void drawYAxis(int count, Graphics2D g) {
-        g.setColor(Color.BLACK);
-        drawVerticalLine(lPad + (count / 2 + 1) * yLabelWidth, countVerticalStep(), g);
-        g.setColor(colors[count % colors.length]);
-        drawVerticalMetric(lPad, countVerticalLabelStep(), countVerticalStep(), g);
-        drawVerticalLabel(count / 2 * yLabelWidth + 5, " " + yAxisTitle, g);
-    }
+    @Override
+    public void drawXAxisMetric(Graphics2D g){
+        DecimalFormat df = new DecimalFormat("#.#");
+        FontMetrics fm = g.getFontMetrics();
 
-    /**
-     * Draws vertical lines
-     */
-    public void drawVerticalLine(int x, double steps, Graphics2D g) {
-        g.drawLine(x, tPad, x, getHeight() - bPad);// vertical
-        g.setColor(Color.LIGHT_GRAY);
-        for (int i = 0; i < (getPlotHeight() - 1) / steps + 1; i++) {// horizontal
-            g.drawLine(x - 2, (int) (getHeight() - bPad - i * steps), x + 2,
-                    (int) (getHeight() - bPad - i * steps));
+        // Certain modes have a constant offset value for the x-axis, so we draw this number to the left of the origin
+        if (currentPlotMode == PlotMode.PLOT_FREQUENCIES || currentPlotMode == PlotMode.PLOT_VELOCITIES) {
+            double offsetNumber;
+            if(currentPlotMode== PlotMode.PLOT_FREQUENCIES)
+                offsetNumber = View.getView(this).currentDataBlock.fStart;
+            else
+                offsetNumber = ViewUtilities.frequencyToVelocity(View.getView(this).currentDataBlock.fStart);
+            String offsetString = df.format(offsetNumber) + "+";
+            g.drawString(offsetString, lCanvasPadding - fm.stringWidth(offsetString),
+                    getHeight() - bCanvasPadding + fm.getAscent() + 5);
         }
-    }
 
-    /**
-     * Draws vertical metric
-     */
-    public void drawVerticalMetric(int x, double strStep, double plotStep, Graphics2D g) {
-        g.setFont(new Font(g.getFont().getFontName(), 0, 11));
-        for (int i = 0; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {
-            g.drawString("" + Math.round(c2gy((getHeight() - bPad - tPad) / 2 + tPad - i * plotStep) * 10)
-                    / 10.0, x, (int) ((getHeight() - bPad - tPad) / 2 + tPad - i * plotStep));
+        double xSpacing = getXSpacing();
+        for (double i = (int) ((int) (getMinX() / xSpacing) * xSpacing); i <= getMaxX(); i += xSpacing) {
+            int xPosition = g2cx(i);
+            int yPosition = getHeight() - bCanvasPadding;
+
+            // draw vertical marks
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(xPosition, tCanvasPadding, xPosition, yPosition - 2);
+
+            // draw labels for each mark
+            g.setColor(Color.BLACK);
+            String lString = df.format(i);
+            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + 5);
         }
-        for (int i = 1; i < ((getPlotHeight() - 1) / plotStep + 1) / 2; i++) {// horizontal
-            g.drawString("" + Math.round(c2gy((getHeight() - bPad - tPad) / 2 + tPad + i * plotStep) * 10)
-                    / 10.0, x - 5, (int) ((getHeight() - bPad - tPad) / 2 + tPad + i * plotStep));
-        }
-    }
-
-    /**
-     * Draws the vertical label
-     */
-    public void drawVerticalLabel(int x, String title, Graphics2D g) {
-        g.translate(x, getPlotHeight() / 2);
-        g.rotate(-Math.PI / 2.0);
-        g.drawString(title, 0, 10);
-        g.rotate(Math.PI / 2.0);
-        g.translate(-x, -getPlotHeight() / 2);
-    }
-
-    /**
-     * Counts the vertical step
-     */
-    public double countVerticalStep() {
-        int count = getPlotHeight() / squareWidth + 1;
-        if (count % 2 == 1) {
-            count++;
-        }
-        return (double) getPlotHeight() / count;
-    }
-
-    /**
-     * Counts the horizontal step
-     */
-    public double countHorizontalStep() {
-        int count = getPlotWidth() / squareWidth + 1;
-        return (double) getPlotWidth() / count;
-    }
-
-    /**
-     * Vertical Label step
-     */
-    public double countVerticalLabelStep() {
-        int count = getPlotHeight() / squareWidth + 1;
-        int max;
-        if (getPoints() == null || getMaxYPoint() == null) {
-            max = countMax(defaultY);// 50
-        } else {
-            max = countMaxVertical(Math.max(Math.abs(getMaxYPoint()), Math.abs(getMinYPoint())));// 50
-        }
-        return (double) max / (double) count;
     }
 
     /**
@@ -446,97 +358,7 @@ public class VCanvas extends CommonRootCanvas {
         if (max < 1) {
             return defaultY + 0.0;
         }
-        return max + max * .1;
-    }
-
-    /**
-     * Returns the x-value of the point with the smallest y-value
-     */
-    public Double getMinYPoint() {
-        if (getPoints().size() == 0) {
-            return (double) -defaultY;
-        }
-        double min = getPoints().firstEntry().getValue();
-        Set<Double> keys = getPoints().keySet();
-        for (Double key : keys) {
-            if (getPoints().get(key) < min) {
-                min = getPoints().get(key);
-            }
-        }
-        return min;
-    }
-
-    /**
-     * Returns max y (x-value) - min y (x-value)
-     */
-    public double getMaxYRange() {
-        if (getMaxYPoint() - getMinYPoint() < 2) {
-            return 2.0;
-        } else {
-            return getMaxYPoint() - getMinYPoint();
-        }
-    }
-
-    /**
-     * Horizontal label step
-     */
-    public double countHorizontalLabelStep() {// NOT FINISHED
-        int count = getPlotWidth() / squareWidth + 1;
-        double max = getXRange();
-        return max / count;
-    }
-
-    public int countMax(double max) {
-        int i = 0;
-        boolean end = false;
-        while (!end) {
-            if (max / (steps[i % steps.length] * (int) Math.pow(10, i / steps.length)) < 1) {
-                end = true;
-            }
-            i++;
-        }
-        i--;
-        return (int) Math.pow(2, (int) Math.ceil(Math.log(max / adapter.getDeltaBaseline()) / Math.log(2)));
-    }
-
-    public int countMaxVertical(double max) {
-        int i = 0;
-        boolean end = false;
-        while (!end) {
-            if (max / (steps[i % steps.length] * (int) Math.pow(10, i / steps.length)) < 1) {
-                end = true;
-            }
-            i++;
-        }
-        i -= 2;
-        return steps[i % steps.length] * (int) Math.pow(10, i / steps.length);
-    }
-
-    public static int countHorizontalMax(double max) {
-        return (int) Math.pow(2, (int) Math.ceil(Math.log(max) / Math.log(2)));
-    }
-
-    public double getRatioX() {
-        if (getPoints() == null) {
-            return (double) getPlotWidth() / (double) countMax(defaultX);
-        }
-        return getPlotWidth() / getXRange();
-    }
-
-    public double getRatioY() {
-        if (getPoints() == null || getMaxYPoint() == null) {
-            return getPlotHeight() / 1.0;
-        } else {
-            return getPlotHeight() / getMaxY();
-        }
-    }
-
-    protected int getPlotWidth() {
-        return getWidth() - yLabelWidth - lPad - rPad;
-    }
-
-    protected int getPlotHeight() {
-        return getHeight() - tPad - bPad;
+        return 1.1 * max;
     }
 
     public double getMaxY() {
@@ -553,11 +375,6 @@ public class VCanvas extends CommonRootCanvas {
         return 0.0;
     }
 
-    protected double getXRange() {
-        xRange = Math.abs(getMaxX() - getMinX());
-        return xRange;
-    }
-
     protected double getMaxX() {
         if (getPoints() == null || getPoints().size() == 0) {
             return defaultX;
@@ -569,11 +386,7 @@ public class VCanvas extends CommonRootCanvas {
         if (getPoints() == null || getPoints().size() == 0) {
             return 0.0;
         }
-        return getPoints().firstKey();
-    }
-
-    public int getLeftShift() {
-        return lPad + yLabelWidth;
+        return Math.min(0.0, getPoints().firstKey());
     }
 
     // GETTERS AND SETTERS
@@ -623,7 +436,7 @@ public class VCanvas extends CommonRootCanvas {
 
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (new SquareOrnament(3).isInside(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament(3).isInside(x, y, g2cx(key), g2cy(getPoints().get(key)))) {
                 return key;
             }
         }
@@ -634,7 +447,7 @@ public class VCanvas extends CommonRootCanvas {
 
         Set<Double> keys = getPoints().keySet();
         for (Double key : keys) {
-            if (new SquareOrnament(3).isInsideVertically(mCanx, mCany, g2cx(key), g2cy(getPoints().get(key)))) {
+            if (new SquareOrnament(3).isInsideVertically(x, y, g2cx(key), g2cy(getPoints().get(key)))) {
                 return key;
             }
 
@@ -648,13 +461,13 @@ public class VCanvas extends CommonRootCanvas {
      */
     @Override
     public void mousePressed(MouseEvent evt) {
-        mCanx = evt.getX();
-        mCany = evt.getY();
+        int mouseX = evt.getX();
+        int mouseY = evt.getY();
         double p = 0;
 
-        if (View.getView(this).choosingDelete && getPointOnGraph(mCanx, mCany) != null
+        if (View.getView(this).choosingDelete && getPointOnGraph(mouseX, mouseY) != null
                 && evt.getButton() != MouseEvent.BUTTON2) {
-            p = getPointOnGraph(mCanx, mCany);
+            p = getPointOnGraph(mouseX, mouseY);
             if (View.getView(this).deleting[(int) p - 1] != -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p), false);
                 View.getView(this).deleting[(int) p - 1] = -1;
@@ -679,21 +492,21 @@ public class VCanvas extends CommonRootCanvas {
     @Override
     public void mouseDragged(MouseEvent evt) {
 
-        mCanx = evt.getX();
-        mCany = evt.getY();
+        int mouseX = evt.getX();
+        int mouseY = evt.getY();
         double p = 0;
-        if (evt.getButton() != MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null
+        if (evt.getButton() != MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mouseX, mouseY) != null
                 && View.getView(this).choosingDelete) {
-            p = getVerticallyPointOnGraph(mCanx, mCany);
+            p = getVerticallyPointOnGraph(mouseX, mouseY);
 
             if (View.getView(this).deleting[(int) p - 1] != -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p), false);
                 View.getView(this).deleting[(int) p - 1] = -1;
             }
         }
-        if (evt.getButton() == MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mCanx, mCany) != null
+        if (evt.getButton() == MouseEvent.BUTTON2 && getVerticallyPointOnGraph(mouseX, mouseY) != null
                 && View.getView(this).choosingDelete) {
-            p = getVerticallyPointOnGraph(mCanx, mCany);
+            p = getVerticallyPointOnGraph(mouseX, mouseY);
 
             if (View.getView(this).deleting[(int) p - 1] == -1) {
                 drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p));
@@ -705,25 +518,25 @@ public class VCanvas extends CommonRootCanvas {
     @Override
     public void mouseMoved(MouseEvent evt) {
         DecimalFormat df = new DecimalFormat("#.##");
-        mCanx = evt.getX();
-        mCany = evt.getY();
+        int mouseX = evt.getX();
+        int mouseY = evt.getY();
         double min = 0;
         if (currentPlotMode == PlotMode.PLOT_FREQUENCIES && View.getView(this).currentDataBlock != null) {
             min = View.getView(this).currentDataBlock.fStart;
             df = new DecimalFormat("#.###");
         }
-        if (currentPlotMode == PlotMode.PLOT_AVERAGE_TA && getPointOnGraph(mCanx, mCany) != null) {
-            double p = getVerticallyPointOnGraph(mCanx, mCany);
+        if (currentPlotMode == PlotMode.PLOT_AVERAGE_TA && getPointOnGraph(mouseX, mouseY) != null) {
+            double p = getVerticallyPointOnGraph(mouseX, mouseY);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]  Data Block: "
                     + View.getView(this).taPlotted[(int) p] + ")");
-        } else if (currentPlotMode == PlotMode.PLOT_BEAM_WIDTH && getPointOnGraph(mCanx, mCany) != null) {
-            double p = getVerticallyPointOnGraph(mCanx, mCany);
+        } else if (currentPlotMode == PlotMode.PLOT_BEAM_WIDTH && getPointOnGraph(mouseX, mouseY) != null) {
+            double p = getVerticallyPointOnGraph(mouseX, mouseY);
             setToolTipText("[" + df.format(p + View.getView(this).min) + "; " + df.format(getPoints().get(p)) + "]");
-        } else if (getPointOnGraph(mCanx, mCany) != null) {
-            double p = getVerticallyPointOnGraph(mCanx, mCany);
+        } else if (getPointOnGraph(mouseX, mouseY) != null) {
+            double p = getVerticallyPointOnGraph(mouseX, mouseY);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]");
         }
-        if (getVerticallyPointOnGraph(mCanx, mCany) != null) {
+        if (getVerticallyPointOnGraph(mouseX, mouseY) != null) {
             setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 
         } else {
@@ -776,12 +589,10 @@ public class VCanvas extends CommonRootCanvas {
         drawXAxis(g2); // draw vertical lines
         g2.setColor(Color.BLACK);
         int i = 0;
-        drawYAxis(i++, g2); // draw vertical axis
+        drawYAxis(g2); // draw vertical axis
         // draw axes
         g2.setColor(Color.BLACK);
-        g2.drawLine(getLeftShift(), g2cy(0.0), getLeftShift() + getPlotWidth(), g2cy(0.0));// horizontal// draw
-        // horizontal axis
-        g2.drawString(graphTitle, getWidth() / 2 - 80, tPad / 2);
+        g2.drawString(graphTitle, getWidth() / 2 - 80, tCanvasPadding / 2);
         i = 0;
         g2.setColor(colors[0]);
         drawDataSet(i, g2);

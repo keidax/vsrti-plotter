@@ -23,19 +23,14 @@ import java.util.TreeMap;
 @SuppressWarnings("serial")
 public abstract class CommonTIFTCanvas extends CommonRootCanvas {
 
-    protected int[] steps = {1, 2, 5};
-    protected int squareWidth; // width of vertical line placement
-    protected int xLabelWidth;
     protected int defaultY = 2;
     protected int defaultX = 1;
 
     protected Double currentPoint;
-    protected static Color[] colors = {Color.BLACK};
     protected VolatileImage volatileImg;
 
     protected JFileChooser fileChooser;
 
-    protected int strokeSize = 4;
     protected Font titleFont;
 
     protected CommonTIFTAdapter commonAdapter;
@@ -48,12 +43,10 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     private HashMap<Double, Integer> mapG2CY = new HashMap<Double, Integer>();
 
     public CommonTIFTCanvas(CommonTIFTAdapter a, TreeMap<Double, Double> g) {
-        lPad = 80;
-        rPad = 30;
-        tPad = 40;
-        bPad = 60;
-        squareWidth = 50;
-        xLabelWidth = 30;
+        lCanvasPadding = 80;
+        rCanvasPadding = 30;
+        tCanvasPadding = 40;
+        bCanvasPadding = 60;
         setPoints(g);
         commonAdapter = a;
         addMouseListener(this);
@@ -307,104 +300,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         return min * 1.1;
     }
 
-    public int countMax(double max) {
-        int i = 0;
-        boolean end = false;
-        while (!end) {
-            if (max / (steps[i % steps.length] * (int) Math.pow(10, i / steps.length)) < 1) {
-                end = true;
-            }
-            i++;
-        }
-        i--;
-        return (int) Math.pow(2, (int) Math.ceil(Math.log(max / commonAdapter.getDeltaBaseline()) / Math.log(2)));
-    }
-
-    public int countMaxVertical(double max) {
-        int i = 0;
-        boolean end = false;
-        while (!end) {
-            if (max / (steps[i % steps.length] * (int) Math.pow(10, i / steps.length)) < 1) {
-                end = true;
-            }
-            i++;
-        }
-        i -= 2;
-        return steps[i % steps.length] * (int) Math.pow(10, i / steps.length);
-    }
-
-    public int getLPad() {
-        return lPad;
-    }
-
-    public void setLPad(int pad) {
-        lPad = pad;
-    }
-
-    public int getRPad() {
-        return rPad;
-    }
-
-    public void setRPad(int pad) {
-        rPad = pad;
-    }
-
-    public int getTPad() {
-        return tPad;
-    }
-
-    public void setTPad(int pad) {
-        tPad = pad;
-    }
-
-    public int getBPad() {
-        return bPad;
-    }
-
-    public void setBPad(int pad) {
-        bPad = pad;
-    }
-
-    public int[] getSteps() {
-        return steps;
-    }
-
-    public void setSteps(int[] steps) {
-        this.steps = steps;
-    }
-
-    public int getSquareWidth() {
-        return squareWidth;
-    }
-
-    public void setSquareWidth(int squareWidth) {
-        this.squareWidth = squareWidth;
-    }
-
-    public int getYLabelWidth() {
-        return yLabelWidth;
-    }
-
-    public void setYLabelWidth(int labelWidth) {
-        yLabelWidth = labelWidth;
-    }
-
-    public int getXLabelWidth() {
-        return xLabelWidth;
-    }
-
-    public void setXLabelWidth(int labelWidth) {
-        xLabelWidth = labelWidth;
-    }
-
-    public int getDefaultY() {
-        return defaultY;
-    }
-
-    public void setDefaultY(int defaultY) {
-        this.defaultY = defaultY;
-    }
-
     public Double getCurrentPoint() {
         return currentPoint;
     }
@@ -416,7 +311,7 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     protected Double getVerticallyPointOnGraph(int cx, int cy) {
         double x = c2gx(cx);
         // don't allow points outside of graph area
-        if (x < getMinX() || x > getMaxX() || cy < tPad || cy > getHeight() - bPad) {
+        if (x < getMinX() || x > getMaxX() || cy < tCanvasPadding || cy > getHeight() - bCanvasPadding) {
             return null;
         }
         double floorX, ceilX;
@@ -486,8 +381,8 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         // NOT FINISHED (just redo getCurrentDataSet to
         // getViewer().getCurrentDataSet
 
-        if (currentPoint == null && e.getX() >= getLPad() && e.getX() <= getLPad() + getPlotWidth() && e.getY() >= tPad
-                && e.getY() < getWidth() - bPad) {
+        if (currentPoint == null && e.getX() >= getLeftCanvasPadding() && e.getX() <= getLeftCanvasPadding() + getPlotWidth() && e.getY() >= tCanvasPadding
+                && e.getY() < getWidth() - bCanvasPadding) {
         }
     }
 
@@ -525,111 +420,11 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         drawXAxis(g2);
         g2.setColor(Color.BLACK);
         g2.setFont(getTitleFont());
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tPad + g2.getFontMetrics().getHeight() / 2) / 2);
-        g2.setColor(colors[0]);
+        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tCanvasPadding + g2.getFontMetrics().getHeight() / 2) / 2);
+        g2.setColor(Color.BLACK);
         drawDataSet(g2);
         long end = System.currentTimeMillis();
         System.out.println("drawing time: " + (end - start));
-    }
-
-    /**
-     * Draws the x-axis
-     *
-     * @param g the Graphics2D object to use
-     */
-    public void drawXAxis(Graphics2D g) {
-        g.setStroke(new BasicStroke(strokeSize));
-        g.setFont(getNormalFont());
-        DecimalFormat df = new DecimalFormat("#.#");
-        FontMetrics fm = g.getFontMetrics();
-
-        double xSpacing = getXSpacing();
-
-        // draw axis title
-        g.drawString(xAxisTitle, getLPad() + (getPlotWidth() - g.getFontMetrics().stringWidth(xAxisTitle)) / 2,
-                getHeight() - 10);
-        // draw horizontal axis
-        g.drawLine(getLPad(), g2cy(0.0), getWidth() - rPad, g2cy(0.0));
-
-        for (double i = (int) ((int) (getMinX() / xSpacing) * xSpacing); i <= getMaxX(); i += xSpacing) {
-            int xPosition = g2cx(i);
-            int yPosition = getHeight() - bPad;
-
-            // draw vertical marks
-            g.setColor(Color.LIGHT_GRAY);
-            g.drawLine(xPosition, yPosition + 2, xPosition, yPosition - 2);
-
-            // draw labels for each mark
-            g.setColor(Color.BLACK);
-            String lString = df.format(i);
-            g.drawString(lString, xPosition - fm.stringWidth(lString) / 2, yPosition + fm.getAscent() + 5);
-        }
-    }
-
-    /**
-     * Draws the y-axis
-     *
-     * @param g the Graphics2D object to use
-     */
-    public void drawYAxis(Graphics2D g) {
-        g.setStroke(new BasicStroke(strokeSize));
-        g.setFont(getNormalFont());
-        g.setColor(Color.BLACK);
-        FontMetrics fm = g.getFontMetrics();
-        DecimalFormat df = new DecimalFormat("#.#");
-
-        g.drawLine(getLPad(), tPad, getLPad(), getHeight() - bPad);
-
-        // determine spacing for marks on y-axis
-        double ySpacing = 1;
-        double pixelsPerNumber = this.getPlotHeight() * 1.0 / (getMaxY() - getMinY());
-        if (pixelsPerNumber > 200) {
-            ySpacing = 0.1;
-        } else if (pixelsPerNumber > 90) {
-            ySpacing = 0.2;
-        } else if (pixelsPerNumber > 35) {
-            ySpacing = 0.5;
-        } else if (pixelsPerNumber > 20) {
-            ySpacing = 1;
-        } else if (pixelsPerNumber > 8) {
-            ySpacing = 2;
-        } else if (pixelsPerNumber > 3.5) {
-            ySpacing = 5;
-        } else {
-            ySpacing = 10;
-        }
-
-        for (double i = (int) ((int) (getMinY() / ySpacing) * ySpacing); i <= getMaxY(); i += ySpacing) {
-            int xPosition = lPad;
-            int yPosition = g2cy(i);
-            // draw horixontal marks
-            g.setColor(Color.LIGHT_GRAY);
-            g.drawLine(xPosition - 2, yPosition, xPosition + 2, yPosition);
-            // draw label for each mark
-            g.setColor(Color.BLACK);
-            String tempString = df.format(i);
-            g.drawString(tempString, xPosition - fm.stringWidth(tempString) - 5, yPosition + fm.getAscent() / 2);
-        }
-
-        drawVerticalLabel(g);
-    }
-
-    /**
-     * Draws the label for the y axis
-     */
-    public void drawVerticalLabel(Graphics2D g) {
-        g.setColor(Color.BLACK);
-        g.setFont(getNormalFont());
-
-        int translateDown = tPad + (getPlotHeight() + g.getFontMetrics().stringWidth(yAxisTitle)) / 2;
-
-        g.translate(yLabelWidth, translateDown);
-        g.rotate(-Math.PI / 2.0);
-
-        g.drawString(yAxisTitle, 0, 10);
-
-        g.rotate(Math.PI / 2.0);
-        g.translate(-yLabelWidth, -translateDown);
     }
 
     private Font getTitleFont() {

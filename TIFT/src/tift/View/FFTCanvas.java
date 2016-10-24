@@ -47,7 +47,7 @@ public class FFTCanvas extends Canvas {
     public void drawDataSet(Graphics2D g) {
         if (getMinX() < 0 && getMaxX() > 0) {
             g.setColor(Color.LIGHT_GRAY);
-            g.drawLine(g2cx(0), tPad, g2cx(0), getHeight() - bPad);
+            g.drawLine(g2cx(0), tCanvasPadding, g2cx(0), getHeight() - bCanvasPadding);
         }
         super.drawDataSet(g);
     }
@@ -76,7 +76,7 @@ public class FFTCanvas extends Canvas {
         }
 
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            double toy = Math.min(Math.max(tCanvasPadding, e.getY()), getHeight() - bCanvasPadding);
             if (amp) {
                 adapter.moveImagePoint(getCurrentPoint(), c2gy(toy));
             } else {

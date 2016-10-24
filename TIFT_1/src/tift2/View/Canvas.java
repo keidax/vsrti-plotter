@@ -65,7 +65,7 @@ public abstract class Canvas extends CommonTIFTCanvas {
             }
         }
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            double toy = Math.min(Math.max(tCanvasPadding, e.getY()), getHeight() - bCanvasPadding);
             adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
         }
     }
@@ -82,7 +82,7 @@ public abstract class Canvas extends CommonTIFTCanvas {
         }
         
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            double toy = Math.min(Math.max(tCanvasPadding, e.getY()), getHeight() - bCanvasPadding);
             adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
         }
     }

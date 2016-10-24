@@ -71,7 +71,7 @@ public class VCanvas extends Canvas {
         }
 
         if (getCurrentPoint() != null) {
-            double toy = Math.min(Math.max(tPad, e.getY()), getHeight() - bPad);
+            double toy = Math.min(Math.max(tCanvasPadding, e.getY()), getHeight() - bCanvasPadding);
             if (amp) {
                 adapter.moveVisibilityPoint(getCurrentPoint(), c2gy(toy));
             } else {
