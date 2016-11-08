@@ -65,7 +65,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         bInstruction = new JButton("Instructions");
         bAbout = new JButton("About");
         bAvgBlocks = new JButton("Average Blocks of Data");
-        bAvgTAs = new JButton("Plot Average TAs vs. Scan No.");
+        bAvgTAs = new JButton("Plot Average TAs vs. Block Number");
         bSubtract = new JButton("Subtract Background");
         bUndo = new JButton("Undo Delete");
         bBeam = new JButton("Plot Beam");
