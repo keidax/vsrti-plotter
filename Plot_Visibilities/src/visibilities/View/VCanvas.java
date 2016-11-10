@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,7 +34,6 @@ public class VCanvas extends CommonVSRTICanvas {
     protected double defaultXLeft = 0;
     protected double defaultXRight = 25;
     protected Double currentPoint;
-    protected VolatileImage volatileImg;
     private JFileChooser fileChooser;
     /**
      * determines the size of the title
@@ -217,7 +215,8 @@ public class VCanvas extends CommonVSRTICanvas {
         g.setStroke(oldStroke);
     }
 
-    public void drawDataSet(Graphics2D g) {
+    @Override
+    protected void drawDataSet(Graphics2D g) {
         if (adapter.getVisibilityGraphDataPoints().size() == 0) {
             return;
         }
@@ -234,31 +233,17 @@ public class VCanvas extends CommonVSRTICanvas {
     }
 
     // main paint method
-    protected void doPaint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        setBackground(Color.WHITE);
-
-        drawXAxis(g2); // draw vertical lines
-        g2.setColor(Color.BLACK);
-        drawYAxis(g2); // draw vertical axis
-        // draw axes
-        g2.setColor(Color.BLACK);
-        // g2.drawLine(this.getLeftCanvasPadding(), g2cy(0.0), this.getLeftCanvasPadding() +
-        // this.getPlotWidth(), g2cy(0.0));//horizontal// draw horizontal axis
-        g.setFont(new Font(g.getFont().getFontName(), 0, titleSize));
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tCanvasPadding + g2
-                .getFontMetrics().getHeight() / 2) / 2);
-        g2.setColor(colors[0]);
-        drawDataSet(g2);
+    @Override
+    protected void doPaint(Graphics2D g) {
+        super.doPaint(g);
         if (view.showVis) {
-            paintVis(g2);
+            paintVis(g);
         }
     }
-    
+
     @Override
-    public void update(Graphics g) {
-        paint(g);
+    protected Font getTitleFont(){
+        return super.getTitleFont().deriveFont((float)titleSize);
     }
 
     /**
@@ -331,44 +316,6 @@ public class VCanvas extends CommonVSRTICanvas {
         this.view = view;
     }
 
-    @Override
-    public void paint(Graphics g) {
-        // create the hardware accelerated image.
-        createBackBuffer();
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // Main rendering loop. Volatile images may lose their contents.
-        // This loop will continually render to (and produce if neccessary)
-        // volatile images
-        // until the rendering was completed successfully.
-        do {
-
-            // Validate the volatile image for the graphics configuration of
-            // this
-            // component. If the volatile image doesn't apply for this graphics
-            // configuration
-            // (in other words, the hardware acceleration doesn't apply for the
-            // new device)
-            // then we need to re-create it.
-            GraphicsConfiguration gc = getGraphicsConfiguration();
-            int valCode = volatileImg.validate(gc);
-
-            // This means the device doesn't match up to this hardware
-            // accelerated image.
-            if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-                createBackBuffer(); // recreate the hardware accelerated image.
-            }
-
-            Graphics offscreenGraphics = volatileImg.getGraphics();
-            doPaint(offscreenGraphics); // call core paint method.
-
-            // paint back buffer to main graphics
-            g.drawImage(volatileImg, 0, 0, this);
-            // Test if content is lost
-        } while (volatileImg.contentsLost());
-    }
-
-
-
     /**
      * Draws Model
      */
@@ -411,10 +358,5 @@ public class VCanvas extends CommonVSRTICanvas {
         }
         return Math.sqrt(Math.pow(tA, 2) + Math.pow(tB, 2) + 2 * tA * tB
                 * Math.cos(2 * Math.PI * blam * Math.sin(view.theta)));
-    }
-
-    protected void createBackBuffer() {
-        GraphicsConfiguration gc = getGraphicsConfiguration();
-        volatileImg = gc.createCompatibleVolatileImage(getWidth(), getHeight());
     }
 }

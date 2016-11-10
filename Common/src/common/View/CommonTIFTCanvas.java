@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,15 +26,12 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
     protected int defaultX = 1;
 
     protected Double currentPoint;
-    protected VolatileImage volatileImg;
 
     protected JFileChooser fileChooser;
 
     protected Font titleFont;
 
     protected CommonTIFTAdapter commonAdapter;
-
-    private boolean antialiasing = true;
 
     //experimental speed optimizations
     private double cachedMinY, cachedMaxY;
@@ -202,14 +198,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
 
     }
 
-    public boolean getAntialiasing() {
-        return antialiasing;
-    }
-
-    public void setAntialiasing(boolean antialiasing) {
-        this.antialiasing = antialiasing;
-    }
-
     @Override
     protected int getOrnamentSize(double x) {
         if (x <= getMinX()) {
@@ -329,49 +317,6 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         return (x - floorX < ceilX - x) ? floorX : ceilX;
     }
 
-    @Override
-    public void paint(Graphics g) {
-        // create the hardware accelerated image.
-        createBackBuffer();
-
-        // Main rendering loop. Volatile images may lose their contents.
-        // This loop will continually render to (and produce if necessary)
-        // volatile images until the rendering was completed successfully.
-        do {
-
-            // Validate the volatile image for the graphics configuration of this
-            // component. If the volatile image doesn't apply for this graphics configuration
-            // (in other words, the hardware acceleration doesn't apply for the new device)
-            // then we need to re-create it.
-            GraphicsConfiguration gc = getGraphicsConfiguration();
-
-//            System.out.println("page flipping: " + gc.getBufferCapabilities().isPageFlipping()
-//            + "\nmulti buffer: " + gc.getBufferCapabilities().isMultiBufferAvailable()
-//            + "\naccelerated: " + gc.getImageCapabilities().isAccelerated()
-//            + "\ntrue volatile: "+ gc.getImageCapabilities().isTrueVolatile());
-
-            int valCode = volatileImg.validate(gc);
-
-            // This means the device doesn't match up to this hardware
-            // accelerated image.
-            if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-                createBackBuffer(); // recreate the hardware accelerated image.
-            }
-
-            Graphics offscreenGraphics = volatileImg.getGraphics();
-            doPaint(offscreenGraphics); // call core paint method.
-
-            // paint back buffer to main graphics
-            g.drawImage(volatileImg, 0, 0, this);
-            // Test if content is lost
-        } while (volatileImg.contentsLost());
-    }
-
-    protected void createBackBuffer() {
-        GraphicsConfiguration gc = getGraphicsConfiguration();
-        volatileImg = gc.createCompatibleVolatileImage(getWidth(), getHeight());
-    }
-
     /**
      * Records coordinates mouse was released and if there was no currentPoint,
      * then creates new point with particular coordinates
@@ -402,32 +347,18 @@ public abstract class CommonTIFTCanvas extends CommonRootCanvas {
         }
     }
 
-    protected void doPaint(Graphics g) {
+    @Override
+    protected void doPaint(Graphics2D g) {
         mapG2CY.clear();
         needsRecaching = true;
         cachedMinY = getMinY();
         cachedMaxY = getMaxY();
         needsRecaching = false;
-
-        long start = System.currentTimeMillis();
-
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                antialiasing ? RenderingHints.VALUE_ANTIALIAS_ON : RenderingHints.VALUE_ANTIALIAS_OFF);
-        setBackground(Color.WHITE);
-
-        drawYAxis(g2);
-        drawXAxis(g2);
-        g2.setColor(Color.BLACK);
-        g2.setFont(getTitleFont());
-        g2.drawString(graphTitle, (getWidth() - g2.getFontMetrics().stringWidth(graphTitle)) / 2, (tCanvasPadding + g2.getFontMetrics().getHeight() / 2) / 2);
-        g2.setColor(Color.BLACK);
-        drawDataSet(g2);
-        long end = System.currentTimeMillis();
-        System.out.println("drawing time: " + (end - start));
+        super.doPaint(g);
     }
 
-    private Font getTitleFont() {
+    @Override
+    protected Font getTitleFont() {
         if (titleFont == null) {
             try {
                 titleFont = Font.createFont(Font.TRUETYPE_FONT, CommonTIFTCanvas.class.getClassLoader().getResourceAsStream("FreeSerif-min.ttf"));

@@ -3,7 +3,6 @@ package srt.View;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,7 +26,6 @@ public class VCanvas extends CommonRootCanvas {
     protected int squareWidth = 30;
     protected static int defaultX = 9;
     protected static int defaultY = 9;
-    protected VolatileImage volatileImg;
     protected JFileChooser fileChooser;
 
     
@@ -261,7 +259,8 @@ public class VCanvas extends CommonRootCanvas {
        /**
      * Draws all points to the inputed graphics
      */
-    public void drawDataSet(int count, Graphics2D g) {
+    @Override
+    protected void drawDataSet(Graphics2D g) {
         if (getPoints().size() == 0) {
             return;
         }
@@ -543,64 +542,5 @@ public class VCanvas extends CommonRootCanvas {
             setCursor(Cursor.getDefaultCursor());
             setToolTipText("");
         }
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        // create the hardware accelerated image.
-        createBackBuffer();
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // Main rendering loop. Volatile images may lose their contents.
-        // This loop will continually render to (and produce if neccessary)
-        // volatile images
-        // until the rendering was completed successfully.
-        do {
-
-            // Validate the volatile image for the graphics configuration of
-            // this
-            // component. If the volatile image doesn't apply for this graphics
-            // configuration
-            // (in other words, the hardware acceleration doesn't apply for the
-            // new device)
-            // then we need to re-create it.
-            GraphicsConfiguration gc = getGraphicsConfiguration();
-            int valCode = volatileImg.validate(gc);
-
-            // This means the device doesn't match up to this hardware
-            // accelerated image.
-            if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-                createBackBuffer(); // recreate the hardware accelerated image.
-            }
-
-            Graphics offscreenGraphics = volatileImg.getGraphics();
-            doPaint(offscreenGraphics); // call core paint method.
-
-            // paint back buffer to main graphics
-            g.drawImage(volatileImg, 0, 0, this);
-            // Test if content is lost
-        } while (volatileImg.contentsLost());
-    }
-
-    protected void doPaint(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        setBackground(Color.WHITE);
-
-        drawXAxis(g2); // draw vertical lines
-        g2.setColor(Color.BLACK);
-        int i = 0;
-        drawYAxis(g2); // draw vertical axis
-        // draw axes
-        g2.setColor(Color.BLACK);
-        g2.drawString(graphTitle, getWidth() / 2 - 80, tCanvasPadding / 2);
-        i = 0;
-        g2.setColor(colors[0]);
-        drawDataSet(i, g2);
-        i++;
-    }
-
-    protected void createBackBuffer() {
-        GraphicsConfiguration gc = getGraphicsConfiguration();
-        volatileImg = gc.createCompatibleVolatileImage(getWidth(), getHeight());
     }
 }

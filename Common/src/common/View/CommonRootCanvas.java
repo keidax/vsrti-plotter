@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.VolatileImage;
 import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.TreeMap;
@@ -23,6 +24,8 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
 
     protected int yLabelWidth = 10;
     protected int strokeSize = 4;
+
+    protected VolatileImage volatileImg;
 
     /**
      * determines the size of the axis labels and numbers
@@ -80,6 +83,10 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
             normalFont = new Font(Font.SANS_SERIF, Font.PLAIN, fontSize);
         }
         return normalFont;
+    }
+
+    protected Font getTitleFont(){
+        return getNormalFont();
     }
 
     /**
@@ -259,6 +266,13 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
                 getHeight() - 10);
     }
 
+    protected void drawGraphTitle(Graphics2D g){
+        g.setColor(Color.BLACK);
+        g.setFont(getTitleFont());
+        g.drawString(graphTitle, (getWidth() - g.getFontMetrics().stringWidth(graphTitle)) / 2,
+                (tCanvasPadding + g.getFontMetrics().getHeight() / 2) / 2);
+    }
+
     public int getLeftCanvasPadding() {
         return lCanvasPadding;
     }
@@ -366,4 +380,66 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
     @Override
     public void mouseDragged(MouseEvent e) {}
 
+    @Override
+    public void update(Graphics g) {
+        paint(g);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        // create the hardware accelerated image.
+        createBackBuffer();
+
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Main rendering loop. Volatile images may lose their contents.
+        // This loop will continually render to (and produce if neccessary)
+        // volatile images until the rendering was completed successfully.
+        do {
+
+            // Validate the volatile image for the graphics configuration of this
+            // component. If the volatile image doesn't apply for this graphics configuration
+            // (in other words, the hardware acceleration doesn't apply for the new device)
+            // then we need to re-create it.
+            GraphicsConfiguration gc = getGraphicsConfiguration();
+            int valCode = volatileImg.validate(gc);
+
+            // This means the device doesn't match up to this hardware
+            // accelerated image.
+            if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
+                createBackBuffer(); // recreate the hardware accelerated image.
+            }
+
+            Graphics offscreenGraphics = volatileImg.getGraphics();
+            ((Graphics2D) offscreenGraphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            doPaint((Graphics2D) offscreenGraphics); // call core paint method.
+
+            // paint back buffer to main graphics
+            g.drawImage(volatileImg, 0, 0, this);
+            // Test if content is lost
+        } while (volatileImg.contentsLost());
+    }
+
+    protected void createBackBuffer() {
+        GraphicsConfiguration gc = getGraphicsConfiguration();
+        volatileImg = gc.createCompatibleVolatileImage(getWidth(), getHeight());
+    }
+
+    protected void doPaint(Graphics2D g) {
+        long start = System.currentTimeMillis();
+
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        setBackground(Color.WHITE);
+
+        drawXAxis(g);
+        drawYAxis(g);
+        drawGraphTitle(g);
+        drawDataSet(g);
+
+        long end = System.currentTimeMillis();
+        System.err.println("drawing time: " + (end - start));
+    }
+
+    abstract protected void drawDataSet(Graphics2D g);
 }

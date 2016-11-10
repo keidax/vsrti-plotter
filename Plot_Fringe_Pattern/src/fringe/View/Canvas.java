@@ -6,12 +6,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.VolatileImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,7 +50,6 @@ public abstract class Canvas extends CommonVSRTICanvas {
     protected int mCanx, mCany;
     protected Double currentPoint;
     protected Color[] colors = {Color.BLACK};
-    protected VolatileImage volatileImg;
     protected int mouseButton = 0;
     protected double maxX = 40;
     private JFileChooser fileChooser;
@@ -370,47 +367,6 @@ public abstract class Canvas extends CommonVSRTICanvas {
         this.colors = colors;
     }
     
-    @Override
-    public void update(Graphics g) {
-        paint(g);
-    }
-    
-    @Override
-    public void paint(Graphics g) {
-        // create the hardware accelerated image.
-        createBackBuffer();
-        
-        // Main rendering loop. Volatile images may lose their contents.
-        // This loop will continually render to (and produce if neccessary)
-        // volatile images
-        // until the rendering was completed successfully.
-        do {
-            
-            // Validate the volatile image for the graphics configuration of
-            // this
-            // component. If the volatile image doesn't apply for this graphics
-            // configuration
-            // (in other words, the hardware acceleration doesn't apply for the
-            // new device)
-            // then we need to re-create it.
-            GraphicsConfiguration gc = getGraphicsConfiguration();
-            int valCode = volatileImg.validate(gc);
-            
-            // This means the device doesn't match up to this hardware
-            // accelerated image.
-            if (valCode == VolatileImage.IMAGE_INCOMPATIBLE) {
-                createBackBuffer(); // recreate the hardware accelerated image.
-            }
-            
-            Graphics offscreenGraphics = volatileImg.getGraphics();
-            doPaint(offscreenGraphics); // call core paint method.
-            
-            // paint back buffer to main graphics
-            g.drawImage(volatileImg, 0, 0, this);
-            // Test if content is lost
-        } while (volatileImg.contentsLost());
-    }
-    
     // main paint method
     protected void doPaint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -489,10 +445,5 @@ public abstract class Canvas extends CommonVSRTICanvas {
         }
         double x = Math.PI * view.getModel().getDiameter() * theta / view.getModel().getLambda();
         return Math.pow(2 * ViewUtilities.besselJ(x) / x, 2);
-    }
-    
-    protected void createBackBuffer() {
-        GraphicsConfiguration gc = getGraphicsConfiguration();
-        volatileImg = gc.createCompatibleVolatileImage(getWidth(), getHeight());
     }
 }
