@@ -94,7 +94,7 @@ public class ViewUtilities {
      * @return Velocity in km/s
      */
     public static double frequencyToVelocity(double freq) {
-        return ((1420.406 - freq)/1420.406) * 3e5;
+        return ((1420.406 - freq)/freq) * 3e5;
     }
     
 }
