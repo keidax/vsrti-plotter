@@ -42,7 +42,7 @@ public class Form extends JFrame implements Runnable {
         getContentPane().setLayout(new FlowLayout());
         
         JButton beamButton = new JButton("Plot Beam");
-        JButton fringeButton = new JButton("Plot Fringe Pattern");
+//        JButton fringeButton = new JButton("Plot Fringe Pattern");
         JButton visButton = new JButton("Plot Visibilities");
         
         getContentPane().add(beamButton);
@@ -57,12 +57,12 @@ public class Form extends JFrame implements Runnable {
             }
         });
         
-        fringeButton.addActionListener(new ActionListener() {
+        /*fringeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 fringe.Main.main(null);
             }
-        });
+        });*/
         
         visButton.addActionListener(new ActionListener() {
             @Override

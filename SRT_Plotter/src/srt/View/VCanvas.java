@@ -24,7 +24,6 @@ public class VCanvas extends CommonRootCanvas {
 
     public View view;
     public Adapter adapter;
-    protected int squareWidth = 30;
     protected static int defaultX = 9;
     protected static int defaultY = 9;
     protected JFileChooser fileChooser;
@@ -32,7 +31,6 @@ public class VCanvas extends CommonRootCanvas {
     
     protected TreeMap<Double, Double> dataPoints;
     protected static AbstractOrnament[] ornaments = {new CircleOrnament(3), new SquareOrnament(3)};
-    protected static Color[] colors = {Color.BLUE, Color.BLACK};
     protected int sigma = 1;
 
     public enum PlotMode {
@@ -86,7 +84,6 @@ public class VCanvas extends CommonRootCanvas {
         setSize(new Dimension(200, 50));
         setVisible(true);
 
-        // lCanvasPadding = (old) lPad + yLabelWidth
         lCanvasPadding = 100;
         rCanvasPadding = 30;
         tCanvasPadding = 30;
@@ -180,29 +177,18 @@ public class VCanvas extends CommonRootCanvas {
                         return "Only EPS";
                     }
                 });
-                // fileChooser.addChoosableFileFilter(new jpgSaveFilter());
                 if (fileChooser.showSaveDialog(VCanvas.this) == JFileChooser.APPROVE_OPTION) {
-                    // ObjectOutputStream out;
                     try {
 
                         File f = fileChooser.getSelectedFile();
                         if (!f.getName().trim().endsWith(".eps")) {
                             f = new File(f.getAbsolutePath() + ".eps");
                         }
-                        // out = new ObjectOutputStream(new
-                        // FileOutputStream(f));
                         EpsGraphics2D g = new EpsGraphics2D("Title", f, 0, 0, getWidth(), getHeight());
                         VCanvas.this.paint(g);
                         g.flush();
                         System.out.println(g.toString());
                         g.close();
-                        // f.close();
-
-                        // BufferedImage image = new BufferedImage(getWidth(),
-                        // getHeight(), BufferedImage.TYPE_INT_RGB);
-                        // paint(image.createGraphics());
-                        // ImageIO.write(image, "eps", f);
-                        // out.close();
                     } catch (IOException ex) {}
                 } else {
                     JOptionPane.showMessageDialog(null, "cannot save image", "save error", JOptionPane.ERROR_MESSAGE);
@@ -271,38 +257,6 @@ public class VCanvas extends CommonRootCanvas {
 
     }
 
-    /**
-     * Draws the x-axis
-     */
-    /*public void drawXAxis(Graphics2D g) {
-        double steps = countHorizontalStep();
-        double lstep = countHorizontalLabelStep();
-        g.setFont(new Font(g.getFont().getFontName(), 0, 11));
-        DecimalFormat df = new DecimalFormat("#.##");
-
-        if (currentPlotMode == PlotMode.PLOT_FREQUENCIES) {
-            g.drawString(View.getView(this).currentDataBlock.fStart + "+", 0, getHeight() - 17);
-        } else if(currentPlotMode == PlotMode.PLOT_VELOCITIES) {
-            g.drawString(ViewUtilities.frequencyToVelocity(View.getView(this).currentDataBlock.fStart) + "+", 0, getHeight() - 17);
-        }
-
-        for (int i = 0; i < (getPlotWidth() - 1) / steps + 1; i++) {
-            g.setColor(Color.LIGHT_GRAY);
-            g.drawLine((int) (lCanvasPadding + i * steps), tCanvasPadding, (int) (lCanvasPadding + i * steps), getHeight() - bCanvasPadding);
-            g.setColor(Color.BLACK);
-
-            if (currentPlotMode == PlotMode.PLOT_BEAM_WIDTH) {
-                g.drawString("" + df.format(i * lstep * 100 / 100.0 + View.getView(this).min), (int) (lCanvasPadding + i
-                        * steps - xLabelWidth / 4), getHeight() - 17);
-            } else {
-                g.drawString("" + df.format(i * lstep * 100 / 100.0),
-                        (int) (lCanvasPadding + i * steps - xLabelWidth / 4), getHeight() - 17);
-            }
-
-        }
-        drawXAxisTitle(g);
-    }*/
-
     @Override
     public void drawXAxisMetric(Graphics2D g){
         DecimalFormat df = new DecimalFormat("#.#");
@@ -316,6 +270,8 @@ public class VCanvas extends CommonRootCanvas {
                     getHeight() - bCanvasPadding + fm.getAscent() + 5);
         }
 
+        // This is mostly the same as the root method, but we want the marks on the x-axis to
+        // extend from top to bottom.
         double xSpacing = getXSpacing();
         for (double i = (int) (getMinX() - (getMinX() % xSpacing) + xSpacing); i <= getMaxX(); i += xSpacing) {
             int xPosition = g2cx(i);

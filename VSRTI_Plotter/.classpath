@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Beam_width"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Plot_Fringe_Pattern"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Plot_Visibilities"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
