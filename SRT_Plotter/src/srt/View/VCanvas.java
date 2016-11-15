@@ -237,15 +237,10 @@ public class VCanvas extends CommonRootCanvas {
     /**
      * Draws an individual point as a red circle or a red triangle
      */
-    public void drawPoint(Graphics2D g, double x, double y, boolean b) {
-        
+    public void drawPointForDelete(Graphics2D g, double x, double y) {
         g.setColor(Color.RED);
-        TriangleOrnament t = new TriangleOrnament();
-        if (b == true) {
-            ornaments[1].draw(g, g2cx(x), g2cy(y));
-        } else {
-            t.draw(g, g2cx(x), g2cy(y));
-        }
+        SquareOrnament t = new SquareOrnament(6);
+        t.draw(g, g2cx(x), g2cy(y));
     }
     
     /**
@@ -478,7 +473,7 @@ public class VCanvas extends CommonRootCanvas {
                 && evt.getButton() != MouseEvent.BUTTON2) {
             p = getPointOnGraph(mouseX, mouseY);
             if (View.getView(this).deleting[(int) p - 1] != -1) {
-                drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p), false);
+                drawPointForDelete((Graphics2D) getGraphics(), p, getPoints().get(p));
                 View.getView(this).deleting[(int) p - 1] = -1;
 
             } else if (View.getView(this).deleting[(int) p - 1] == -1) {
@@ -509,7 +504,7 @@ public class VCanvas extends CommonRootCanvas {
             p = getVerticallyPointOnGraph(mouseX, mouseY);
 
             if (View.getView(this).deleting[(int) p - 1] != -1) {
-                drawPoint((Graphics2D) getGraphics(), p, getPoints().get(p), false);
+                drawPointForDelete((Graphics2D) getGraphics(), p, getPoints().get(p));
                 View.getView(this).deleting[(int) p - 1] = -1;
             }
         }
