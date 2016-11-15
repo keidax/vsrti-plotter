@@ -14,11 +14,17 @@
       SRT_Plotter/src/**"/>
   </target>
 
-  <target name="dist" depends="compile" description="generate the distribution">
+  <target name="gitdetails" description="extract the git tag for current version">
+      <exec executable="git" outputproperty="git.tagstring">
+          <arg value="describe"/>
+      </exec>
+  </target>
+
+  <target name="dist" depends="compile,gitdetails" description="generate the distribution">
     <!-- Create the distribution directory -->
     <mkdir dir="dist"/>
     <!-- Build the jar file -->
-    <jar destfile="dist/${ant.project.name}.jar" basedir="${build}">
+    <jar destfile="dist/${ant.project.name}_${git.tagstring}.jar" basedir="${build}">
       <manifest>
         <attribute name="Main-Class" value="srt.Main"/>
       </manifest>
