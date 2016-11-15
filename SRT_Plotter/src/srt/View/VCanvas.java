@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -313,19 +314,15 @@ public class VCanvas extends CommonRootCanvas {
         FontMetrics fm = g.getFontMetrics();
 
         // Certain modes have a constant offset value for the x-axis, so we draw this number to the left of the origin
-        if (currentPlotMode == PlotMode.PLOT_FREQUENCIES || currentPlotMode == PlotMode.PLOT_VELOCITIES) {
-            double offsetNumber;
-            if(currentPlotMode== PlotMode.PLOT_FREQUENCIES)
-                offsetNumber = View.getView(this).currentDataBlock.fStart;
-            else
-                offsetNumber = ViewUtilities.frequencyToVelocity(View.getView(this).currentDataBlock.fStart);
+        if (currentPlotMode == PlotMode.PLOT_FREQUENCIES) {
+            double offsetNumber = View.getView(this).currentDataBlock.fStart;
             String offsetString = df.format(offsetNumber) + "+";
             g.drawString(offsetString, lCanvasPadding - fm.stringWidth(offsetString),
                     getHeight() - bCanvasPadding + fm.getAscent() + 5);
         }
 
         double xSpacing = getXSpacing();
-        for (double i = (int) ((int) (getMinX() / xSpacing) * xSpacing); i <= getMaxX(); i += xSpacing) {
+        for (double i = (int) (getMinX() - (getMinX() % xSpacing) + xSpacing); i <= getMaxX(); i += xSpacing) {
             int xPosition = g2cx(i);
             int yPosition = getHeight() - bCanvasPadding;
 
@@ -360,6 +357,19 @@ public class VCanvas extends CommonRootCanvas {
         return 1.1 * max;
     }
 
+    public Double getMinYPoint(){
+        if(getPoints() == null || getPoints().size() == 0) {
+            return 0.0;
+        }
+
+        double min = Collections.min(getPoints().values());
+        if(min > 0){
+            return 0.0;
+        } else {
+            return min;
+        }
+    }
+
     public double getMaxY() {
         if (getPoints().isEmpty()) {
             return defaultY;
@@ -371,7 +381,7 @@ public class VCanvas extends CommonRootCanvas {
         if (getPoints().isEmpty()) {
             return 0;
         }
-        return 0.0;
+        return getMinYPoint() * 1.1;
     }
 
     protected double getMaxX() {
@@ -385,7 +395,7 @@ public class VCanvas extends CommonRootCanvas {
         if (getPoints() == null || getPoints().size() == 0) {
             return 0.0;
         }
-        return Math.min(0.0, getPoints().firstKey());
+        return Math.floor(getPoints().firstKey());
     }
 
     // GETTERS AND SETTERS

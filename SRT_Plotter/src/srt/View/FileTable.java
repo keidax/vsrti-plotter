@@ -130,7 +130,6 @@ public class FileTable extends JTable implements TableModelListener {
         double[] data = this.getModel().getValueAt(index[0]).data;
         double start = this.getModel().getValueAt(index[0]).fStart;
         double step = this.getModel().getValueAt(index[0]).fStep;
-        double velOffset = ViewUtilities.frequencyToVelocity(start);
 
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
         TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
@@ -146,7 +145,7 @@ public class FileTable extends JTable implements TableModelListener {
                         break;
                     case PLOT_VELOCITIES:
                         double freq = start + i * step;
-                        points.put(ViewUtilities.frequencyToVelocity(freq) - velOffset, data[i]);
+                        points.put(ViewUtilities.frequencyToVelocity(freq), data[i]);
                         break;
                 }
             }
