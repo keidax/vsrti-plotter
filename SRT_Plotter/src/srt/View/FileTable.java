@@ -46,6 +46,10 @@ public class FileTable extends JTable implements TableModelListener {
              */
             @Override
             public void mousePressed(MouseEvent e) {
+                // If the mouse is pressed on a data block while in Average TA mode, we want to leave that mode
+                if(FileTable.this.getModel().viewer.canvas.getPlotMode() == VCanvas.PlotMode.PLOT_AVERAGE_TA) {
+                    FileTable.this.getModel().viewer.canvas.setPlotMode(VCanvas.PlotMode.PLOT_CHANNELS);
+                }
                 FileTable.this.updateGraph();
             }
             
