@@ -49,7 +49,7 @@ public class VCanvas extends CommonRootCanvas {
             case PLOT_AVERAGE_TA:
                 setXAxisTitle("Data Block");
                 setYAxisTitle("Antenna Temperature (K)");
-                setGraphTitle("Averge TA vs. Order");
+                setGraphTitle("Average TA vs. Order");
                 break;
             case PLOT_CHANNELS:
                 setXAxisTitle("Channels");
