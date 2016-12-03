@@ -156,6 +156,7 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
         // determine spacing for marks on y-axis
         double ySpacing = 1;
         double pixelsPerNumber = this.getPlotHeight() * 1.0 / (getMaxY() - getMinY());
+        //TODO make this able to scale arbitrarily
         if (pixelsPerNumber > 200) {
             ySpacing = 0.2;
         } else if (pixelsPerNumber > 100) {
@@ -166,10 +167,14 @@ public abstract class CommonRootCanvas extends JPanel implements MouseListener, 
             ySpacing = 2;
         } else if (pixelsPerNumber > 8) {
             ySpacing = 5;
-        } else if (pixelsPerNumber > 3.5) {
+        } else if (pixelsPerNumber > 4) {
             ySpacing = 10;
+        } else if (pixelsPerNumber > 2) {
+            ySpacing = 20;
+        } else if (pixelsPerNumber > 0.8) {
+            ySpacing = 50;
         } else {
-            ySpacing = 15;
+            ySpacing = 100;
         }
         return ySpacing;
     }
