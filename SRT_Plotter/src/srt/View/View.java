@@ -249,7 +249,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
                                 JOptionPane
                                         .showMessageDialog(null,
                                                 "Both data blocks must have the same data length, start frequency, and step frequency");
-                                return;
                             } else {
                                 double[] data = new double[A.data.length];
                                 double[] deleted = new double[A.data.length];
@@ -545,8 +544,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     }
                     writeIntoFile(f, dataBlockList.toString());
                     
-                } else {
-                    return;
                 }
             }
             
@@ -655,7 +652,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
                             canDelete = true;
                         } else {
                             JOptionPane.showMessageDialog(null, "You must select one or more data blocks.");
-                            return;
                         }
                         
                     }
@@ -702,14 +698,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 choosingDelete = false;
                 DataBlock node;
                 if (selectedRows != null) {
-                    for (int k = 0; k < selectedRows.length; k++) {
-                        node = dataBlockList.get(selectedRows[k]);
+                    for (int selectedRow : selectedRows) {
+                        node = dataBlockList.get(selectedRow);
                         for (int i = 0; i < node.data.length; i++) {
                             if (node.endChannels[i] != 0) {
                                 node.data[i] = node.endChannels[i];
                                 node.endChannels[i] = 0;
                             }
-                            
+
                         }
                     }
                 }
@@ -894,15 +890,15 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     bSelectEnd.setText("Delete End Channels");
                     DataBlock node;
                     if (selectedRows.length > 0) {
-                        for (int k = 0; k < selectedRows.length; k++) {
-                            node = dataBlockList.get(selectedRows[k]);
+                        for (int selectedRow : selectedRows) {
+                            node = dataBlockList.get(selectedRow);
                             for (int i = 0; i < deleting.length; i++) {
                                 if (deleting[i] == -1) {
                                     node.endChannels[i] = node.data[i];
                                     node.data[i] = deleting[i];
                                 }
                             }
-                            
+
                         }
                         jTable.updateGraph();
                     }
@@ -943,7 +939,7 @@ public class View extends JFrame implements ModelListener, ActionListener {
         
         this.setSize(800, 600);
         setVisible(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
     }
     
