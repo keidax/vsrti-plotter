@@ -53,6 +53,18 @@ public class DataBlock {
         return sum / count;
     }
 
+    public double getRMSOverFrequency(){
+        double average = getAverageOverFrequency();
+        double sum = 0, count = 0;
+        for (double point : data) {
+            if (point != -1) {
+                sum += Math.pow(average - point, 2);
+                count++;
+            }
+        }
+        return Math.sqrt(sum/count);
+    }
+
     /**
      * Prints out the Title and the data
      */

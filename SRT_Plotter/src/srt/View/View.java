@@ -670,8 +670,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     JOptionPane.showMessageDialog(null,
                             "You must select a data block before you can find its average over frequency.");
                 } else {
-                    View.this.lDelta.setText("Average Over Frequency: "
-                            + df.format(currentDataBlock.getAverageOverFrequency()));
+                    View.this.lDelta.setText(String.format("<html>Average Over Frequency: %s<br>RMS: %s</html>",
+                            df.format(currentDataBlock.getAverageOverFrequency()),
+                            df.format(currentDataBlock.getRMSOverFrequency())));
                 }
             }
         });
