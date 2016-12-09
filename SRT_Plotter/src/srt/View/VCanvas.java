@@ -491,7 +491,7 @@ public class VCanvas extends CommonRootCanvas {
                     + View.getView(this).taPlotted[(int) p] + ")");
         } else if (currentPlotMode == PlotMode.PLOT_BEAM_WIDTH && getPointOnGraph(mouseX, mouseY) != null) {
             double p = getVerticallyPointOnGraph(mouseX, mouseY);
-            setToolTipText("[" + df.format(p + View.getView(this).min) + "; " + df.format(getPoints().get(p)) + "]");
+            setToolTipText("[" + df.format(p) + "; " + df.format(getPoints().get(p)) + "]");
         } else if (getPointOnGraph(mouseX, mouseY) != null) {
             double p = getVerticallyPointOnGraph(mouseX, mouseY);
             setToolTipText("[" + df.format(p + min) + "; " + df.format(getPoints().get(p)) + "]");

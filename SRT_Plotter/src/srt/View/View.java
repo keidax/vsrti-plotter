@@ -36,7 +36,6 @@ public class View extends JFrame implements ModelListener, ActionListener {
     public JScrollPane jScroll;
     public int[] selectedRows, taPlotted;
     public boolean gotB = false;
-    public double min = 0.0;
     public JTextField fD;
     private JFileChooser jfc;
     
@@ -410,9 +409,9 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 JScrollPane jSC = new JScrollPane(table);
                 jSC.setMaximumSize(new Dimension(800, 300));
                 
-                Object[] o = {"Cancel", "Elevation", "Azimuth"};
+                Object[] o = {"Cancel", "Elevation", "Azimuth", "Degrees of Arc"};
                 int opt =
-                        JOptionPane.showOptionDialog(null, "Would you like to plot vs. azimuth or vs. elevation?",
+                        JOptionPane.showOptionDialog(null, "How would you like to plot?",
                                 "Plot Beam", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, o, o[2]);
                 String[] temp;
                 int count = 0;
@@ -420,47 +419,35 @@ public class View extends JFrame implements ModelListener, ActionListener {
                     return;
                 } else if (opt == 1) {
                     jf.setTitle("SRT Plotter - Plot Beam: Elevation");
-                    min = 0.0;
-                   for(DataBlock node : dataBlockList) {
+                    for(DataBlock node : dataBlockList) {
+                        node.angle = node.elevation;
                         if (node.title.contains("eloff")) {
-                            temp = node.title.replace("   ", " ").replace("  ", " ").split(" ");
-                            for (int i = 0; i < temp.length; i++) {
-                                if (temp[i].equals("eloff")) {
-                                    table.changeSelection(count, 0, true, false);
-                                    node.angle = Double.parseDouble(temp[i + 1]);
-                                    if (node.angle < min) {
-                                        min = node.angle;
-                                    }
-                                    break;
-                                }
-                            }
+                            table.changeSelection(count, 0, true, false);
                         }
                         count++;
                     }
-                } else {
+                } else if(opt == 2) {
                     jf.setTitle("SRT Plotter - Plot Beam: Azimuth");
-                    min = 0.0;
                     for (DataBlock node : dataBlockList) {
+                        node.angle = node.azumith;
                         if (node.title.contains("azoff")) {
-                            temp = node.title.replace("   ", " ").replace("  ", " ").split(" ");
-                            for (int i = 0; i < temp.length; i++) {
-                                if (temp[i].equals("azoff")) {
-                                    table.changeSelection(count, 0, true, false);
-                                    node.angle = Double.parseDouble(temp[i + 1]);
-                                    // convert to true angle in sku
-                                    node.angle *= Math.cos(node.elevation / 360 * 2 * Math.PI);
-                                    if (node.angle < min) {
-                                        min = node.angle;
-                                    }
-                                    break;
-                                }
-                            }
+                            table.changeSelection(count, 0, true, false);
+                        }
+                        count++;
+                    }
+                } else if(opt == 3) {
+                    jf.setTitle("SRT Plotter - Plot Beam: Degrees of Arc");
+                    for (DataBlock node: dataBlockList){
+                        node.angle = node.azumith;
+                        node.angle *= Math.cos(node.elevation / 360 * 2 * Math.PI);
+                        if(node.title.contains("azoff")){
+                            table.changeSelection(count, 0, true, false);
                         }
                         count++;
                     }
                 }
                 canDelete = false;
-                
+
                 JPanel row1 = new JPanel();
                 JPanel row2 = new JPanel();
                 row1.setLayout(new BoxLayout(row1, BoxLayout.Y_AXIS));
@@ -1031,12 +1018,14 @@ public class View extends JFrame implements ModelListener, ActionListener {
                 }
             }
             in.close();
-            
-            for (int i = 0; i < numChannels; i++) {
-                data[i] = data[i] / numRows;
-                
+
+            if(numRows > 0) {
+                for (int i = 0; i < numChannels; i++) {
+                    data[i] = data[i] / numRows;
+
+                }
+                dataBlockList.add(new DataBlock(title, data, freqStart, freqStep, deleted, endChannels));
             }
-            dataBlockList.add(new DataBlock(title, data, freqStart, freqStep, deleted, endChannels));
             
         } catch (Exception e) {// Catch exception if any
             JOptionPane.showMessageDialog(null, "The file is not formatted correctly.\n" + f);

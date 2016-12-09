@@ -171,23 +171,23 @@ public class FileTable extends JTable implements TableModelListener {
             return false;
         }
         this.getModel().viewer.getCanvas().getPoints().clear();
-        
+
         double avg = 0;
         double angle = 0;
-        
-        TreeMap<Double, Double> rms = new TreeMap<Double, Double>();
+        double rms;
+
+        TreeMap<Double, Double> rmsPoints = new TreeMap<Double, Double>();
         TreeMap<Double, Double> points = new TreeMap<Double, Double>();
-        
-        double min = this.getModel().viewer.min;
-        System.out.println(min);
+
         for (int i = 0; i < index.length; i++) {
             avg = this.getModel().getValueAt(index[i]).getAverageOverFrequency();
-            angle = this.getModel().getValueAt(index[i]).angle - min;
+            rms = this.getModel().getValueAt(index[i]).getRMSOverFrequency();
+            angle = this.getModel().getValueAt(index[i]).angle;
             points.put(angle, avg);
-            rms.put(angle, avg / Math.sqrt(index.length));
+            rmsPoints.put(angle, rms);
             
         }
-        this.getModel().viewer.adapter.importVisibilityGraphRms(rms);
+        this.getModel().viewer.adapter.importVisibilityGraphRms(rmsPoints);
         this.getModel().viewer.adapter.importVisibilityGraphPoints(points);
         this.getModel().viewer.currentDataBlock = this.getModel().getValueAt(index[0]);
         return true;
